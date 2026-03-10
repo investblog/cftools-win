@@ -7,11 +7,11 @@ public record ParseResult(List<string> Domains, List<string> Duplicates, List<st
 
 /// <summary>
 /// Extracts and validates domain names from arbitrary text input.
+/// Handles URLs, HTML, JSON, CSV, email addresses, IDN/punycode.
 /// Best-effort extraction — final validation is done by Cloudflare API.
 /// </summary>
 public static partial class DomainParser
 {
-    // Special second-level domains (heuristic, not PSL)
     private static readonly HashSet<string> SpecialSLDs = new(StringComparer.OrdinalIgnoreCase)
     {
         "co",
@@ -26,6 +26,27 @@ public static partial class DomainParser
 
     private static readonly IdnMapping Idn = new();
 
+    private static readonly char[] TokenDelimiters =
+    {
+        ' ',
+        '\t',
+        '\n',
+        '\r',
+        ',',
+        ';',
+        '|',
+        '<',
+        '>',
+        '"',
+        '\'',
+        '(',
+        ')',
+        '[',
+        ']',
+        '{',
+        '}',
+    };
+
     [GeneratedRegex(
         @"\b((?=[a-z0-9-]{1,63}\.)(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.)+(?:xn--)?[a-z0-9-]{2,63}\b",
         RegexOptions.IgnoreCase | RegexOptions.Compiled
@@ -34,6 +55,7 @@ public static partial class DomainParser
 
     /// <summary>
     /// Parse domains from arbitrary text input.
+    /// Accepts any text: plain lists, URLs, HTML, JSON, CSV, mixed prose.
     /// </summary>
     public static ParseResult Parse(string text, bool rootOnly = true)
     {
@@ -49,7 +71,6 @@ public static partial class DomainParser
             if (string.IsNullOrEmpty(domain))
                 continue;
 
-            // Skip invalid TLDs (filters out IP addresses)
             if (!HasValidTld(domain))
             {
                 if (!invalid.Contains(domain, StringComparer.OrdinalIgnoreCase))
@@ -57,11 +78,9 @@ public static partial class DomainParser
                 continue;
             }
 
-            // Skip subdomains if rootOnly
             if (rootOnly && !IsRootDomain(domain))
                 continue;
 
-            // Track duplicates
             if (!seen.Add(domain))
             {
                 if (!duplicates.Contains(domain, StringComparer.OrdinalIgnoreCase))
@@ -98,57 +117,103 @@ public static partial class DomainParser
     }
 
     // ========================================================================
-    // Private Methods
+    // Extraction
     // ========================================================================
 
     private static List<string> ExtractPotentialDomains(string text)
     {
         var results = new List<string>();
 
-        // Extract ASCII domains
+        // Phase 1: Tokenize and extract Unicode domains (regex can't match these)
+        var tokens = text.Split(TokenDelimiters, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var raw in tokens)
+        {
+            var cleaned = StripUrlWrapper(raw);
+            if (string.IsNullOrWhiteSpace(cleaned) || !cleaned.Contains('.'))
+                continue;
+
+            if (!IsUnicode(cleaned))
+                continue;
+
+            try
+            {
+                var encoded = EncodeDomain(cleaned);
+                if (encoded.Contains('.'))
+                    results.Add(encoded);
+            }
+            catch
+            {
+                // Invalid IDN, skip
+            }
+        }
+
+        // Phase 2: Full-text ASCII regex (handles domains in any context —
+        // URLs, HTML attrs, JSON values, emails, ports — via word boundaries)
         foreach (Match m in AsciiDomainRegex().Matches(text))
         {
             results.Add(m.Value);
         }
 
-        // Extract Unicode domains (line by line)
-        var lines = text.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var line in lines)
-        {
-            var parts = line.Split(
-                new[] { ' ', '\t', ',', ';', '|' },
-                StringSplitOptions.RemoveEmptyEntries
-            );
-            foreach (var part in parts)
-            {
-                if (!IsUnicode(part) || !part.Contains('.'))
-                    continue;
-
-                try
-                {
-                    var encoded = EncodeDomain(part.Trim());
-                    if (encoded != part.ToLowerInvariant() && encoded.Contains('.'))
-                        results.Add(encoded);
-                }
-                catch
-                {
-                    // Invalid IDN, skip
-                }
-            }
-        }
-
         return results;
     }
+
+    /// <summary>
+    /// Strip URL protocol, path, query, fragment, port, and email prefix
+    /// from a token to expose the bare hostname.
+    /// </summary>
+    private static string StripUrlWrapper(string token)
+    {
+        var s = token;
+
+        // Strip protocol (https://, http://, ftp://, //)
+        var protoIdx = s.IndexOf("://", StringComparison.Ordinal);
+        if (protoIdx >= 0)
+            s = s[(protoIdx + 3)..];
+        else if (s.StartsWith("//", StringComparison.Ordinal))
+            s = s[2..];
+
+        // Strip email prefix (user@)
+        var atIdx = s.IndexOf('@');
+        if (atIdx >= 0)
+            s = s[(atIdx + 1)..];
+
+        // Strip path
+        var slashIdx = s.IndexOf('/');
+        if (slashIdx >= 0)
+            s = s[..slashIdx];
+
+        // Strip query string
+        var queryIdx = s.IndexOf('?');
+        if (queryIdx >= 0)
+            s = s[..queryIdx];
+
+        // Strip fragment
+        var fragIdx = s.IndexOf('#');
+        if (fragIdx >= 0)
+            s = s[..fragIdx];
+
+        // Strip port (:1234)
+        var colonIdx = s.LastIndexOf(':');
+        if (colonIdx >= 0 && colonIdx + 1 < s.Length && s[(colonIdx + 1)..].All(char.IsDigit))
+            s = s[..colonIdx];
+
+        // Strip surrounding noise
+        s = s.Trim('.', '-', '_');
+
+        return s;
+    }
+
+    // ========================================================================
+    // Normalization & Validation
+    // ========================================================================
 
     private static string NormalizeDomain(string domain)
     {
         var normalized = domain.Trim().ToLowerInvariant();
 
-        // Remove trailing dot
         if (normalized.EndsWith('.'))
             normalized = normalized[..^1];
 
-        // Convert Unicode to punycode
         if (IsUnicode(normalized))
         {
             try
