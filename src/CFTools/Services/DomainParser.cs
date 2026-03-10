@@ -1,4 +1,5 @@
-using System.Globalization;
+﻿using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CFTools.Services;
@@ -8,7 +9,7 @@ public record ParseResult(List<string> Domains, List<string> Duplicates, List<st
 /// <summary>
 /// Extracts and validates domain names from arbitrary text input.
 /// Handles URLs, HTML, JSON, CSV, email addresses, IDN/punycode.
-/// Best-effort extraction — final validation is done by Cloudflare API.
+/// Best-effort extraction - final validation is done by Cloudflare API.
 /// </summary>
 public static partial class DomainParser
 {
@@ -25,7 +26,9 @@ public static partial class DomainParser
     };
 
     private static readonly IdnMapping Idn = new();
-
+    private static readonly UTF8Encoding Utf8Strict = new(false, true);
+    private static readonly Encoding Latin1 = Encoding.Latin1;
+    private static readonly Encoding Windows1251;
     private static readonly char[] TokenDelimiters =
     {
         ' ',
@@ -47,16 +50,18 @@ public static partial class DomainParser
         '}',
     };
 
+    static DomainParser()
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        Windows1251 = Encoding.GetEncoding(1251);
+    }
+
     [GeneratedRegex(
-        @"\b((?=[a-z0-9-]{1,63}\.)(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.)+(?:xn--)?[a-z0-9-]{2,63}\b",
+        @"\b((?=[a-z0-9-]{1,63}\.)((?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.)+(?:xn--)?[a-z0-9-]{2,63})\b",
         RegexOptions.IgnoreCase | RegexOptions.Compiled
     )]
     private static partial Regex AsciiDomainRegex();
 
-    /// <summary>
-    /// Parse domains from arbitrary text input.
-    /// Accepts any text: plain lists, URLs, HTML, JSON, CSV, mixed prose.
-    /// </summary>
     public static ParseResult Parse(string text, bool rootOnly = true)
     {
         var matches = ExtractPotentialDomains(text);
@@ -98,9 +103,6 @@ public static partial class DomainParser
         return new ParseResult(domains, duplicates, invalid);
     }
 
-    /// <summary>
-    /// Quick count of unique domains in text.
-    /// </summary>
     public static int Count(string text)
     {
         var matches = ExtractPotentialDomains(text);
@@ -116,100 +118,89 @@ public static partial class DomainParser
         return unique.Count;
     }
 
-    // ========================================================================
-    // Extraction
-    // ========================================================================
-
     private static List<string> ExtractPotentialDomains(string text)
     {
         var results = new List<string>();
-
-        // Phase 1: Tokenize and extract Unicode domains (regex can't match these)
         var tokens = text.Split(TokenDelimiters, StringSplitOptions.RemoveEmptyEntries);
+
         foreach (var raw in tokens)
         {
             var cleaned = StripUrlWrapper(raw);
+            cleaned = RepairCommonMojibake(cleaned);
             if (string.IsNullOrWhiteSpace(cleaned) || !cleaned.Contains('.'))
                 continue;
 
-            if (!IsUnicode(cleaned))
-                continue;
-
-            try
+            if (IsUnicode(cleaned))
             {
-                var encoded = EncodeDomain(cleaned);
-                if (encoded.Contains('.'))
-                    results.Add(encoded);
-            }
-            catch
-            {
-                // Invalid IDN, skip
+                try
+                {
+                    var encoded = EncodeDomain(cleaned);
+                    if (encoded.Contains('.'))
+                        results.Add(encoded);
+                }
+                catch
+                {
+                    // Invalid IDN, skip
+                }
             }
         }
 
-        // Phase 2: Full-text ASCII regex (handles domains in any context —
-        // URLs, HTML attrs, JSON values, emails, ports — via word boundaries)
-        foreach (Match m in AsciiDomainRegex().Matches(text))
+        foreach (Match match in AsciiDomainRegex().Matches(text))
         {
-            results.Add(m.Value);
+            var candidate = match.Groups[1].Value;
+            if (candidate.Length == 0)
+                continue;
+
+            var start = match.Groups[1].Index;
+            if (start > 0)
+            {
+                var previous = text[start - 1];
+                if (char.IsLetterOrDigit(previous) || previous > 127)
+                    continue;
+            }
+
+            results.Add(candidate);
         }
 
         return results;
     }
 
-    /// <summary>
-    /// Strip URL protocol, path, query, fragment, port, and email prefix
-    /// from a token to expose the bare hostname.
-    /// </summary>
     private static string StripUrlWrapper(string token)
     {
         var s = token;
 
-        // Strip protocol (https://, http://, ftp://, //)
         var protoIdx = s.IndexOf("://", StringComparison.Ordinal);
         if (protoIdx >= 0)
             s = s[(protoIdx + 3)..];
         else if (s.StartsWith("//", StringComparison.Ordinal))
             s = s[2..];
 
-        // Strip email prefix (user@)
         var atIdx = s.IndexOf('@');
         if (atIdx >= 0)
             s = s[(atIdx + 1)..];
 
-        // Strip path
         var slashIdx = s.IndexOf('/');
         if (slashIdx >= 0)
             s = s[..slashIdx];
 
-        // Strip query string
         var queryIdx = s.IndexOf('?');
         if (queryIdx >= 0)
             s = s[..queryIdx];
 
-        // Strip fragment
         var fragIdx = s.IndexOf('#');
         if (fragIdx >= 0)
             s = s[..fragIdx];
 
-        // Strip port (:1234)
         var colonIdx = s.LastIndexOf(':');
         if (colonIdx >= 0 && colonIdx + 1 < s.Length && s[(colonIdx + 1)..].All(char.IsDigit))
             s = s[..colonIdx];
 
-        // Strip surrounding noise
-        s = s.Trim('.', '-', '_');
-
-        return s;
+        return s.Trim('.', '-', '_');
     }
-
-    // ========================================================================
-    // Normalization & Validation
-    // ========================================================================
 
     private static string NormalizeDomain(string domain)
     {
-        var normalized = domain.Trim().ToLowerInvariant();
+        var normalized = RepairCommonMojibake(domain.Trim()).ToLowerInvariant();
 
         if (normalized.EndsWith('.'))
             normalized = normalized[..^1];
@@ -229,6 +220,95 @@ public static partial class DomainParser
         return normalized;
     }
 
+    private static string RepairCommonMojibake(string text)
+    {
+        if (!LooksLikeMojibake(text))
+            return text;
+
+        var best = text;
+        foreach (var encoding in GetCandidateEncodings(text))
+        {
+            var candidate = TryDecodeMojibake(text, encoding);
+            if (IsBetterDomainCandidate(best, candidate))
+                best = candidate;
+        }
+
+        return best;
+    }
+
+    private static IEnumerable<Encoding> GetCandidateEncodings(string text)
+    {
+        var prefersLatin1 = text.IndexOfAny(['\u00C3', '\u00C2', '\u00D0', '\u00D1']) >= 0;
+        var prefersWindows1251 = text.IndexOfAny(['\u0420', '\u0421']) >= 0;
+
+        if (prefersLatin1)
+            yield return Latin1;
+
+        if (prefersWindows1251)
+            yield return Windows1251;
+
+        if (!prefersLatin1)
+            yield return Latin1;
+
+        if (!prefersWindows1251)
+            yield return Windows1251;
+    }
+
+    private static string TryDecodeMojibake(string text, Encoding sourceEncoding)
+    {
+        try
+        {
+            var bytes = sourceEncoding.GetBytes(text);
+            return Utf8Strict.GetString(bytes);
+        }
+        catch
+        {
+            return text;
+        }
+    }
+
+    private static bool IsBetterDomainCandidate(string current, string candidate)
+    {
+        if (candidate == current || !candidate.Contains('.'))
+            return false;
+
+        return ScoreDomainText(candidate) > ScoreDomainText(current);
+    }
+
+    private static int ScoreDomainText(string text)
+    {
+        var score = 0;
+        foreach (var c in text)
+        {
+            if (char.IsLetterOrDigit(c) || c is '.' or '-')
+                score += 2;
+
+            if (IsLikelyMojibakeChar(c))
+                score -= 6;
+
+            if (c is '\uFFFD' or '?')
+                score -= 10;
+        }
+
+        foreach (var label in text.Split('.', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var hasLatin = label.Any(IsLatinLetter);
+            var hasCyrillic = label.Any(IsCyrillicLetter);
+            if (hasLatin && hasCyrillic)
+                score -= 12;
+        }
+
+        return score;
+    }
+
+    private static bool LooksLikeMojibake(string text) => text.Any(IsLikelyMojibakeChar);
+
+    private static bool IsLikelyMojibakeChar(char c) => c is '\u0420' or '\u0421' or '\u00D0' or '\u00D1' or '\u00C3' or '\u00C2';
+
+    private static bool IsLatinLetter(char c) => c is >= 'A' and <= 'Z' or >= 'a' and <= 'z' || c is >= '\u00C0' and <= '\u024F';
+
+    private static bool IsCyrillicLetter(char c) => c is >= '\u0400' and <= '\u04FF';
+
     private static bool HasValidTld(string domain)
     {
         var tld = domain.Split('.')[^1];
@@ -239,17 +319,13 @@ public static partial class DomainParser
     {
         var parts = domain.Split('.');
 
-        // Handle special SLDs like .co.uk, .com.br
         if (parts.Length == 3 && SpecialSLDs.Contains(parts[1]))
             return true;
 
         return parts.Length == 2;
     }
 
-    private static bool IsUnicode(string text)
-    {
-        return text.Any(c => c > 127);
-    }
+    private static bool IsUnicode(string text) => text.Any(c => c > 127);
 
     private static string EncodeDomain(string domain)
     {

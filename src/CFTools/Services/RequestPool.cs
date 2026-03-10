@@ -13,7 +13,6 @@ public sealed class RequestPool : IDisposable
     private readonly Queue<QueuedTask> _queue = new();
     private readonly Random _random = new();
 
-    private SemaphoreSlim _semaphore;
     private CancellationTokenSource? _poolCts;
 
     private int _maxConcurrency;
@@ -35,19 +34,14 @@ public sealed class RequestPool : IDisposable
         double jitterFactor = 0.3
     )
     {
-        _maxConcurrency = Math.Min(maxConcurrency, 8);
-        _maxRetries = Math.Min(maxRetries, 5);
+        _maxConcurrency = ClampConcurrency(maxConcurrency);
+        _maxRetries = ClampRetries(maxRetries);
         _baseDelayMs = baseDelayMs;
         _maxDelayMs = maxDelayMs;
         _jitterFactor = jitterFactor;
-
-        _semaphore = new SemaphoreSlim(_maxConcurrency, 8);
         _poolCts = new CancellationTokenSource();
     }
 
-    /// <summary>
-    /// Add a task to the pool. Returns when the task completes or fails after all retries.
-    /// </summary>
     public Task<T> Add<T>(
         Func<CancellationToken, Task<T>> execute,
         CancellationToken cancellationToken = default
@@ -76,13 +70,9 @@ public sealed class RequestPool : IDisposable
         }
 
         _ = ProcessQueue();
-
         return tcs.Task;
     }
 
-    /// <summary>
-    /// Pause processing. Running tasks complete, no new tasks start.
-    /// </summary>
     public void Pause()
     {
         lock (_lock)
@@ -91,9 +81,6 @@ public sealed class RequestPool : IDisposable
         }
     }
 
-    /// <summary>
-    /// Resume processing after pause.
-    /// </summary>
     public void Resume()
     {
         lock (_lock)
@@ -103,22 +90,15 @@ public sealed class RequestPool : IDisposable
         _ = ProcessQueue();
     }
 
-    /// <summary>
-    /// Cancel all pending and running tasks.
-    /// </summary>
     public void Cancel()
     {
         lock (_lock)
         {
             _poolCts?.Cancel();
 
-            // Drain queue
             while (_queue.TryDequeue(out var task))
-            {
                 task.LinkedCts.Dispose();
-            }
 
-            // Reset CTS for future use
             _poolCts?.Dispose();
             _poolCts = new CancellationTokenSource();
         }
@@ -136,15 +116,16 @@ public sealed class RequestPool : IDisposable
     {
         lock (_lock)
         {
-            _maxConcurrency = Math.Min(maxConcurrency, 8);
+            _maxConcurrency = ClampConcurrency(maxConcurrency);
         }
+        _ = ProcessQueue();
     }
 
     public void UpdateRetries(int maxRetries)
     {
         lock (_lock)
         {
-            _maxRetries = Math.Min(maxRetries, 5);
+            _maxRetries = ClampRetries(maxRetries);
         }
     }
 
@@ -161,12 +142,7 @@ public sealed class RequestPool : IDisposable
     {
         _poolCts?.Cancel();
         _poolCts?.Dispose();
-        _semaphore.Dispose();
     }
-
-    // ========================================================================
-    // Private
-    // ========================================================================
 
     private async Task ProcessQueue()
     {
@@ -175,16 +151,15 @@ public sealed class RequestPool : IDisposable
             QueuedTask? task;
             lock (_lock)
             {
-                if (_paused || _queue.Count == 0)
+                if (_paused || _queue.Count == 0 || _running >= _maxConcurrency)
                     return;
 
                 task = _queue.Dequeue();
+                _running++;
             }
 
-            await _semaphore.WaitAsync(task.LinkedCts.Token).ConfigureAwait(false);
-            Interlocked.Increment(ref _running);
-
             _ = ExecuteTask(task);
+            await Task.Yield();
         }
     }
 
@@ -197,10 +172,12 @@ public sealed class RequestPool : IDisposable
 
             await task.Execute(ct).ConfigureAwait(false);
             Interlocked.Increment(ref _completed);
+            task.LinkedCts.Dispose();
         }
         catch (OperationCanceledException)
         {
             task.SetCanceled?.Invoke(task.LinkedCts.Token);
+            task.LinkedCts.Dispose();
         }
         catch (Exception ex)
         {
@@ -212,7 +189,6 @@ public sealed class RequestPool : IDisposable
 
                 lock (_lock)
                 {
-                    // Re-enqueue at front (via temp queue swap to maintain order)
                     var items = _queue.ToArray();
                     _queue.Clear();
                     _queue.Enqueue(task);
@@ -221,18 +197,16 @@ public sealed class RequestPool : IDisposable
                 }
 
                 _ = ProcessQueue();
-                return; // Don't release semaphore yet — ProcessQueue will re-acquire
+                return;
             }
-            else
-            {
-                task.SetException?.Invoke(ex);
-                Interlocked.Increment(ref _failed);
-            }
+
+            task.SetException?.Invoke(ex);
+            Interlocked.Increment(ref _failed);
+            task.LinkedCts.Dispose();
         }
         finally
         {
             Interlocked.Decrement(ref _running);
-            _semaphore.Release();
             _ = ProcessQueue();
         }
     }
@@ -245,7 +219,6 @@ public sealed class RequestPool : IDisposable
         if (error is CfApiException cfEx)
             return cfEx.Normalized.Retryable;
 
-        // Network errors are retryable
         if (error is HttpRequestException)
             return true;
 
@@ -257,20 +230,20 @@ public sealed class RequestPool : IDisposable
 
     private int CalculateDelay(Exception error, int attempt)
     {
-        // Check for Retry-After
         if (error is CfApiException cfEx && cfEx.RetryAfterMs is > 0)
             return cfEx.RetryAfterMs.Value;
 
-        // Exponential backoff: min(maxDelay, baseDelay * 2^attempt)
         var exponentialDelay = Math.Min(_maxDelayMs, _baseDelayMs * (int)Math.Pow(2, attempt));
-
-        // Add jitter
         var jitter = _random.Next(0, (int)(_baseDelayMs * _jitterFactor));
 
         return exponentialDelay + jitter;
     }
 
-    private record QueuedTask(
+    private static int ClampConcurrency(int value) => Math.Clamp(value, 1, 8);
+
+    private static int ClampRetries(int value) => Math.Clamp(value, 0, 5);
+
+    private sealed record QueuedTask(
         Func<CancellationToken, Task> Execute,
         CancellationTokenSource LinkedCts,
         Action<Exception>? SetException = null,

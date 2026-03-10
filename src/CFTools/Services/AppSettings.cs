@@ -1,9 +1,11 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace CFTools.Services;
 
 public sealed class AppSettings
 {
+    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+
     private static readonly string SettingsDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "CFTools"
@@ -22,7 +24,9 @@ public sealed class AppSettings
                 return new AppSettings();
 
             var json = File.ReadAllText(SettingsFile);
-            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            var settings = JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            settings.Normalize();
+            return settings;
         }
         catch
         {
@@ -34,16 +38,21 @@ public sealed class AppSettings
     {
         try
         {
+            Normalize();
             Directory.CreateDirectory(SettingsDir);
-            var json = JsonSerializer.Serialize(
-                this,
-                new JsonSerializerOptions { WriteIndented = true }
-            );
+            var json = JsonSerializer.Serialize(this, JsonOptions);
             File.WriteAllText(SettingsFile, json);
         }
         catch
         {
-            // Silently fail — non-critical
+            // Silently fail - non-critical
         }
+    }
+
+    public void Normalize()
+    {
+        MaxConcurrency = Math.Clamp(MaxConcurrency, 1, 8);
+        MaxRetries = Math.Clamp(MaxRetries, 0, 5);
+        ThemeIndex = Math.Clamp(ThemeIndex, 0, 2);
     }
 }

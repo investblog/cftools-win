@@ -1,14 +1,10 @@
-using CFTools.Services;
+﻿using CFTools.Services;
 using Xunit;
 
 namespace CFTools.Tests;
 
 public class DomainParserTests
 {
-    // ========================================================================
-    // Basic extraction
-    // ========================================================================
-
     [Fact]
     public void Parse_SimpleList_ExtractsDomains()
     {
@@ -60,10 +56,6 @@ public class DomainParserTests
         Assert.Empty(result.Invalid);
     }
 
-    // ========================================================================
-    // URL extraction
-    // ========================================================================
-
     [Fact]
     public void Parse_URLs_ExtractsDomains()
     {
@@ -112,10 +104,6 @@ public class DomainParserTests
         Assert.Contains("test.org", result.Domains);
     }
 
-    // ========================================================================
-    // Deduplication
-    // ========================================================================
-
     [Fact]
     public void Parse_Duplicates_Detected()
     {
@@ -137,10 +125,6 @@ public class DomainParserTests
         Assert.Single(result.Duplicates);
     }
 
-    // ========================================================================
-    // Normalization
-    // ========================================================================
-
     [Fact]
     public void Parse_TrailingDot_Removed()
     {
@@ -150,10 +134,6 @@ public class DomainParserTests
         Assert.Single(result.Domains);
         Assert.Equal("example.com", result.Domains[0]);
     }
-
-    // ========================================================================
-    // Root domain filtering
-    // ========================================================================
 
     [Fact]
     public void Parse_SubdomainsFiltered_WhenRootOnly()
@@ -185,10 +165,6 @@ public class DomainParserTests
         Assert.Contains("test.com.br", result.Domains);
     }
 
-    // ========================================================================
-    // Validation
-    // ========================================================================
-
     [Fact]
     public void Parse_IPAddresses_Filtered()
     {
@@ -198,10 +174,6 @@ public class DomainParserTests
         Assert.Single(result.Domains);
         Assert.Equal("example.com", result.Domains[0]);
     }
-
-    // ========================================================================
-    // IDN / Punycode
-    // ========================================================================
 
     [Fact]
     public void Parse_PunycodeDomains_Accepted()
@@ -217,6 +189,16 @@ public class DomainParserTests
     public void Parse_UnicodeDomain_ConvertsToPunycode()
     {
         var input = "домен.рф";
+        var result = DomainParser.Parse(input);
+
+        Assert.Single(result.Domains);
+        Assert.Equal("xn--d1acufc.xn--p1ai", result.Domains[0]);
+    }
+
+    [Fact]
+    public void Parse_MojibakeWindows1251Domain_RepairsToPunycode()
+    {
+        var input = "РґРѕРјРµРЅ.СЂС„";
         var result = DomainParser.Parse(input);
 
         Assert.Single(result.Domains);
@@ -256,6 +238,16 @@ public class DomainParserTests
     }
 
     [Fact]
+    public void Parse_Latin1MojibakeDomain_RepairsToPunycode()
+    {
+        var input = "mÃ¼ller.de";
+        var result = DomainParser.Parse(input);
+
+        Assert.Single(result.Domains);
+        Assert.Equal("xn--mller-kva.de", result.Domains[0]);
+    }
+
+    [Fact]
     public void Parse_MultipleUnicodeDomainsInText()
     {
         var input = "Добавить домен.рф и сайт.рф в Cloudflare";
@@ -264,20 +256,12 @@ public class DomainParserTests
         Assert.Equal(2, result.Domains.Count);
     }
 
-    // ========================================================================
-    // Count
-    // ========================================================================
-
     [Fact]
     public void Count_ReturnsCorrectNumber()
     {
         var input = "example.com\ntest.org\nexample.com";
         Assert.Equal(2, DomainParser.Count(input));
     }
-
-    // ========================================================================
-    // Messy real-world input
-    // ========================================================================
 
     [Fact]
     public void Parse_MessyInput_ExtractsAll()
