@@ -39,7 +39,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
+                        <CheckBox Grid.Column="0" IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                 Checked="CheckBox_Changed" Unchecked="CheckBox_Changed" />
                         <TextBlock Grid.Column="1" Text="{x:Bind Zone.Name}" VerticalAlignment="Center" />
                         <FontIcon Grid.Column="2" Glyph="&#xE73E;"
                                   Visibility="{x:Bind IsPurged, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"

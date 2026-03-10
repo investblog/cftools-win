@@ -9,7 +9,7 @@ namespace CFTools.Services;
 /// </summary>
 public sealed class CloudflareApi : IDisposable
 {
-    private const string BaseUrl = "https://api.cloudflare.com/client/v4";
+    private const string BaseUrl = "https://api.cloudflare.com/client/v4/";
     private static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
 
     private static readonly JsonSerializerOptions JsonOptions = new()
@@ -55,12 +55,12 @@ public sealed class CloudflareApi : IDisposable
 
     public async Task<CfUser> VerifyCredentials(CancellationToken ct = default)
     {
-        return await Get<CfUser>("/user", ct);
+        return await Get<CfUser>("user", ct);
     }
 
     public async Task<List<CfAccount>> GetAccounts(CancellationToken ct = default)
     {
-        return await Get<List<CfAccount>>("/accounts", ct);
+        return await Get<List<CfAccount>>("accounts", ct);
     }
 
     public async Task<PaginatedResult<CfZone>> ListZones(
@@ -76,7 +76,7 @@ public sealed class CloudflareApi : IDisposable
         if (name is not null)
             query.Add($"name={Uri.EscapeDataString(name)}");
 
-        var endpoint = $"/zones?{string.Join("&", query)}";
+        var endpoint = $"zones?{string.Join("&", query)}";
         return await GetPaginated<CfZone>(endpoint, ct);
     }
 
@@ -115,13 +115,13 @@ public sealed class CloudflareApi : IDisposable
         CancellationToken ct = default)
     {
         var request = new CreateZoneRequest(domain, new AccountRef(accountId), type, jumpStart);
-        return await Post<CfZone>("/zones", request, ct);
+        return await Post<CfZone>("zones", request, ct);
     }
 
     public async Task<string> PurgeCacheEverything(string zoneId, CancellationToken ct = default)
     {
         var request = new PurgeCacheRequest(PurgeEverything: true);
-        var result = await Post<PurgeCacheResponse>($"/zones/{zoneId}/purge_cache", request, ct);
+        var result = await Post<PurgeCacheResponse>($"zones/{zoneId}/purge_cache", request, ct);
         return result.Id;
     }
 
