@@ -32,7 +32,8 @@ public sealed class RequestPool : IDisposable
         int maxRetries = 3,
         int baseDelayMs = 500,
         int maxDelayMs = 20_000,
-        double jitterFactor = 0.3)
+        double jitterFactor = 0.3
+    )
     {
         _maxConcurrency = Math.Min(maxConcurrency, 8);
         _maxRetries = Math.Min(maxRetries, 5);
@@ -47,11 +48,15 @@ public sealed class RequestPool : IDisposable
     /// <summary>
     /// Add a task to the pool. Returns when the task completes or fails after all retries.
     /// </summary>
-    public Task<T> Add<T>(Func<CancellationToken, Task<T>> execute, CancellationToken cancellationToken = default)
+    public Task<T> Add<T>(
+        Func<CancellationToken, Task<T>> execute,
+        CancellationToken cancellationToken = default
+    )
     {
         var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
             _poolCts?.Token ?? CancellationToken.None,
-            cancellationToken);
+            cancellationToken
+        );
 
         var tcs = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         var task = new QueuedTask(
@@ -62,7 +67,8 @@ public sealed class RequestPool : IDisposable
             },
             linkedCts,
             SetException: ex => tcs.TrySetException(ex),
-            SetCanceled: ct => tcs.TrySetCanceled(ct));
+            SetCanceled: ct => tcs.TrySetCanceled(ct)
+        );
 
         lock (_lock)
         {
@@ -79,7 +85,10 @@ public sealed class RequestPool : IDisposable
     /// </summary>
     public void Pause()
     {
-        lock (_lock) { _paused = true; }
+        lock (_lock)
+        {
+            _paused = true;
+        }
     }
 
     /// <summary>
@@ -87,7 +96,10 @@ public sealed class RequestPool : IDisposable
     /// </summary>
     public void Resume()
     {
-        lock (_lock) { _paused = false; }
+        lock (_lock)
+        {
+            _paused = false;
+        }
         _ = ProcessQueue();
     }
 
@@ -255,7 +267,8 @@ public sealed class RequestPool : IDisposable
         Func<CancellationToken, Task> Execute,
         CancellationTokenSource LinkedCts,
         Action<Exception>? SetException = null,
-        Action<CancellationToken>? SetCanceled = null)
+        Action<CancellationToken>? SetCanceled = null
+    )
     {
         public int Attempt { get; set; }
     }

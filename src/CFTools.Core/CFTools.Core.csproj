@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>CFTools</RootNamespace>
@@ -13,5 +12,4 @@
     <Compile Include="..\CFTools\Services\DomainParser.cs" Link="Services\DomainParser.cs" />
     <Compile Include="..\CFTools\Services\RequestPool.cs" Link="Services\RequestPool.cs" />
   </ItemGroup>
-
 </Project>

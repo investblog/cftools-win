@@ -25,11 +25,7 @@ public sealed class CloudflareApi : IDisposable
 
     public CloudflareApi()
     {
-        _http = new HttpClient
-        {
-            BaseAddress = new Uri(BaseUrl),
-            Timeout = DefaultTimeout,
-        };
+        _http = new HttpClient { BaseAddress = new Uri(BaseUrl), Timeout = DefaultTimeout };
     }
 
     public void SetCredentials(string email, string apiKey)
@@ -68,7 +64,8 @@ public sealed class CloudflareApi : IDisposable
         string? name = null,
         int page = 1,
         int perPage = 50,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
         var query = new List<string> { $"page={page}", $"per_page={perPage}" };
         if (accountId is not null)
@@ -99,7 +96,10 @@ public sealed class CloudflareApi : IDisposable
         return allZones;
     }
 
-    public async Task<(bool Exists, string? ZoneId)> CheckZoneExists(string domain, CancellationToken ct = default)
+    public async Task<(bool Exists, string? ZoneId)> CheckZoneExists(
+        string domain,
+        CancellationToken ct = default
+    )
     {
         var result = await ListZones(name: domain, perPage: 1, ct: ct);
         if (result.Items.Count > 0)
@@ -112,7 +112,8 @@ public sealed class CloudflareApi : IDisposable
         string accountId,
         string type = "full",
         bool jumpStart = true,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
         var request = new CreateZoneRequest(domain, new AccountRef(accountId), type, jumpStart);
         return await Post<CfZone>("zones", request, ct);
@@ -149,7 +150,9 @@ public sealed class CloudflareApi : IDisposable
         }
         catch (TaskCanceledException) when (!ct.IsCancellationRequested)
         {
-            throw new CfApiException(ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds));
+            throw new CfApiException(
+                ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds)
+            );
         }
 
         return await HandleResponse<T>(response);
@@ -170,16 +173,21 @@ public sealed class CloudflareApi : IDisposable
         }
         catch (TaskCanceledException) when (!ct.IsCancellationRequested)
         {
-            throw new CfApiException(ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds));
+            throw new CfApiException(
+                ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds)
+            );
         }
 
-        var data = await response.Content.ReadFromJsonAsync<ApiResponse<List<T>>>(JsonOptions, ct)
+        var data =
+            await response.Content.ReadFromJsonAsync<ApiResponse<List<T>>>(JsonOptions, ct)
             ?? throw new CfApiException(ErrorNormalizer.NetworkError("Empty response from API"));
 
         if (!data.Success)
             ThrowApiError(data.Errors, response);
 
-        var pagination = data.ResultInfo ?? new PaginationInfo(1, data.Result.Count, data.Result.Count, data.Result.Count, 1);
+        var pagination =
+            data.ResultInfo
+            ?? new PaginationInfo(1, data.Result.Count, data.Result.Count, data.Result.Count, 1);
         return new PaginatedResult<T>(data.Result, pagination);
     }
 
@@ -198,7 +206,9 @@ public sealed class CloudflareApi : IDisposable
         }
         catch (TaskCanceledException) when (!ct.IsCancellationRequested)
         {
-            throw new CfApiException(ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds));
+            throw new CfApiException(
+                ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds)
+            );
         }
 
         return await HandleResponse<T>(response);
@@ -219,11 +229,14 @@ public sealed class CloudflareApi : IDisposable
         }
         catch (TaskCanceledException) when (!ct.IsCancellationRequested)
         {
-            throw new CfApiException(ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds));
+            throw new CfApiException(
+                ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds)
+            );
         }
 
         // Delete returns {success: true, result: {id: "..."}} — just check success
-        var data = await response.Content.ReadFromJsonAsync<ApiResponse<object>>(JsonOptions)
+        var data =
+            await response.Content.ReadFromJsonAsync<ApiResponse<object>>(JsonOptions)
             ?? throw new CfApiException(ErrorNormalizer.NetworkError("Empty response from API"));
 
         if (!data.Success)
@@ -232,7 +245,8 @@ public sealed class CloudflareApi : IDisposable
 
     private async Task<T> HandleResponse<T>(HttpResponseMessage response)
     {
-        var data = await response.Content.ReadFromJsonAsync<ApiResponse<T>>(JsonOptions)
+        var data =
+            await response.Content.ReadFromJsonAsync<ApiResponse<T>>(JsonOptions)
             ?? throw new CfApiException(ErrorNormalizer.NetworkError("Empty response from API"));
 
         if (!data.Success)
@@ -247,12 +261,14 @@ public sealed class CloudflareApi : IDisposable
         var code = error?.Code ?? (int)response.StatusCode;
 
         // Extract detailed message from error_chain if available
-        var message = error?.ErrorChain?.FirstOrDefault()?.Message
-            ?? error?.Message
-            ?? "Unknown error";
+        var message =
+            error?.ErrorChain?.FirstOrDefault()?.Message ?? error?.Message ?? "Unknown error";
 
-        var retryAfter = response.Headers.RetryAfter?.Delta?.TotalSeconds.ToString()
-            ?? response.Headers.RetryAfter?.Date?.Subtract(DateTimeOffset.UtcNow).TotalSeconds.ToString();
+        var retryAfter =
+            response.Headers.RetryAfter?.Delta?.TotalSeconds.ToString()
+            ?? response
+                .Headers.RetryAfter?.Date?.Subtract(DateTimeOffset.UtcNow)
+                .TotalSeconds.ToString();
 
         var normalized = ErrorNormalizer.Normalize(code, message, retryAfter);
         throw new CfApiException(normalized);
@@ -261,7 +277,9 @@ public sealed class CloudflareApi : IDisposable
     private void EnsureConfigured()
     {
         if (!IsConfigured)
-            throw new InvalidOperationException("Credentials not configured. Call SetCredentials first.");
+            throw new InvalidOperationException(
+                "Credentials not configured. Call SetCredentials first."
+            );
     }
 
     public void Dispose()

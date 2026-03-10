@@ -1,6 +1,6 @@
+using CFTools.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using CFTools.ViewModels;
 
 namespace CFTools.Views;
 

@@ -1,6 +1,6 @@
-using Xunit;
 using CFTools.Models;
 using CFTools.Services;
+using Xunit;
 
 namespace CFTools.Tests;
 
@@ -34,11 +34,13 @@ public class RequestPoolTests : IDisposable
         for (int i = 0; i < 5; i++)
         {
             var val = i;
-            tasks.Add(_pool.Add(async ct =>
-            {
-                await Task.Delay(10, ct);
-                return val;
-            }));
+            tasks.Add(
+                _pool.Add(async ct =>
+                {
+                    await Task.Delay(10, ct);
+                    return val;
+                })
+            );
         }
 
         var results = await Task.WhenAll(tasks);
@@ -57,18 +59,25 @@ public class RequestPoolTests : IDisposable
         var tasks = new List<Task<int>>();
         for (int i = 0; i < 6; i++)
         {
-            tasks.Add(_pool.Add(async ct =>
-            {
-                var current = Interlocked.Increment(ref currentConcurrent);
-                // Track max concurrent
-                int oldMax;
-                do { oldMax = maxConcurrent; }
-                while (current > oldMax && Interlocked.CompareExchange(ref maxConcurrent, current, oldMax) != oldMax);
+            tasks.Add(
+                _pool.Add(async ct =>
+                {
+                    var current = Interlocked.Increment(ref currentConcurrent);
+                    // Track max concurrent
+                    int oldMax;
+                    do
+                    {
+                        oldMax = maxConcurrent;
+                    } while (
+                        current > oldMax
+                        && Interlocked.CompareExchange(ref maxConcurrent, current, oldMax) != oldMax
+                    );
 
-                await Task.Delay(50, ct);
-                Interlocked.Decrement(ref currentConcurrent);
-                return current;
-            }));
+                    await Task.Delay(50, ct);
+                    Interlocked.Decrement(ref currentConcurrent);
+                    return current;
+                })
+            );
         }
 
         await Task.WhenAll(tasks);
@@ -118,12 +127,14 @@ public class RequestPoolTests : IDisposable
 
         for (int i = 0; i < 10; i++)
         {
-            tasks.Add(_pool.Add(async ct =>
-            {
-                await Task.Delay(100, ct);
-                Interlocked.Increment(ref completed);
-                return 0;
-            }));
+            tasks.Add(
+                _pool.Add(async ct =>
+                {
+                    await Task.Delay(100, ct);
+                    Interlocked.Increment(ref completed);
+                    return 0;
+                })
+            );
         }
 
         await Task.Delay(50);

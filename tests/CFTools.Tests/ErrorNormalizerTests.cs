@@ -1,5 +1,5 @@
-using Xunit;
 using CFTools.Models;
+using Xunit;
 
 namespace CFTools.Tests;
 

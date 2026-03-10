@@ -1,5 +1,5 @@
-using Microsoft.UI.Xaml;
 using CFTools.Services;
+using Microsoft.UI.Xaml;
 
 namespace CFTools;
 

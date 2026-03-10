@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using CFTools.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CFTools.Models;
 using Microsoft.UI.Dispatching;
 
 namespace CFTools.ViewModels;
@@ -53,8 +53,11 @@ public partial class PurgeCacheViewModel : ObservableObject
 
     public PurgeCacheViewModel()
     {
-        _dispatcher = DispatcherQueue.GetForCurrentThread()
-            ?? throw new InvalidOperationException("PurgeCacheViewModel must be created on the UI thread.");
+        _dispatcher =
+            DispatcherQueue.GetForCurrentThread()
+            ?? throw new InvalidOperationException(
+                "PurgeCacheViewModel must be created on the UI thread."
+            );
     }
 
     [RelayCommand]
@@ -141,62 +144,68 @@ public partial class PurgeCacheViewModel : ObservableObject
         var processed = 0;
         var wasCancelled = 0;
 
-        var tasks = selected.Select(zone =>
-            App.Pool.Add(async ct =>
-            {
-                await RunOnUiThreadAsync(() => zone.StatusText = "Purging...");
-
-                try
-                {
-                    await App.Api.PurgeCacheEverything(zone.Zone.Id, ct);
-
-                    var successCount = Interlocked.Increment(ref succeeded);
-                    var processedCount = Interlocked.Increment(ref processed);
-
-                    await RunOnUiThreadAsync(() =>
+        var tasks = selected
+            .Select(zone =>
+                App.Pool.Add(
+                    async ct =>
                     {
-                        zone.IsPurged = true;
-                        zone.StatusText = "Purged";
-                        UpdatePurgeProgress(processedCount, successCount, failed, total);
-                    });
-                }
-                catch (OperationCanceledException)
-                {
-                    Interlocked.Exchange(ref wasCancelled, 1);
-                    var failureCount = Interlocked.Increment(ref failed);
-                    var processedCount = Interlocked.Increment(ref processed);
+                        await RunOnUiThreadAsync(() => zone.StatusText = "Purging...");
 
-                    await RunOnUiThreadAsync(() =>
-                    {
-                        zone.StatusText = "Cancelled";
-                        UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
-                    });
-                }
-                catch (CfApiException ex)
-                {
-                    var failureCount = Interlocked.Increment(ref failed);
-                    var processedCount = Interlocked.Increment(ref processed);
+                        try
+                        {
+                            await App.Api.PurgeCacheEverything(zone.Zone.Id, ct);
 
-                    await RunOnUiThreadAsync(() =>
-                    {
-                        zone.StatusText = $"Failed: {ex.Normalized.Message}";
-                        UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
-                    });
-                }
-                catch (Exception ex)
-                {
-                    var failureCount = Interlocked.Increment(ref failed);
-                    var processedCount = Interlocked.Increment(ref processed);
+                            var successCount = Interlocked.Increment(ref succeeded);
+                            var processedCount = Interlocked.Increment(ref processed);
 
-                    await RunOnUiThreadAsync(() =>
-                    {
-                        zone.StatusText = $"Failed: {ex.Message}";
-                        UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
-                    });
-                }
+                            await RunOnUiThreadAsync(() =>
+                            {
+                                zone.IsPurged = true;
+                                zone.StatusText = "Purged";
+                                UpdatePurgeProgress(processedCount, successCount, failed, total);
+                            });
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            Interlocked.Exchange(ref wasCancelled, 1);
+                            var failureCount = Interlocked.Increment(ref failed);
+                            var processedCount = Interlocked.Increment(ref processed);
 
-                return zone.Zone.Id;
-            }, _batchCts.Token)).ToList();
+                            await RunOnUiThreadAsync(() =>
+                            {
+                                zone.StatusText = "Cancelled";
+                                UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
+                            });
+                        }
+                        catch (CfApiException ex)
+                        {
+                            var failureCount = Interlocked.Increment(ref failed);
+                            var processedCount = Interlocked.Increment(ref processed);
+
+                            await RunOnUiThreadAsync(() =>
+                            {
+                                zone.StatusText = $"Failed: {ex.Normalized.Message}";
+                                UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            var failureCount = Interlocked.Increment(ref failed);
+                            var processedCount = Interlocked.Increment(ref processed);
+
+                            await RunOnUiThreadAsync(() =>
+                            {
+                                zone.StatusText = $"Failed: {ex.Message}";
+                                UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
+                            });
+                        }
+
+                        return zone.Zone.Id;
+                    },
+                    _batchCts.Token
+                )
+            )
+            .ToList();
 
         try
         {
@@ -206,9 +215,10 @@ public partial class PurgeCacheViewModel : ObservableObject
         {
             IsRunning = false;
             UpdateCommandStates();
-            ProgressText = wasCancelled == 1
-                ? $"Cancelled: {succeeded} purged, {failed} not completed out of {total}"
-                : $"Done: {succeeded} purged, {failed} failed out of {total}";
+            ProgressText =
+                wasCancelled == 1
+                    ? $"Cancelled: {succeeded} purged, {failed} not completed out of {total}"
+                    : $"Done: {succeeded} purged, {failed} failed out of {total}";
             StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
         }
     }
@@ -264,7 +274,9 @@ public partial class PurgeCacheViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(FilterText))
             return Zones;
 
-        return Zones.Where(z => z.Zone.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase));
+        return Zones.Where(z =>
+            z.Zone.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase)
+        );
     }
 
     private Task RunOnUiThreadAsync(Action action)

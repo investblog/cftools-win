@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using CFTools.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CFTools.Models;
 
 namespace CFTools.ViewModels;
 
@@ -83,7 +83,8 @@ public partial class DeleteDomainsViewModel : ObservableObject
     private async Task DeleteSelectedAsync()
     {
         var selected = Zones.Where(z => z.IsSelected).ToList();
-        if (selected.Count == 0) return;
+        if (selected.Count == 0)
+            return;
 
         IsRunning = true;
         CanDelete = false;
@@ -97,16 +98,18 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
             foreach (var zone in selected)
             {
-                tasks.Add(App.Pool.Add(async ct =>
-                {
-                    await App.Api.DeleteZone(zone.Zone.Id, ct);
+                tasks.Add(
+                    App.Pool.Add(async ct =>
+                    {
+                        await App.Api.DeleteZone(zone.Zone.Id, ct);
 
-                    Interlocked.Increment(ref success);
-                    zone.IsDeleted = true;
-                    UpdateDeleteProgress(success, failed, total);
+                        Interlocked.Increment(ref success);
+                        zone.IsDeleted = true;
+                        UpdateDeleteProgress(success, failed, total);
 
-                    return zone.Zone.Id;
-                }));
+                        return zone.Zone.Id;
+                    })
+                );
             }
 
             await Task.WhenAll(tasks);

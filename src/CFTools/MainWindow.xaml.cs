@@ -1,6 +1,6 @@
+using CFTools.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using CFTools.Views;
 
 namespace CFTools;
 
@@ -28,13 +28,14 @@ public sealed partial class MainWindow : Window
     {
         DispatcherQueue.TryEnqueue(() =>
         {
-            AuthNavItem.Content = isConnected
-                ? $"Connected: {App.CurrentEmail}"
-                : "Not connected";
+            AuthNavItem.Content = isConnected ? $"Connected: {App.CurrentEmail}" : "Not connected";
         });
     }
 
-    private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    private void NavView_SelectionChanged(
+        NavigationView sender,
+        NavigationViewSelectionChangedEventArgs args
+    )
     {
         if (args.SelectedItem is not NavigationViewItem item)
             return;

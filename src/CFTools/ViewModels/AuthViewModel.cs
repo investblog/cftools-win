@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CFTools.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CFTools.Models;
 using Microsoft.UI.Xaml.Controls;
 
 namespace CFTools.ViewModels;
@@ -74,7 +74,10 @@ public partial class AuthViewModel : ObservableObject
         catch (CfApiException ex)
         {
             App.Api.ClearCredentials();
-            ShowStatus($"Auth failed: {ex.Normalized.Message} - {ex.Normalized.Recommendation}", InfoBarSeverity.Error);
+            ShowStatus(
+                $"Auth failed: {ex.Normalized.Message} - {ex.Normalized.Recommendation}",
+                InfoBarSeverity.Error
+            );
         }
         catch (Exception ex)
         {

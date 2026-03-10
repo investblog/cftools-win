@@ -1,5 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CFTools.Models;
+﻿using CFTools.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CFTools.ViewModels;
 

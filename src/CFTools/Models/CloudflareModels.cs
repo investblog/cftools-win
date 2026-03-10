@@ -73,32 +73,30 @@ public record CreateZoneRequest(
     [property: JsonPropertyName("jump_start")] bool JumpStart = true
 );
 
-public record AccountRef(
-    [property: JsonPropertyName("id")] string Id
-);
+public record AccountRef([property: JsonPropertyName("id")] string Id);
 
 public record PurgeCacheRequest(
     [property: JsonPropertyName("purge_everything")] bool PurgeEverything = true
 );
 
-public record PurgeCacheResponse(
-    [property: JsonPropertyName("id")] string Id
-);
+public record PurgeCacheResponse([property: JsonPropertyName("id")] string Id);
 
 // ============================================================================
 // Paginated Result (internal, not API)
 // ============================================================================
 
-public record PaginatedResult<T>(
-    List<T> Items,
-    PaginationInfo Pagination
-);
+public record PaginatedResult<T>(List<T> Items, PaginationInfo Pagination);
 
 // ============================================================================
 // State Models - Orchestration
 // ============================================================================
 
-public enum OperationKind { Create, Delete, Purge }
+public enum OperationKind
+{
+    Create,
+    Delete,
+    Purge,
+}
 
 public enum PreflightStatus
 {
@@ -119,7 +117,16 @@ public record PreflightEntry(
     string? Message = null
 );
 
-public enum TaskStatus { Queued, Running, Success, Failed, Skipped, Blocked, Cancelled }
+public enum TaskStatus
+{
+    Queued,
+    Running,
+    Success,
+    Failed,
+    Skipped,
+    Blocked,
+    Cancelled,
+}
 
 public record TaskEntry
 {
@@ -134,7 +141,14 @@ public record TaskEntry
     public long? LatencyMs { get; set; }
 }
 
-public enum BatchStatus { Pending, Running, Paused, Completed, Cancelled }
+public enum BatchStatus
+{
+    Pending,
+    Running,
+    Paused,
+    Completed,
+    Cancelled,
+}
 
 public class BatchState
 {

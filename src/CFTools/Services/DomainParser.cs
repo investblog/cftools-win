@@ -14,14 +14,22 @@ public static partial class DomainParser
     // Special second-level domains (heuristic, not PSL)
     private static readonly HashSet<string> SpecialSLDs = new(StringComparer.OrdinalIgnoreCase)
     {
-        "co", "com", "net", "org", "edu", "gov", "ac", "me"
+        "co",
+        "com",
+        "net",
+        "org",
+        "edu",
+        "gov",
+        "ac",
+        "me",
     };
 
     private static readonly IdnMapping Idn = new();
 
     [GeneratedRegex(
         @"\b((?=[a-z0-9-]{1,63}\.)(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.)+(?:xn--)?[a-z0-9-]{2,63}\b",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+        RegexOptions.IgnoreCase | RegexOptions.Compiled
+    )]
     private static partial Regex AsciiDomainRegex();
 
     /// <summary>
@@ -107,7 +115,10 @@ public static partial class DomainParser
         var lines = text.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
         foreach (var line in lines)
         {
-            var parts = line.Split(new[] { ' ', '\t', ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = line.Split(
+                new[] { ' ', '\t', ',', ';', '|' },
+                StringSplitOptions.RemoveEmptyEntries
+            );
             foreach (var part in parts)
             {
                 if (!IsUnicode(part) || !part.Contains('.'))
