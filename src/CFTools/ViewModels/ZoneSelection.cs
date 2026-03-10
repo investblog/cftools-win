@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CFTools.Models;
 
 namespace CFTools.ViewModels;
@@ -11,13 +11,16 @@ public partial class ZoneSelection : ObservableObject
     public CfZone Zone { get; }
 
     [ObservableProperty]
-    private bool _isSelected;
+    public partial bool IsSelected { get; set; }
 
     [ObservableProperty]
-    private bool _isPurged;
+    public partial bool IsPurged { get; set; }
 
     [ObservableProperty]
-    private bool _isDeleted;
+    public partial bool IsDeleted { get; set; }
+
+    [ObservableProperty]
+    public partial string StatusText { get; set; } = string.Empty;
 
     public ZoneSelection(CfZone zone) => Zone = zone;
 }

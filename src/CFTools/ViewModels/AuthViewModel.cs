@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CFTools.Models;
 using Microsoft.UI.Xaml.Controls;
@@ -8,29 +8,28 @@ namespace CFTools.ViewModels;
 public partial class AuthViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string _email = string.Empty;
+    public partial string Email { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _apiKey = string.Empty;
+    public partial string ApiKey { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isConnected;
+    public partial bool IsConnected { get; set; }
 
     [ObservableProperty]
-    private bool _isBusy;
+    public partial bool IsBusy { get; set; }
 
     [ObservableProperty]
-    private string _statusMessage = string.Empty;
+    public partial string StatusMessage { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isStatusOpen;
+    public partial bool IsStatusOpen { get; set; }
 
     [ObservableProperty]
-    private InfoBarSeverity _infoBarSeverity;
+    public partial InfoBarSeverity InfoBarSeverity { get; set; }
 
     public AuthViewModel()
     {
-        // Try to restore saved credentials
         var saved = App.Credentials.Load();
         if (saved is not null)
         {
@@ -56,8 +55,6 @@ public partial class AuthViewModel : ObservableObject
             App.Api.SetCredentials(Email.Trim(), ApiKey.Trim());
 
             var user = await App.Api.VerifyCredentials();
-
-            // Get accounts to find the default account ID
             var accounts = await App.Api.GetAccounts();
             if (accounts.Count == 0)
             {
@@ -68,19 +65,16 @@ public partial class AuthViewModel : ObservableObject
 
             App.CurrentAccountId = accounts[0].Id;
             App.CurrentEmail = user.Email;
-
-            // Save credentials
             App.Credentials.Save(Email.Trim(), ApiKey.Trim());
 
             IsConnected = true;
             ShowStatus($"Connected as {user.Email} ({accounts[0].Name})", InfoBarSeverity.Success);
-
             App.NotifyAuthChanged(true);
         }
         catch (CfApiException ex)
         {
             App.Api.ClearCredentials();
-            ShowStatus($"Auth failed: {ex.Normalized.Message} — {ex.Normalized.Recommendation}", InfoBarSeverity.Error);
+            ShowStatus($"Auth failed: {ex.Normalized.Message} - {ex.Normalized.Recommendation}", InfoBarSeverity.Error);
         }
         catch (Exception ex)
         {

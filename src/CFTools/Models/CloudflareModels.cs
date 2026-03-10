@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace CFTools.Models;
 
@@ -95,16 +95,31 @@ public record PaginatedResult<T>(
 );
 
 // ============================================================================
-// State Models — Orchestration
+// State Models - Orchestration
 // ============================================================================
 
 public enum OperationKind { Create, Delete, Purge }
 
-public enum PreflightStatus { WillCreate, Exists, Invalid, Duplicate }
+public enum PreflightStatus
+{
+    WillCreate,
+    Exists,
+    Invalid,
+    Duplicate,
+    Creating,
+    Created,
+    Failed,
+    Cancelled,
+}
 
-public record PreflightEntry(string Domain, PreflightStatus Status, string? ExistingZoneId = null);
+public record PreflightEntry(
+    string Domain,
+    PreflightStatus Status,
+    string? ExistingZoneId = null,
+    string? Message = null
+);
 
-public enum TaskStatus { Queued, Running, Success, Failed, Skipped, Blocked }
+public enum TaskStatus { Queued, Running, Success, Failed, Skipped, Blocked, Cancelled }
 
 public record TaskEntry
 {

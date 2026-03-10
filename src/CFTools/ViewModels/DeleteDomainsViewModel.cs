@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CFTools.Models;
@@ -8,19 +8,19 @@ namespace CFTools.ViewModels;
 public partial class DeleteDomainsViewModel : ObservableObject
 {
     [ObservableProperty]
-    private bool _isBusy;
+    public partial bool IsBusy { get; set; }
 
     [ObservableProperty]
-    private bool _isRunning;
+    public partial bool IsRunning { get; set; }
 
     [ObservableProperty]
-    private string _statusText = string.Empty;
+    public partial string StatusText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _progressText = string.Empty;
+    public partial string ProgressText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _canDelete;
+    public partial bool CanDelete { get; set; }
 
     public ObservableCollection<ZoneSelection> Zones { get; } = new();
 

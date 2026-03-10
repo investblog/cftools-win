@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>CFTools</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CFTools\Models\CloudflareModels.cs" Link="Models\CloudflareModels.cs" />
+    <Compile Include="..\CFTools\Models\ErrorModels.cs" Link="Models\ErrorModels.cs" />
+    <Compile Include="..\CFTools\Services\DomainParser.cs" Link="Services\DomainParser.cs" />
+    <Compile Include="..\CFTools\Services\RequestPool.cs" Link="Services\RequestPool.cs" />
+  </ItemGroup>
+
+</Project>

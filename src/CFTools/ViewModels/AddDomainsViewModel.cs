@@ -1,34 +1,58 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CFTools.Models;
 using CFTools.Services;
+using Microsoft.UI.Dispatching;
 
 namespace CFTools.ViewModels;
 
 public partial class AddDomainsViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string _domainInput = string.Empty;
+    public partial string DomainInput { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _statusText = string.Empty;
+    public partial string StatusText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isBusy;
+    public partial bool IsBusy { get; set; }
 
     [ObservableProperty]
-    private bool _canCreate;
+    public partial bool CanCheck { get; set; } = true;
 
     [ObservableProperty]
-    private bool _isRunning;
+    public partial bool CanCreate { get; set; }
 
     [ObservableProperty]
-    private string _progressText = string.Empty;
+    public partial bool IsRunning { get; set; }
+
+    [ObservableProperty]
+    public partial bool CanCancel { get; set; }
+
+    [ObservableProperty]
+    public partial string ProgressText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial double ProgressValue { get; set; }
+
+    [ObservableProperty]
+    public partial double ProgressMaximum { get; set; } = 1;
+
+    [ObservableProperty]
+    public partial bool ShowProgress { get; set; }
 
     public ObservableCollection<PreflightEntry> PreflightResults { get; } = new();
 
     private readonly List<string> _domainsToCreate = new();
+    private readonly DispatcherQueue _dispatcher;
+    private CancellationTokenSource? _batchCts;
+
+    public AddDomainsViewModel()
+    {
+        _dispatcher = DispatcherQueue.GetForCurrentThread()
+            ?? throw new InvalidOperationException("AddDomainsViewModel must be created on the UI thread.");
+    }
 
     [RelayCommand]
     private async Task CheckAsync()
@@ -43,9 +67,16 @@ public partial class AddDomainsViewModel : ObservableObject
         }
 
         IsBusy = true;
+        IsRunning = false;
+        CanCreate = false;
+        CanCancel = false;
+        CanCheck = false;
+        ShowProgress = false;
+        ProgressValue = 0;
+        ProgressMaximum = 1;
+        ProgressText = string.Empty;
         PreflightResults.Clear();
         _domainsToCreate.Clear();
-        CanCreate = false;
         StatusText = "Parsing domains...";
 
         try
@@ -69,27 +100,25 @@ public partial class AddDomainsViewModel : ObservableObject
 
                 if (zoneExists)
                 {
-                    PreflightResults.Add(new PreflightEntry(domain, PreflightStatus.Exists, zoneId));
+                    PreflightResults.Add(new PreflightEntry(domain, PreflightStatus.Exists, zoneId, "Already exists in Cloudflare"));
                     exists++;
                 }
                 else
                 {
-                    PreflightResults.Add(new PreflightEntry(domain, PreflightStatus.WillCreate));
+                    PreflightResults.Add(new PreflightEntry(domain, PreflightStatus.WillCreate, Message: "Ready to create"));
                     _domainsToCreate.Add(domain);
                     willCreate++;
                 }
             }
 
-            // Add duplicates as info
             foreach (var dup in parsed.Duplicates)
-                PreflightResults.Add(new PreflightEntry(dup, PreflightStatus.Duplicate));
+                PreflightResults.Add(new PreflightEntry(dup, PreflightStatus.Duplicate, Message: "Duplicate in input"));
 
-            // Add invalid as info
             foreach (var inv in parsed.Invalid)
-                PreflightResults.Add(new PreflightEntry(inv, PreflightStatus.Invalid));
+                PreflightResults.Add(new PreflightEntry(inv, PreflightStatus.Invalid, Message: "Input is not a valid root domain"));
 
+            StatusText = $"{willCreate} ready, {exists} already exist, {parsed.Duplicates.Count} duplicates, {parsed.Invalid.Count} invalid";
             CanCreate = willCreate > 0;
-            StatusText = $"{willCreate} to create, {exists} already exist, {parsed.Duplicates.Count} duplicates";
         }
         catch (CfApiException ex)
         {
@@ -102,6 +131,7 @@ public partial class AddDomainsViewModel : ObservableObject
         finally
         {
             IsBusy = false;
+            UpdateCommandStates();
         }
     }
 
@@ -111,66 +141,159 @@ public partial class AddDomainsViewModel : ObservableObject
         if (_domainsToCreate.Count == 0 || App.CurrentAccountId is null)
             return;
 
+        _batchCts?.Dispose();
+        _batchCts = new CancellationTokenSource();
+
         IsRunning = true;
-        CanCreate = false;
+        IsBusy = false;
+        ShowProgress = true;
+        ProgressValue = 0;
+        ProgressMaximum = _domainsToCreate.Count;
+        StatusText = "Creating zones...";
+        UpdateCommandStates();
+
         var accountId = App.CurrentAccountId;
         var total = _domainsToCreate.Count;
-        var success = 0;
+        var succeeded = 0;
         var failed = 0;
+        var processed = 0;
+        var wasCancelled = 0;
 
-        try
-        {
-            var tasks = new List<Task>();
-
-            foreach (var domain in _domainsToCreate)
+        var tasks = _domainsToCreate.Select(domain =>
+            App.Pool.Add(async ct =>
             {
-                tasks.Add(App.Pool.Add(async ct =>
+                await RunOnUiThreadAsync(() =>
+                    UpdatePreflightStatus(domain, PreflightStatus.Creating, "Creating zone..."));
+
+                try
                 {
                     await App.Api.CreateZone(domain, accountId, ct: ct);
 
-                    Interlocked.Increment(ref success);
-                    UpdateProgress(success, failed, total);
+                    var successCount = Interlocked.Increment(ref succeeded);
+                    var processedCount = Interlocked.Increment(ref processed);
 
-                    // Update preflight entry status
-                    UpdatePreflightStatus(domain, PreflightStatus.Exists);
+                    await RunOnUiThreadAsync(() =>
+                    {
+                        UpdatePreflightStatus(domain, PreflightStatus.Created, "Zone created");
+                        UpdateProgress(processedCount, successCount, failed, total);
+                    });
+                }
+                catch (OperationCanceledException)
+                {
+                    Interlocked.Exchange(ref wasCancelled, 1);
+                    var failureCount = Interlocked.Increment(ref failed);
+                    var processedCount = Interlocked.Increment(ref processed);
 
-                    return domain;
-                }));
-            }
+                    await RunOnUiThreadAsync(() =>
+                    {
+                        UpdatePreflightStatus(domain, PreflightStatus.Cancelled, "Cancelled");
+                        UpdateProgress(processedCount, succeeded, failureCount, total);
+                    });
+                }
+                catch (CfApiException ex)
+                {
+                    var failureCount = Interlocked.Increment(ref failed);
+                    var processedCount = Interlocked.Increment(ref processed);
 
+                    await RunOnUiThreadAsync(() =>
+                    {
+                        UpdatePreflightStatus(domain, PreflightStatus.Failed, ex.Normalized.Message);
+                        UpdateProgress(processedCount, succeeded, failureCount, total);
+                    });
+                }
+                catch (Exception ex)
+                {
+                    var failureCount = Interlocked.Increment(ref failed);
+                    var processedCount = Interlocked.Increment(ref processed);
+
+                    await RunOnUiThreadAsync(() =>
+                    {
+                        UpdatePreflightStatus(domain, PreflightStatus.Failed, ex.Message);
+                        UpdateProgress(processedCount, succeeded, failureCount, total);
+                    });
+                }
+
+                return domain;
+            }, _batchCts.Token)).ToList();
+
+        try
+        {
             await Task.WhenAll(tasks);
-        }
-        catch (CfApiException)
-        {
-            Interlocked.Increment(ref failed);
-            UpdateProgress(success, failed, total);
-        }
-        catch (Exception)
-        {
-            Interlocked.Increment(ref failed);
-            UpdateProgress(success, failed, total);
         }
         finally
         {
             IsRunning = false;
-            ProgressText = $"Done: {success} created, {failed} failed out of {total}";
+            CanCancel = false;
+            UpdateCommandStates();
+
+            ProgressText = wasCancelled == 1
+                ? $"Cancelled: {succeeded} created, {failed} not completed out of {total}"
+                : $"Done: {succeeded} created, {failed} failed out of {total}";
+
+            StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
         }
     }
 
-    private void UpdateProgress(int success, int failed, int total)
+    [RelayCommand]
+    private void CancelBatch()
     {
-        ProgressText = $"Progress: {success + failed}/{total} ({success} ok, {failed} failed)";
+        if (!IsRunning)
+            return;
+
+        StatusText = "Cancelling batch...";
+        CanCancel = false;
+        _batchCts?.Cancel();
+        App.Pool.Cancel();
     }
 
-    private void UpdatePreflightStatus(string domain, PreflightStatus newStatus)
+    private void UpdateProgress(int processed, int success, int failed, int total)
+    {
+        ProgressMaximum = total;
+        ProgressValue = processed;
+        ProgressText = $"{processed}/{total} processed - {success} created, {failed} failed";
+    }
+
+    private void UpdatePreflightStatus(string domain, PreflightStatus newStatus, string? message)
     {
         for (int i = 0; i < PreflightResults.Count; i++)
         {
             if (PreflightResults[i].Domain == domain)
             {
-                PreflightResults[i] = PreflightResults[i] with { Status = newStatus };
+                PreflightResults[i] = PreflightResults[i] with { Status = newStatus, Message = message };
                 break;
             }
         }
+    }
+
+    private void UpdateCommandStates()
+    {
+        CanCheck = !IsBusy && !IsRunning;
+        CanCreate = !IsBusy && !IsRunning && _domainsToCreate.Count > 0;
+        CanCancel = IsRunning;
+    }
+
+    private Task RunOnUiThreadAsync(Action action)
+    {
+        if (_dispatcher.HasThreadAccess)
+        {
+            action();
+            return Task.CompletedTask;
+        }
+
+        var tcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        _dispatcher.TryEnqueue(() =>
+        {
+            try
+            {
+                action();
+                tcs.SetResult();
+            }
+            catch (Exception ex)
+            {
+                tcs.SetException(ex);
+            }
+        });
+
+        return tcs.Task;
     }
 }
