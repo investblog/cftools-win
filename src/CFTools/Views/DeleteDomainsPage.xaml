@@ -89,7 +89,7 @@
       <Button
         Grid.Row="5"
         Content="Delete Selected"
-        Command="{x:Bind ViewModel.DeleteSelectedCommand}"
+        Click="DeleteButton_Click"
         IsEnabled="{x:Bind ViewModel.CanDelete, Mode=OneWay}"
         Background="#C42B1C"
         Foreground="White"
