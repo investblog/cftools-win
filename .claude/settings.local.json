@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet:*)",
+      "Bash(winget search:*)",
+      "Bash(winget install:*)",
+      "Bash(export:*)",
+      "Read(//c/Program Files/Microsoft Visual Studio//**)",
+      "Read(//c/Program Files \\(x86\\)/Microsoft Visual Studio//**)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\":*)",
+      "Bash(mkdir:*)",
+      "Bash(cmd.exe:*)",
+      "Bash(powershell.exe:*)"
+    ]
+  }
+}
