@@ -14,17 +14,17 @@
       <NavigationView.MenuItems>
         <NavigationViewItem Content="Add Domains" Tag="AddDomains">
           <NavigationViewItem.Icon>
-            <SymbolIcon Symbol="Add" />
+            <FontIcon Glyph="&#xE774;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
         <NavigationViewItem Content="Purge Cache" Tag="PurgeCache">
           <NavigationViewItem.Icon>
-            <SymbolIcon Symbol="Refresh" />
+            <FontIcon Glyph="&#xE72C;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
         <NavigationViewItem Content="Delete Domains" Tag="DeleteDomains">
           <NavigationViewItem.Icon>
-            <SymbolIcon Symbol="Delete" />
+            <FontIcon Glyph="&#xE74D;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
       </NavigationView.MenuItems>
@@ -32,7 +32,7 @@
       <NavigationView.FooterMenuItems>
         <NavigationViewItem x:Name="AuthNavItem" Content="Not connected" Tag="Auth">
           <NavigationViewItem.Icon>
-            <SymbolIcon Symbol="Contact" />
+            <FontIcon Glyph="&#xE77B;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
       </NavigationView.FooterMenuItems>

@@ -1,0 +1,91 @@
+<Page
+  x:Class="CFTools.Views.SettingsPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+  <ScrollViewer>
+    <StackPanel Padding="24" Spacing="24" MaxWidth="600" HorizontalAlignment="Left">
+      <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
+
+      <!-- Request Pool -->
+      <StackPanel Spacing="16">
+        <TextBlock Text="Request Pool" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+        <Slider
+          Header="Max Concurrency"
+          Minimum="1"
+          Maximum="8"
+          SnapsTo="StepValues"
+          StepFrequency="1"
+          TickFrequency="1"
+          TickPlacement="Outside"
+          Value="{x:Bind ViewModel.MaxConcurrency, Mode=TwoWay}"
+        />
+
+        <Slider
+          Header="Max Retries"
+          Minimum="0"
+          Maximum="5"
+          SnapsTo="StepValues"
+          StepFrequency="1"
+          TickFrequency="1"
+          TickPlacement="Outside"
+          Value="{x:Bind ViewModel.MaxRetries, Mode=TwoWay}"
+        />
+      </StackPanel>
+
+      <!-- Appearance -->
+      <StackPanel Spacing="12">
+        <TextBlock Text="Appearance" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+        <ComboBox
+          Header="Theme"
+          SelectedIndex="{x:Bind ViewModel.SelectedThemeIndex, Mode=TwoWay}"
+          Width="200"
+        >
+          <ComboBoxItem Content="System" />
+          <ComboBoxItem Content="Light" />
+          <ComboBoxItem Content="Dark" />
+        </ComboBox>
+      </StackPanel>
+
+      <!-- About -->
+      <StackPanel Spacing="8">
+        <TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+          <TextBlock Text="CFTools" FontWeight="SemiBold" FontSize="18" VerticalAlignment="Center" />
+          <TextBlock
+            Text="{x:Bind ViewModel.Version}"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            VerticalAlignment="Center"
+          />
+        </StackPanel>
+
+        <TextBlock
+          Text="Bulk Cloudflare zone management for Windows"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          TextWrapping="Wrap"
+        />
+
+        <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,8,0,0">
+          <TextBlock Text="Author:" VerticalAlignment="Center" />
+          <HyperlinkButton Content="301.st" NavigateUri="https://301.st" Padding="4,0" />
+        </StackPanel>
+
+        <TextBlock
+          Text="Open-source contribution to Windows development"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          TextWrapping="Wrap"
+        />
+
+        <TextBlock
+          Text="Powered by Cloudflare API v4"
+          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+          FontSize="12"
+          Margin="0,8,0,0"
+        />
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</Page>

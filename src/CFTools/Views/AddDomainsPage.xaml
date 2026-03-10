@@ -1,111 +1,123 @@
-﻿<Page
+<Page
   x:Class="CFTools.Views.AddDomainsPage"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
   xmlns:models="using:CFTools.Models"
 >
-  <Grid Padding="24" RowSpacing="16">
+  <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
-    <TextBlock Grid.Row="0" Text="Add Domains" Style="{StaticResource TitleTextBlockStyle}" />
-
-    <Grid Grid.Row="1" ColumnSpacing="16">
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-
-      <TextBox
-        Grid.Column="0"
-        Header="Paste domains (one per line or mixed text)"
-        PlaceholderText="example.com&#x0a;test.org&#x0a;foo.net"
-        AcceptsReturn="True"
-        TextWrapping="Wrap"
-        IsEnabled="{x:Bind ViewModel.CanCheck, Mode=OneWay}"
-        Text="{x:Bind ViewModel.DomainInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-      />
-
-      <ListView
-        Grid.Column="1"
-        Header="Preflight Results"
-        ItemsSource="{x:Bind ViewModel.PreflightResults, Mode=OneWay}"
-        SelectionMode="None"
-      >
-        <ListView.ItemTemplate>
-          <DataTemplate x:DataType="models:PreflightEntry">
-            <Grid ColumnSpacing="12" Padding="4">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="2*" />
-              </Grid.ColumnDefinitions>
-              <TextBlock Grid.Column="0" Text="{x:Bind Domain}" VerticalAlignment="Center" />
-              <TextBlock
-                Grid.Column="1"
-                Text="{x:Bind Status}"
-                VerticalAlignment="Center"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-              />
-              <TextBlock
-                Grid.Column="2"
-                Text="{x:Bind Message}"
-                VerticalAlignment="Center"
-                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                TextWrapping="WrapWholeWords"
-              />
-            </Grid>
-          </DataTemplate>
-        </ListView.ItemTemplate>
-      </ListView>
-    </Grid>
-
-    <StackPanel
-      Grid.Row="2"
-      Spacing="8"
-      Visibility="{x:Bind ViewModel.ShowProgress, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
-    >
-      <ProgressBar
-        Minimum="0"
-        Maximum="{x:Bind ViewModel.ProgressMaximum, Mode=OneWay}"
-        Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}"
-      />
-      <TextBlock
-        Text="{x:Bind ViewModel.ProgressText, Mode=OneWay}"
-        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-      />
-    </StackPanel>
-
-    <TextBlock
-      Grid.Row="3"
-      Text="{x:Bind ViewModel.StatusText, Mode=OneWay}"
-      Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-      TextWrapping="WrapWholeWords"
+    <ProgressBar
+      Grid.Row="0"
+      IsIndeterminate="True"
+      Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
     />
 
-    <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8">
-      <Button
-        Content="Check"
-        Style="{StaticResource AccentButtonStyle}"
-        Command="{x:Bind ViewModel.CheckCommand}"
-        IsEnabled="{x:Bind ViewModel.CanCheck, Mode=OneWay}"
+    <Grid Grid.Row="1" Padding="24" RowSpacing="12">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <TextBlock Grid.Row="0" Text="Add Domains" Style="{StaticResource TitleTextBlockStyle}" />
+
+      <TextBlock
+        Grid.Row="1"
+        Text="{x:Bind ViewModel.StatusText, Mode=OneWay}"
+        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+        TextWrapping="WrapWholeWords"
       />
-      <Button
-        Content="Create All"
-        Command="{x:Bind ViewModel.CreateAllCommand}"
-        IsEnabled="{x:Bind ViewModel.CanCreate, Mode=OneWay}"
-      />
-      <Button
-        Content="Cancel"
-        Command="{x:Bind ViewModel.CancelBatchCommand}"
-        IsEnabled="{x:Bind ViewModel.CanCancel, Mode=OneWay}"
-      />
-      <ProgressRing IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}" Width="20" Height="20" />
-    </StackPanel>
+
+      <Grid Grid.Row="2" ColumnSpacing="16">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBox
+          Grid.Column="0"
+          Header="Paste domains (one per line)"
+          PlaceholderText="example.com&#x0a;test.org&#x0a;foo.net"
+          AcceptsReturn="True"
+          TextWrapping="Wrap"
+          IsEnabled="{x:Bind ViewModel.CanCheck, Mode=OneWay}"
+          Text="{x:Bind ViewModel.DomainInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        />
+
+        <ListView
+          Grid.Column="1"
+          Header="Preflight Results"
+          ItemsSource="{x:Bind ViewModel.PreflightResults, Mode=OneWay}"
+          SelectionMode="None"
+        >
+          <ListView.ItemTemplate>
+            <DataTemplate x:DataType="models:PreflightEntry">
+              <Grid ColumnSpacing="12" Padding="4">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="2*" />
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{x:Bind Domain}" VerticalAlignment="Center" />
+                <TextBlock
+                  Grid.Column="1"
+                  Text="{x:Bind Status}"
+                  VerticalAlignment="Center"
+                  Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                />
+                <TextBlock
+                  Grid.Column="2"
+                  Text="{x:Bind Message}"
+                  VerticalAlignment="Center"
+                  Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                  TextWrapping="WrapWholeWords"
+                />
+              </Grid>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+      </Grid>
+
+      <StackPanel
+        Grid.Row="3"
+        Spacing="8"
+        Visibility="{x:Bind ViewModel.ShowProgress, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
+      >
+        <ProgressBar
+          Minimum="0"
+          Maximum="{x:Bind ViewModel.ProgressMaximum, Mode=OneWay}"
+          Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}"
+        />
+        <TextBlock
+          Text="{x:Bind ViewModel.ProgressText, Mode=OneWay}"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+        />
+      </StackPanel>
+
+      <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8">
+        <Button
+          Content="Check"
+          Style="{StaticResource AccentButtonStyle}"
+          Command="{x:Bind ViewModel.CheckCommand}"
+          IsEnabled="{x:Bind ViewModel.CanCheck, Mode=OneWay}"
+        />
+        <Button
+          Content="Create All"
+          Command="{x:Bind ViewModel.CreateAllCommand}"
+          IsEnabled="{x:Bind ViewModel.CanCreate, Mode=OneWay}"
+        />
+        <Button
+          Content="Cancel"
+          Command="{x:Bind ViewModel.CancelBatchCommand}"
+          IsEnabled="{x:Bind ViewModel.CanCancel, Mode=OneWay}"
+        />
+      </StackPanel>
+    </Grid>
   </Grid>
 </Page>

@@ -37,6 +37,12 @@ public sealed partial class MainWindow : Window
         NavigationViewSelectionChangedEventArgs args
     )
     {
+        if (args.IsSettingsSelected)
+        {
+            ContentFrame.Navigate(typeof(SettingsPage));
+            return;
+        }
+
         if (args.SelectedItem is not NavigationViewItem item)
             return;
 

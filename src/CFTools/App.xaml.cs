@@ -8,9 +8,11 @@ public partial class App : Application
     private Window? _window;
 
     // Shared services — simple singleton access for MVP
+    public static AppSettings Settings { get; } = AppSettings.Load();
     public static CloudflareApi Api { get; } = new();
     public static CredentialStore Credentials { get; } = new();
-    public static RequestPool Pool { get; } = new();
+    public static RequestPool Pool { get; } =
+        new(maxConcurrency: Settings.MaxConcurrency, maxRetries: Settings.MaxRetries);
 
     /// <summary>
     /// Fired when auth state changes so all pages can react.
@@ -25,6 +27,19 @@ public partial class App : Application
         AuthStateChanged?.Invoke(isConnected);
     }
 
+    public static void ApplyTheme(int themeIndex)
+    {
+        if (Current is App app && app._window?.Content is FrameworkElement root)
+        {
+            root.RequestedTheme = themeIndex switch
+            {
+                1 => ElementTheme.Light,
+                2 => ElementTheme.Dark,
+                _ => ElementTheme.Default,
+            };
+        }
+    }
+
     public App()
     {
         this.InitializeComponent();
@@ -34,5 +49,6 @@ public partial class App : Application
     {
         _window = new MainWindow();
         _window.Activate();
+        ApplyTheme(Settings.ThemeIndex);
     }
 }

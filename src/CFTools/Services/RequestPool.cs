@@ -137,7 +137,14 @@ public sealed class RequestPool : IDisposable
         lock (_lock)
         {
             _maxConcurrency = Math.Min(maxConcurrency, 8);
-            // Semaphore replacement is complex; just update the cap for new tasks
+        }
+    }
+
+    public void UpdateRetries(int maxRetries)
+    {
+        lock (_lock)
+        {
+            _maxRetries = Math.Min(maxRetries, 5);
         }
     }
 
