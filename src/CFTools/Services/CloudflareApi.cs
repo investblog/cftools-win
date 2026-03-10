@@ -125,6 +125,11 @@ public sealed class CloudflareApi : IDisposable
         return result.Id;
     }
 
+    public async Task DeleteZone(string zoneId, CancellationToken ct = default)
+    {
+        await Delete($"zones/{zoneId}", ct);
+    }
+
     // ========================================================================
     // Private HTTP Methods
     // ========================================================================
@@ -197,6 +202,32 @@ public sealed class CloudflareApi : IDisposable
         }
 
         return await HandleResponse<T>(response);
+    }
+
+    private async Task Delete(string endpoint, CancellationToken ct)
+    {
+        EnsureConfigured();
+
+        HttpResponseMessage response;
+        try
+        {
+            response = await _http.DeleteAsync(endpoint, ct);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new CfApiException(ErrorNormalizer.NetworkError(ex.Message));
+        }
+        catch (TaskCanceledException) when (!ct.IsCancellationRequested)
+        {
+            throw new CfApiException(ErrorNormalizer.TimeoutError((int)DefaultTimeout.TotalMilliseconds));
+        }
+
+        // Delete returns {success: true, result: {id: "..."}} — just check success
+        var data = await response.Content.ReadFromJsonAsync<ApiResponse<object>>(JsonOptions)
+            ?? throw new CfApiException(ErrorNormalizer.NetworkError("Empty response from API"));
+
+        if (!data.Success)
+            ThrowApiError(data.Errors, response);
     }
 
     private async Task<T> HandleResponse<T>(HttpResponseMessage response)

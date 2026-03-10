@@ -5,7 +5,7 @@ using CFTools.Models;
 
 namespace CFTools.ViewModels;
 
-public partial class PurgeCacheViewModel : ObservableObject
+public partial class DeleteDomainsViewModel : ObservableObject
 {
     [ObservableProperty]
     private bool _isBusy;
@@ -20,10 +20,7 @@ public partial class PurgeCacheViewModel : ObservableObject
     private string _progressText = string.Empty;
 
     [ObservableProperty]
-    private bool _canPurge;
-
-    [ObservableProperty]
-    private string _filterText = string.Empty;
+    private bool _canDelete;
 
     public ObservableCollection<ZoneSelection> Zones { get; } = new();
 
@@ -50,7 +47,7 @@ public partial class PurgeCacheViewModel : ObservableObject
             }
 
             StatusText = $"{zones.Count} zones loaded";
-            UpdateCanPurge();
+            UpdateCanDelete();
         }
         catch (CfApiException ex)
         {
@@ -71,7 +68,7 @@ public partial class PurgeCacheViewModel : ObservableObject
     {
         foreach (var zone in Zones)
             zone.IsSelected = true;
-        UpdateCanPurge();
+        UpdateCanDelete();
     }
 
     [RelayCommand]
@@ -79,17 +76,17 @@ public partial class PurgeCacheViewModel : ObservableObject
     {
         foreach (var zone in Zones)
             zone.IsSelected = false;
-        UpdateCanPurge();
+        UpdateCanDelete();
     }
 
     [RelayCommand]
-    private async Task PurgeSelectedAsync()
+    private async Task DeleteSelectedAsync()
     {
         var selected = Zones.Where(z => z.IsSelected).ToList();
         if (selected.Count == 0) return;
 
         IsRunning = true;
-        CanPurge = false;
+        CanDelete = false;
         var total = selected.Count;
         var success = 0;
         var failed = 0;
@@ -102,11 +99,11 @@ public partial class PurgeCacheViewModel : ObservableObject
             {
                 tasks.Add(App.Pool.Add(async ct =>
                 {
-                    await App.Api.PurgeCacheEverything(zone.Zone.Id, ct);
+                    await App.Api.DeleteZone(zone.Zone.Id, ct);
 
                     Interlocked.Increment(ref success);
-                    zone.IsPurged = true;
-                    UpdatePurgeProgress(success, failed, total);
+                    zone.IsDeleted = true;
+                    UpdateDeleteProgress(success, failed, total);
 
                     return zone.Zone.Id;
                 }));
@@ -117,26 +114,26 @@ public partial class PurgeCacheViewModel : ObservableObject
         catch (CfApiException)
         {
             Interlocked.Increment(ref failed);
-            UpdatePurgeProgress(success, failed, total);
+            UpdateDeleteProgress(success, failed, total);
         }
         catch (Exception)
         {
             Interlocked.Increment(ref failed);
-            UpdatePurgeProgress(success, failed, total);
+            UpdateDeleteProgress(success, failed, total);
         }
         finally
         {
             IsRunning = false;
-            ProgressText = $"Done: {success} purged, {failed} failed out of {total}";
+            ProgressText = $"Done: {success} deleted, {failed} failed out of {total}";
         }
     }
 
-    public void UpdateCanPurge()
+    public void UpdateCanDelete()
     {
-        CanPurge = Zones.Any(z => z.IsSelected) && !IsRunning;
+        CanDelete = Zones.Any(z => z.IsSelected) && !IsRunning;
     }
 
-    private void UpdatePurgeProgress(int success, int failed, int total)
+    private void UpdateDeleteProgress(int success, int failed, int total)
     {
         ProgressText = $"Progress: {success + failed}/{total} ({success} ok, {failed} failed)";
     }

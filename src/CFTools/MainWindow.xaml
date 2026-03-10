@@ -19,6 +19,11 @@
                 </NavigationViewItem>
                 <NavigationViewItem Content="Purge Cache" Tag="PurgeCache">
                     <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Refresh" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Delete Domains" Tag="DeleteDomains">
+                    <NavigationViewItem.Icon>
                         <SymbolIcon Symbol="Delete" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>

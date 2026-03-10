@@ -48,6 +48,9 @@ public sealed partial class MainWindow : Window
             case "PurgeCache":
                 ContentFrame.Navigate(typeof(PurgeCachePage));
                 break;
+            case "DeleteDomains":
+                ContentFrame.Navigate(typeof(DeleteDomainsPage));
+                break;
             case "Auth":
                 ContentFrame.Navigate(typeof(AuthPage));
                 break;
