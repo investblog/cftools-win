@@ -17,7 +17,7 @@
     />
 
     <ScrollViewer Grid.Row="1">
-      <StackPanel Padding="24" Spacing="16" MaxWidth="400" HorizontalAlignment="Left">
+      <StackPanel Padding="24" Spacing="16" MaxWidth="400" HorizontalAlignment="Stretch">
         <TextBlock Text="Cloudflare Authentication" Style="{StaticResource TitleTextBlockStyle}" />
 
         <InfoBar

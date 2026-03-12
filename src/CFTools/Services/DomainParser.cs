@@ -303,9 +303,11 @@ public static partial class DomainParser
 
     private static bool LooksLikeMojibake(string text) => text.Any(IsLikelyMojibakeChar);
 
-    private static bool IsLikelyMojibakeChar(char c) => c is '\u0420' or '\u0421' or '\u00D0' or '\u00D1' or '\u00C3' or '\u00C2';
+    private static bool IsLikelyMojibakeChar(char c) =>
+        c is '\u0420' or '\u0421' or '\u00D0' or '\u00D1' or '\u00C3' or '\u00C2';
 
-    private static bool IsLatinLetter(char c) => c is >= 'A' and <= 'Z' or >= 'a' and <= 'z' || c is >= '\u00C0' and <= '\u024F';
+    private static bool IsLatinLetter(char c) =>
+        c is >= 'A' and <= 'Z' or >= 'a' and <= 'z' || c is >= '\u00C0' and <= '\u024F';
 
     private static bool IsCyrillicLetter(char c) => c is >= '\u0400' and <= '\u04FF';
 

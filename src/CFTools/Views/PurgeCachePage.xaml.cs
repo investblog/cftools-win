@@ -11,6 +11,7 @@ public sealed partial class PurgeCachePage : Page
     public PurgeCachePage()
     {
         this.InitializeComponent();
+        Loaded += async (_, _) => await ViewModel.LoadZonesCommand.ExecuteAsync(null);
     }
 
     private void CheckBox_Changed(object sender, RoutedEventArgs e)

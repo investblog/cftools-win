@@ -87,7 +87,8 @@ public class DomainParserTests
     [Fact]
     public void Parse_HtmlContent_ExtractsDomains()
     {
-        var input = "<a href=\"https://example.com\">link</a> and <img src=\"https://test.org/img.png\">";
+        var input =
+            "<a href=\"https://example.com\">link</a> and <img src=\"https://test.org/img.png\">";
         var result = DomainParser.Parse(input);
 
         Assert.Contains("example.com", result.Domains);

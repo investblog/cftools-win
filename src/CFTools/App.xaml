@@ -22,6 +22,11 @@
       <conv:BoolToVisibilityConverter x:Key="BoolToVisConverter" />
       <conv:InvertBoolToVisibilityConverter x:Key="InvertBoolToVisConverter" />
       <conv:InvertBoolConverter x:Key="InvertBoolConverter" />
+      <conv:PreflightStatusTextConverter x:Key="PreflightTextConverter" />
+      <conv:PreflightStatusBrushConverter x:Key="PreflightBgConverter" IsBackground="True" />
+      <conv:PreflightStatusBrushConverter x:Key="PreflightFgConverter" IsBackground="False" />
+      <conv:StatusToBadgeBrushConverter x:Key="StatusToBgConverter" IsBackground="True" />
+      <conv:StatusToBadgeBrushConverter x:Key="StatusToFgConverter" IsBackground="False" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

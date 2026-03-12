@@ -22,6 +22,11 @@ public partial class DeleteDomainsViewModel : ObservableObject
     [ObservableProperty]
     public partial bool CanDelete { get; set; }
 
+    [ObservableProperty]
+    public partial bool CanCancel { get; set; }
+
+    private CancellationTokenSource? _batchCts;
+
     public ObservableCollection<ZoneSelection> Zones { get; } = new();
 
     [RelayCommand]
@@ -86,7 +91,11 @@ public partial class DeleteDomainsViewModel : ObservableObject
         if (selected.Count == 0)
             return;
 
+        _batchCts?.Dispose();
+        _batchCts = new CancellationTokenSource();
+
         IsRunning = true;
+        CanCancel = true;
         CanDelete = false;
         var total = selected.Count;
         var success = 0;
@@ -99,20 +108,27 @@ public partial class DeleteDomainsViewModel : ObservableObject
             foreach (var zone in selected)
             {
                 tasks.Add(
-                    App.Pool.Add(async ct =>
-                    {
-                        await App.Api.DeleteZone(zone.Zone.Id, ct);
+                    App.Pool.Add(
+                        async ct =>
+                        {
+                            await App.Api.DeleteZone(zone.Zone.Id, ct);
 
-                        Interlocked.Increment(ref success);
-                        zone.IsDeleted = true;
-                        UpdateDeleteProgress(success, failed, total);
+                            Interlocked.Increment(ref success);
+                            zone.IsDeleted = true;
+                            UpdateDeleteProgress(success, failed, total);
 
-                        return zone.Zone.Id;
-                    })
+                            return zone.Zone.Id;
+                        },
+                        _batchCts.Token
+                    )
                 );
             }
 
             await Task.WhenAll(tasks);
+        }
+        catch (OperationCanceledException)
+        {
+            // batch was cancelled
         }
         catch (CfApiException)
         {
@@ -127,6 +143,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
         finally
         {
             IsRunning = false;
+            CanCancel = false;
             ProgressText = $"Done: {success} deleted, {failed} failed out of {total}";
         }
     }
@@ -134,6 +151,18 @@ public partial class DeleteDomainsViewModel : ObservableObject
     public void UpdateCanDelete()
     {
         CanDelete = Zones.Any(z => z.IsSelected) && !IsRunning;
+    }
+
+    [RelayCommand]
+    private void CancelBatch()
+    {
+        if (!IsRunning)
+            return;
+
+        ProgressText = "Cancelling...";
+        CanCancel = false;
+        _batchCts?.Cancel();
+        App.Pool.Cancel();
     }
 
     private void UpdateDeleteProgress(int success, int failed, int total)

@@ -91,34 +91,44 @@ public class RequestPoolTests : IDisposable
     [Fact]
     public async Task UpdateConcurrency_AppliesToFutureWork()
     {
-        using var pool = new RequestPool(maxConcurrency: 1, maxRetries: 1, baseDelayMs: 10, maxDelayMs: 50);
+        using var pool = new RequestPool(
+            maxConcurrency: 1,
+            maxRetries: 1,
+            baseDelayMs: 10,
+            maxDelayMs: 50
+        );
         pool.UpdateConcurrency(3);
 
         var maxConcurrent = 0;
         var currentConcurrent = 0;
-        var tasks = Enumerable.Range(0, 6).Select(_ =>
-            pool.Add(async ct =>
-            {
-                var current = Interlocked.Increment(ref currentConcurrent);
-                int oldMax;
-                do
+        var tasks = Enumerable
+            .Range(0, 6)
+            .Select(_ =>
+                pool.Add(async ct =>
                 {
-                    oldMax = maxConcurrent;
-                } while (
-                    current > oldMax
-                    && Interlocked.CompareExchange(ref maxConcurrent, current, oldMax) != oldMax
-                );
+                    var current = Interlocked.Increment(ref currentConcurrent);
+                    int oldMax;
+                    do
+                    {
+                        oldMax = maxConcurrent;
+                    } while (
+                        current > oldMax
+                        && Interlocked.CompareExchange(ref maxConcurrent, current, oldMax) != oldMax
+                    );
 
-                await Task.Delay(40, ct);
-                Interlocked.Decrement(ref currentConcurrent);
-                return current;
-            })
-        );
+                    await Task.Delay(40, ct);
+                    Interlocked.Decrement(ref currentConcurrent);
+                    return current;
+                })
+            );
 
         await Task.WhenAll(tasks);
 
         Assert.True(maxConcurrent <= 3, $"Max concurrent was {maxConcurrent}, expected <= 3");
-        Assert.True(maxConcurrent >= 2, $"Expected runtime concurrency update to increase throughput, got {maxConcurrent}");
+        Assert.True(
+            maxConcurrent >= 2,
+            $"Expected runtime concurrency update to increase throughput, got {maxConcurrent}"
+        );
     }
 
     [Fact]
