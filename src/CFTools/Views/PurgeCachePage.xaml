@@ -138,6 +138,8 @@
         IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
         SelectionMode="None"
         Padding="0"
+        MaxWidth="580"
+        HorizontalAlignment="Left"
       >
         <ListView.ItemContainerStyle>
           <Style TargetType="ListViewItem">

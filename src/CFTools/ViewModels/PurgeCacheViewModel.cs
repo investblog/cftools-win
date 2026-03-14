@@ -317,12 +317,21 @@ public partial class PurgeCacheViewModel : ObservableObject
         CanLoadZones = !IsBusy && !IsRunning && App.CurrentAccountId is not null;
         CanChangeSelection = !IsBusy && !IsRunning;
         CanCancel = IsRunning;
+
+        var selected = VisibleZones.Count(z => z.IsSelected);
         CanPurge =
             !IsBusy
             && !IsRunning
             && _loadedAccountId is not null
             && _loadedAccountId == App.CurrentAccountId
-            && VisibleZones.Any(z => z.IsSelected);
+            && selected > 0;
+
+        if (!IsBusy && !IsRunning && _loadedAccountId is not null)
+        {
+            var total = VisibleZones.Count;
+            StatusText =
+                selected > 0 ? $"{selected} of {total} selected" : $"{total} zones loaded";
+        }
     }
 
     private void UpdatePurgeProgress(int processed, int success, int failed, int total)
