@@ -51,10 +51,15 @@ public partial class DeleteDomainsViewModel : ObservableObject
     public string AccountContextText =>
         App.CurrentAccountName is { Length: > 0 } name
             ? $"Current account: {name}"
-            : "Current account: not selected";
+            : string.Empty;
+
+    public bool IsAccountMissing => App.CurrentAccountId is null;
 
     private readonly DispatcherQueue _dispatcher;
     private CancellationTokenSource? _batchCts;
+    private string? _loadedAccountId;
+    private string? _observedAccountId;
+    private bool _pendingAccountInvalidation;
 
     public DeleteDomainsViewModel()
     {
@@ -63,6 +68,8 @@ public partial class DeleteDomainsViewModel : ObservableObject
             ?? throw new InvalidOperationException(
                 "DeleteDomainsViewModel must be created on the UI thread."
             );
+        _observedAccountId = App.CurrentAccountId;
+        App.AuthStateChanged += () => _dispatcher.TryEnqueue(HandleAuthStateChanged);
     }
 
     [RelayCommand]
@@ -74,25 +81,36 @@ public partial class DeleteDomainsViewModel : ObservableObject
             return;
         }
 
+        var accountId = App.CurrentAccountId;
+        var accountName = App.CurrentAccountName ?? "the selected account";
+
         IsBusy = true;
         ProgressText = string.Empty;
         ShowProgress = false;
         ProgressValue = 0;
         ProgressMaximum = 1;
-        Zones.Clear();
-        VisibleZones.Clear();
-        StatusText = $"Loading zones for {App.CurrentAccountName ?? "the selected account"}...";
+        ClearLoadedZones();
+        StatusText = $"Loading zones for {accountName}...";
         UpdateCommandStates();
 
         try
         {
-            var zones = await App.Api.ListAllZones(App.CurrentAccountId);
+            var zones = await App.Api.ListAllZones(accountId);
+
+            if (App.CurrentAccountId != accountId)
+            {
+                ResetLoadedZones(
+                    $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                );
+                return;
+            }
 
             foreach (var zone in zones.OrderBy(z => z.Name))
             {
                 Zones.Add(new ZoneSelection(zone));
             }
 
+            _loadedAccountId = accountId;
             RefreshVisibleZones();
             StatusText = $"{zones.Count} zones loaded";
         }
@@ -107,6 +125,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
         finally
         {
             IsBusy = false;
+            ApplyPendingAccountInvalidationIfNeeded();
             UpdateCommandStates();
         }
     }
@@ -149,6 +168,16 @@ public partial class DeleteDomainsViewModel : ObservableObject
         var selected = VisibleZones.Where(z => z.IsSelected).ToList();
         if (selected.Count == 0)
         {
+            return;
+        }
+
+        if (_loadedAccountId is null || _loadedAccountId != App.CurrentAccountId)
+        {
+            ResetLoadedZones(
+                App.CurrentAccountId is null
+                    ? "Connect and select a Cloudflare account first"
+                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+            );
             return;
         }
 
@@ -244,12 +273,17 @@ public partial class DeleteDomainsViewModel : ObservableObject
         finally
         {
             IsRunning = false;
+            var invalidated = ApplyPendingAccountInvalidationIfNeeded();
             UpdateCommandStates();
-            ProgressText =
-                wasCancelled == 1
-                    ? $"Cancelled: {succeeded} deleted, {failed} not completed out of {total}"
-                    : $"Done: {succeeded} deleted, {failed} failed out of {total}";
-            StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
+
+            if (!invalidated)
+            {
+                ProgressText =
+                    wasCancelled == 1
+                        ? $"Cancelled: {succeeded} deleted, {failed} not completed out of {total}"
+                        : $"Done: {succeeded} deleted, {failed} failed out of {total}";
+                StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
+            }
         }
     }
 
@@ -269,10 +303,15 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
     public void UpdateCommandStates()
     {
-        CanLoadZones = !IsBusy && !IsRunning;
+        CanLoadZones = !IsBusy && !IsRunning && App.CurrentAccountId is not null;
         CanChangeSelection = !IsBusy && !IsRunning;
         CanCancel = IsRunning;
-        CanDelete = !IsBusy && !IsRunning && VisibleZones.Any(z => z.IsSelected);
+        CanDelete =
+            !IsBusy
+            && !IsRunning
+            && _loadedAccountId is not null
+            && _loadedAccountId == App.CurrentAccountId
+            && VisibleZones.Any(z => z.IsSelected);
     }
 
     partial void OnFilterTextChanged(string value)
@@ -321,6 +360,71 @@ public partial class DeleteDomainsViewModel : ObservableObject
         }
 
         return zone.Zone.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void HandleAuthStateChanged()
+    {
+        var currentAccountId = App.CurrentAccountId;
+        var accountChanged = _observedAccountId != currentAccountId;
+        _observedAccountId = currentAccountId;
+
+        OnPropertyChanged(nameof(AccountContextText));
+        OnPropertyChanged(nameof(IsAccountMissing));
+
+        if (!accountChanged)
+        {
+            return;
+        }
+
+        if (IsBusy || IsRunning)
+        {
+            _pendingAccountInvalidation = true;
+            return;
+        }
+
+        if (_loadedAccountId is not null || Zones.Count > 0)
+        {
+            ResetLoadedZones(
+                currentAccountId is null
+                    ? "Connect and select a Cloudflare account first"
+                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+            );
+        }
+    }
+
+    private bool ApplyPendingAccountInvalidationIfNeeded()
+    {
+        if (!_pendingAccountInvalidation || IsBusy || IsRunning)
+        {
+            return false;
+        }
+
+        _pendingAccountInvalidation = false;
+        ResetLoadedZones(
+            App.CurrentAccountId is null
+                ? "Connect and select a Cloudflare account first"
+                : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+        );
+        return true;
+    }
+
+    private void ResetLoadedZones(string statusMessage)
+    {
+        ClearLoadedZones();
+        StatusText = statusMessage;
+        UpdateCommandStates();
+    }
+
+    private void ClearLoadedZones()
+    {
+        _loadedAccountId = null;
+        Zones.Clear();
+        VisibleZones.Clear();
+        FilterText = string.Empty;
+        ProgressText = string.Empty;
+        ShowProgress = false;
+        ProgressValue = 0;
+        ProgressMaximum = 1;
     }
 
     private void UpdateDeleteProgress(int processed, int success, int failed, int total)

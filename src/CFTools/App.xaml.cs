@@ -18,6 +18,7 @@ public partial class App : Application
     /// Fired when auth state changes so all pages can react.
     /// </summary>
     public static event Action? AuthStateChanged;
+    public static event Action? NavigateToAuthRequested;
 
     public static string? CurrentAccountId { get; set; }
     public static string? CurrentAccountName { get; set; }
@@ -41,6 +42,11 @@ public partial class App : Application
     public static void NotifyAuthChanged()
     {
         AuthStateChanged?.Invoke();
+    }
+
+    public static void RequestNavigateToAuth()
+    {
+        NavigateToAuthRequested?.Invoke();
     }
 
     public static void ApplyTheme(int themeIndex)

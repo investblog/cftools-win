@@ -18,6 +18,7 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowConnectAction))]
     [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
+    [NotifyPropertyChangedFor(nameof(DisconnectActionText))]
     [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
     public partial bool IsConnected { get; set; }
 
@@ -37,17 +38,26 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowConnectAction))]
     [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
+    [NotifyPropertyChangedFor(nameof(DisconnectActionText))]
     [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
     public partial bool ShowAccountPicker { get; set; }
 
     [ObservableProperty]
     public partial CfAccount? SelectedAccount { get; set; }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
+    [NotifyPropertyChangedFor(nameof(DisconnectActionText))]
+    public partial bool HasStoredCredentials { get; set; }
+
     public ObservableCollection<CfAccount> Accounts { get; } = new();
 
     public bool ShowConnectAction => !IsConnected && !ShowAccountPicker;
 
-    public bool ShowDisconnectAction => IsConnected || ShowAccountPicker;
+    public bool ShowDisconnectAction => IsConnected || ShowAccountPicker || HasStoredCredentials;
+
+    public string DisconnectActionText =>
+        IsConnected || ShowAccountPicker ? "Disconnect" : "Forget credentials";
 
     public bool CanEditCredentials => !IsBusy && !ShowAccountPicker && !IsConnected;
 
@@ -58,6 +68,7 @@ public partial class AuthViewModel : ObservableObject
         {
             Email = saved.Value.Email;
             ApiKey = saved.Value.ApiKey;
+            HasStoredCredentials = true;
         }
     }
 
@@ -145,6 +156,7 @@ public partial class AuthViewModel : ObservableObject
         App.CurrentAccountId = account.Id;
         App.CurrentAccountName = account.Name;
         App.Credentials.Save(Email.Trim(), ApiKey.Trim());
+        HasStoredCredentials = true;
         IsConnected = true;
         ShowAccountPicker = false;
         ShowStatus($"Connected as {App.CurrentEmail} ({account.Name})", InfoBarSeverity.Success);
@@ -158,6 +170,7 @@ public partial class AuthViewModel : ObservableObject
         ShowAccountPicker = false;
         Accounts.Clear();
         SelectedAccount = null;
+        HasStoredCredentials = false;
         Email = string.Empty;
         ApiKey = string.Empty;
         StatusMessage = string.Empty;

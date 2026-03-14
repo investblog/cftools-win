@@ -25,6 +25,12 @@ public sealed partial class MainWindow : Window
         NavView.SelectedItem = AuthNavItem;
 
         App.AuthStateChanged += OnAuthStateChanged;
+        App.NavigateToAuthRequested += () =>
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                ContentFrame.Navigate(typeof(AuthPage));
+                NavView.SelectedItem = AuthNavItem;
+            });
         OnAuthStateChanged();
     }
 

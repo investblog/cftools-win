@@ -25,6 +25,9 @@ public partial class AddDomainsViewModel : ObservableObject
     public partial bool CanCreate { get; set; }
 
     [ObservableProperty]
+    public partial bool IsNextStepCreate { get; set; }
+
+    [ObservableProperty]
     public partial bool IsRunning { get; set; }
 
     [ObservableProperty]
@@ -47,11 +50,16 @@ public partial class AddDomainsViewModel : ObservableObject
     public string AccountContextText =>
         App.CurrentAccountName is { Length: > 0 } name
             ? $"Current account: {name}"
-            : "Current account: not selected";
+            : string.Empty;
+
+    public bool IsAccountMissing => App.CurrentAccountId is null;
 
     private readonly List<string> _domainsToCreate = new();
     private readonly DispatcherQueue _dispatcher;
     private CancellationTokenSource? _batchCts;
+    private string? _preflightAccountId;
+    private string? _observedAccountId;
+    private bool _pendingAccountInvalidation;
 
     public AddDomainsViewModel()
     {
@@ -60,6 +68,8 @@ public partial class AddDomainsViewModel : ObservableObject
             ?? throw new InvalidOperationException(
                 "AddDomainsViewModel must be created on the UI thread."
             );
+        _observedAccountId = App.CurrentAccountId;
+        App.AuthStateChanged += () => _dispatcher.TryEnqueue(HandleAuthStateChanged);
     }
 
     [RelayCommand]
@@ -74,17 +84,22 @@ public partial class AddDomainsViewModel : ObservableObject
             return;
         }
 
+        var accountId = App.CurrentAccountId;
+        var accountName = App.CurrentAccountName ?? "the selected account";
+
         IsBusy = true;
         IsRunning = false;
         CanCreate = false;
         CanCancel = false;
         CanCheck = false;
+        IsNextStepCreate = false;
         ShowProgress = false;
         ProgressValue = 0;
         ProgressMaximum = 1;
         ProgressText = string.Empty;
         PreflightResults.Clear();
         _domainsToCreate.Clear();
+        _preflightAccountId = null;
         StatusText = "Parsing domains...";
 
         try
@@ -97,8 +112,7 @@ public partial class AddDomainsViewModel : ObservableObject
                 return;
             }
 
-            StatusText =
-                $"Checking {parsed.Domains.Count} domains in {App.CurrentAccountName ?? "the selected account"}...";
+            StatusText = $"Checking {parsed.Domains.Count} domains in {accountName}...";
 
             var willCreate = 0;
             var exists = 0;
@@ -107,7 +121,7 @@ public partial class AddDomainsViewModel : ObservableObject
             {
                 var (zoneExists, zoneId) = await App.Api.CheckZoneExists(
                     domain,
-                    App.CurrentAccountId
+                    accountId
                 );
 
                 if (zoneExists)
@@ -154,9 +168,19 @@ public partial class AddDomainsViewModel : ObservableObject
                     )
                 );
 
+            if (App.CurrentAccountId != accountId)
+            {
+                ResetPreflightState(
+                    $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Re-check domains before creating."
+                );
+                return;
+            }
+
             StatusText =
                 $"{willCreate} ready, {exists} already exist, {parsed.Duplicates.Count} duplicates, {parsed.Invalid.Count} invalid";
             CanCreate = willCreate > 0;
+            IsNextStepCreate = willCreate > 0;
+            _preflightAccountId = accountId;
         }
         catch (CfApiException ex)
         {
@@ -169,6 +193,7 @@ public partial class AddDomainsViewModel : ObservableObject
         finally
         {
             IsBusy = false;
+            ApplyPendingAccountInvalidationIfNeeded();
             UpdateCommandStates();
         }
     }
@@ -178,6 +203,14 @@ public partial class AddDomainsViewModel : ObservableObject
     {
         if (_domainsToCreate.Count == 0 || App.CurrentAccountId is null)
             return;
+
+        if (_preflightAccountId != App.CurrentAccountId)
+        {
+            ResetPreflightState(
+                $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Re-check domains before creating."
+            );
+            return;
+        }
 
         _batchCts?.Dispose();
         _batchCts = new CancellationTokenSource();
@@ -285,14 +318,19 @@ public partial class AddDomainsViewModel : ObservableObject
         {
             IsRunning = false;
             CanCancel = false;
+            IsNextStepCreate = false;
+            var invalidated = ApplyPendingAccountInvalidationIfNeeded();
             UpdateCommandStates();
 
-            ProgressText =
-                wasCancelled == 1
-                    ? $"Cancelled: {succeeded} created, {failed} not completed out of {total}"
-                    : $"Done: {succeeded} created, {failed} failed out of {total}";
+            if (!invalidated)
+            {
+                ProgressText =
+                    wasCancelled == 1
+                        ? $"Cancelled: {succeeded} created, {failed} not completed out of {total}"
+                        : $"Done: {succeeded} created, {failed} failed out of {total}";
 
-            StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
+                StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
+            }
         }
     }
 
@@ -334,8 +372,74 @@ public partial class AddDomainsViewModel : ObservableObject
     private void UpdateCommandStates()
     {
         CanCheck = !IsBusy && !IsRunning;
-        CanCreate = !IsBusy && !IsRunning && _domainsToCreate.Count > 0;
+        CanCreate =
+            !IsBusy
+            && !IsRunning
+            && _domainsToCreate.Count > 0
+            && _preflightAccountId is not null
+            && _preflightAccountId == App.CurrentAccountId;
         CanCancel = IsRunning;
+    }
+
+    private void HandleAuthStateChanged()
+    {
+        var currentAccountId = App.CurrentAccountId;
+        var accountChanged = _observedAccountId != currentAccountId;
+        _observedAccountId = currentAccountId;
+
+        OnPropertyChanged(nameof(AccountContextText));
+        OnPropertyChanged(nameof(IsAccountMissing));
+
+        if (!accountChanged)
+        {
+            return;
+        }
+
+        if (IsBusy || IsRunning)
+        {
+            _pendingAccountInvalidation = true;
+            return;
+        }
+
+        if (PreflightResults.Count > 0 || _domainsToCreate.Count > 0)
+        {
+            ResetPreflightState(
+                currentAccountId is null
+                    ? "Connect and select a Cloudflare account first"
+                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Re-check domains before creating."
+            );
+        }
+    }
+
+    private bool ApplyPendingAccountInvalidationIfNeeded()
+    {
+        if (!_pendingAccountInvalidation || IsBusy || IsRunning)
+        {
+            return false;
+        }
+
+        _pendingAccountInvalidation = false;
+        ResetPreflightState(
+            App.CurrentAccountId is null
+                ? "Connect and select a Cloudflare account first"
+                : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Re-check domains before creating."
+        );
+        return true;
+    }
+
+    private void ResetPreflightState(string statusMessage)
+    {
+        _domainsToCreate.Clear();
+        _preflightAccountId = null;
+        PreflightResults.Clear();
+        CanCreate = false;
+        CanCancel = false;
+        IsNextStepCreate = false;
+        ShowProgress = false;
+        ProgressValue = 0;
+        ProgressMaximum = 1;
+        ProgressText = string.Empty;
+        StatusText = statusMessage;
     }
 
     private Task RunOnUiThreadAsync(Action action)

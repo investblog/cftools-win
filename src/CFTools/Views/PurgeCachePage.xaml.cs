@@ -1,6 +1,7 @@
 using CFTools.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace CFTools.Views;
 
@@ -11,18 +12,22 @@ public sealed partial class PurgeCachePage : Page
     public PurgeCachePage()
     {
         this.InitializeComponent();
-        Loaded += OnLoaded;
     }
 
-    private async void OnLoaded(object sender, RoutedEventArgs e)
+    protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
-        if (ViewModel.IsBusy || ViewModel.Zones.Count > 0)
+        base.OnNavigatedTo(e);
+
+        if (ViewModel.IsBusy || ViewModel.Zones.Count > 0 || App.CurrentAccountId is null)
         {
             return;
         }
 
         await ViewModel.LoadZonesCommand.ExecuteAsync(null);
     }
+
+    private void GoToAuth_Click(object sender, RoutedEventArgs e) =>
+        App.RequestNavigateToAuth();
 
     private void CheckBox_Changed(object sender, RoutedEventArgs e)
     {
