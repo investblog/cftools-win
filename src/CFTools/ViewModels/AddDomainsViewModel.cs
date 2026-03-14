@@ -330,6 +330,11 @@ public partial class AddDomainsViewModel : ObservableObject
                         : $"Done: {succeeded} created, {failed} failed out of {total}";
 
                 StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
+
+                if (succeeded > 0)
+                {
+                    App.NotifyZoneListChanged();
+                }
             }
         }
     }

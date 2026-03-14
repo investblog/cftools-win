@@ -32,7 +32,7 @@
       Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
     />
 
-    <Grid Grid.Row="1" Padding="24" RowSpacing="12">
+    <Grid Grid.Row="1" Padding="16" RowSpacing="8">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
@@ -137,31 +137,61 @@
         ItemsSource="{x:Bind ViewModel.VisibleZones, Mode=OneWay}"
         IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
         SelectionMode="None"
+        Padding="0"
       >
+        <ListView.ItemContainerStyle>
+          <Style TargetType="ListViewItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+          </Style>
+        </ListView.ItemContainerStyle>
         <ListView.ItemTemplate>
           <DataTemplate x:DataType="vm:ZoneSelection">
-            <Grid ColumnSpacing="12" Padding="4">
+            <Grid
+              ColumnSpacing="6"
+              Padding="0,2"
+              Opacity="{x:Bind IsActive, Converter={StaticResource BoolToOpacityConverter}}"
+              ToolTipService.ToolTip="{x:Bind Zone.Status, Converter={StaticResource PurgeTooltipConverter}}"
+            >
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
               <CheckBox
                 Grid.Column="0"
+                MinWidth="0"
+                Padding="0"
                 IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                IsEnabled="{x:Bind IsActive}"
                 Checked="CheckBox_Changed"
                 Unchecked="CheckBox_Changed"
               />
-              <TextBlock Grid.Column="1" Text="{x:Bind Zone.Name}" VerticalAlignment="Center" />
-              <FontIcon
+              <TextBlock Grid.Column="1" Text="{x:Bind Zone.Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+              <Border
                 Grid.Column="2"
+                Background="{x:Bind Zone.Status, Converter={StaticResource StatusToBgConverter}}"
+                CornerRadius="4"
+                Padding="8,2"
+                VerticalAlignment="Center"
+              >
+                <TextBlock
+                  Text="{x:Bind Zone.Status}"
+                  Foreground="{x:Bind Zone.Status, Converter={StaticResource StatusToFgConverter}}"
+                  FontSize="11"
+                  FontWeight="SemiBold"
+                />
+              </Border>
+              <FontIcon
+                Grid.Column="3"
                 Glyph="&#xE73E;"
                 Visibility="{x:Bind IsPurged, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
                 Foreground="Green"
               />
               <TextBlock
-                Grid.Column="3"
+                Grid.Column="4"
                 Text="{x:Bind StatusText}"
                 VerticalAlignment="Center"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"

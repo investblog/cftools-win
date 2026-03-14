@@ -27,6 +27,8 @@
       <conv:PreflightStatusBrushConverter x:Key="PreflightFgConverter" IsBackground="False" />
       <conv:StatusToBadgeBrushConverter x:Key="StatusToBgConverter" IsBackground="True" />
       <conv:StatusToBadgeBrushConverter x:Key="StatusToFgConverter" IsBackground="False" />
+      <conv:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+      <conv:PurgeTooltipConverter x:Key="PurgeTooltipConverter" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

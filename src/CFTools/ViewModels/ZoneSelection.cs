@@ -10,6 +10,8 @@ public partial class ZoneSelection : ObservableObject
 {
     public CfZone Zone { get; }
 
+    public bool IsActive => Zone.Status == "active";
+
     [ObservableProperty]
     public partial bool IsSelected { get; set; }
 

@@ -2,13 +2,13 @@
   x:Class="CFTools.MainWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  Title="CFTools"
+  Title="Cloudflare Tools"
 >
   <Grid>
     <NavigationView
       x:Name="NavView"
       IsBackButtonVisible="Collapsed"
-      PaneDisplayMode="Auto"
+      PaneDisplayMode="LeftCompact"
       SelectionChanged="NavView_SelectionChanged"
     >
       <NavigationView.MenuItems>

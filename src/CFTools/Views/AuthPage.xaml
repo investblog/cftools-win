@@ -60,7 +60,7 @@
         />
 
         <TextBlock
-          Text="Select an account to finish sign-in, or disconnect to clear this sign-in."
+          Text="Select an account to finish sign-in, or disconnect to return to the sign-in form."
           TextWrapping="Wrap"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
           Visibility="{x:Bind ViewModel.ShowAccountPicker, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
@@ -74,9 +74,19 @@
             Visibility="{x:Bind ViewModel.ShowConnectAction, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
           />
           <Button
-            Content="{x:Bind ViewModel.DisconnectActionText, Mode=OneWay}"
+            Content="Switch account"
+            Command="{x:Bind ViewModel.SwitchAccountCommand}"
+            Visibility="{x:Bind ViewModel.ShowSwitchAccountAction, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
+          />
+          <Button
+            Content="Disconnect"
             Command="{x:Bind ViewModel.DisconnectCommand}"
             Visibility="{x:Bind ViewModel.ShowDisconnectAction, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
+          />
+          <Button
+            Content="Forget credentials"
+            Command="{x:Bind ViewModel.ForgetCommand}"
+            Visibility="{x:Bind ViewModel.ShowForgetAction, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
           >
             <Button.Resources>
               <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />

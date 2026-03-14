@@ -18,11 +18,16 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowConnectAction))]
     [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
-    [NotifyPropertyChangedFor(nameof(DisconnectActionText))]
+    [NotifyPropertyChangedFor(nameof(ShowForgetAction))]
+    [NotifyPropertyChangedFor(nameof(ShowSwitchAccountAction))]
     [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
     public partial bool IsConnected { get; set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowConnectAction))]
+    [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
+    [NotifyPropertyChangedFor(nameof(ShowForgetAction))]
+    [NotifyPropertyChangedFor(nameof(ShowSwitchAccountAction))]
     [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
     public partial bool IsBusy { get; set; }
 
@@ -38,7 +43,8 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowConnectAction))]
     [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
-    [NotifyPropertyChangedFor(nameof(DisconnectActionText))]
+    [NotifyPropertyChangedFor(nameof(ShowForgetAction))]
+    [NotifyPropertyChangedFor(nameof(ShowSwitchAccountAction))]
     [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
     public partial bool ShowAccountPicker { get; set; }
 
@@ -46,23 +52,27 @@ public partial class AuthViewModel : ObservableObject
     public partial CfAccount? SelectedAccount { get; set; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
-    [NotifyPropertyChangedFor(nameof(DisconnectActionText))]
+    [NotifyPropertyChangedFor(nameof(ShowForgetAction))]
     public partial bool HasStoredCredentials { get; set; }
 
     public ObservableCollection<CfAccount> Accounts { get; } = new();
 
-    public bool ShowConnectAction => !IsConnected && !ShowAccountPicker;
+    public bool ShowConnectAction => !IsBusy && !IsConnected && !ShowAccountPicker;
 
-    public bool ShowDisconnectAction => IsConnected || ShowAccountPicker || HasStoredCredentials;
+    public bool ShowDisconnectAction => !IsBusy && (IsConnected || ShowAccountPicker);
 
-    public string DisconnectActionText =>
-        IsConnected || ShowAccountPicker ? "Disconnect" : "Forget credentials";
+    public bool ShowForgetAction =>
+        !IsBusy && HasStoredCredentials && !IsConnected && !ShowAccountPicker;
+
+    public bool ShowSwitchAccountAction =>
+        !IsBusy && IsConnected && !ShowAccountPicker && Accounts.Count > 1;
 
     public bool CanEditCredentials => !IsBusy && !ShowAccountPicker && !IsConnected;
 
     public AuthViewModel()
     {
+        Accounts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(ShowSwitchAccountAction));
+
         var saved = App.Credentials.Load();
         if (saved is not null)
         {
@@ -170,12 +180,43 @@ public partial class AuthViewModel : ObservableObject
         ShowAccountPicker = false;
         Accounts.Clear();
         SelectedAccount = null;
+        IsStatusOpen = false;
+        App.ClearAuthSession();
+    }
+
+    [RelayCommand]
+    private void Forget()
+    {
+        IsConnected = false;
+        ShowAccountPicker = false;
+        Accounts.Clear();
+        SelectedAccount = null;
         HasStoredCredentials = false;
         Email = string.Empty;
         ApiKey = string.Empty;
         StatusMessage = string.Empty;
         IsStatusOpen = false;
         App.ClearAuthSession(clearStoredCredentials: true);
+    }
+
+    [RelayCommand]
+    private void SwitchAccount()
+    {
+        if (Accounts.Count <= 1 || App.CurrentEmail is null)
+        {
+            return;
+        }
+
+        IsConnected = false;
+        ShowAccountPicker = true;
+        SelectedAccount = null;
+        App.CurrentAccountId = null;
+        App.CurrentAccountName = null;
+        ShowStatus(
+            $"Authenticated as {App.CurrentEmail}. Select an account.",
+            InfoBarSeverity.Informational
+        );
+        App.NotifyAuthChanged();
     }
 
     private void ShowStatus(string message, InfoBarSeverity severity)

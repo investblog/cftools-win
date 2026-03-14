@@ -19,6 +19,7 @@ public partial class App : Application
     /// </summary>
     public static event Action? AuthStateChanged;
     public static event Action? NavigateToAuthRequested;
+    public static event Action? ZoneListChanged;
 
     public static string? CurrentAccountId { get; set; }
     public static string? CurrentAccountName { get; set; }
@@ -47,6 +48,11 @@ public partial class App : Application
     public static void RequestNavigateToAuth()
     {
         NavigateToAuthRequested?.Invoke();
+    }
+
+    public static void NotifyZoneListChanged()
+    {
+        ZoneListChanged?.Invoke();
     }
 
     public static void ApplyTheme(int themeIndex)

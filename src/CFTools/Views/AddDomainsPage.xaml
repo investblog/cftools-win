@@ -17,7 +17,7 @@
       Visibility="{x:Bind ViewModel.IsBusy, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
     />
 
-    <Grid Grid.Row="1" Padding="24" RowSpacing="12">
+    <Grid Grid.Row="1" Padding="16" RowSpacing="8">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />

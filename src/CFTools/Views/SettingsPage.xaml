@@ -55,7 +55,7 @@
 
         <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
           <TextBlock
-            Text="CFTools"
+            Text="Cloudflare Tools"
             FontWeight="SemiBold"
             FontSize="18"
             VerticalAlignment="Center"
@@ -68,21 +68,25 @@
         </StackPanel>
 
         <TextBlock
-          Text="Bulk Cloudflare zone management for Windows"
+          Text="Cloudflare Tools for Windows — bulk zone management"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
           TextWrapping="Wrap"
         />
 
-        <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,8,0,0">
-          <TextBlock Text="Author:" VerticalAlignment="Center" />
-          <HyperlinkButton Content="301.st" NavigateUri="https://301.st" Padding="4,0" />
+        <StackPanel Spacing="4" Margin="0,8,0,0">
+          <StackPanel Orientation="Horizontal" Spacing="4">
+            <TextBlock Text="Author:" VerticalAlignment="Center" />
+            <HyperlinkButton Content="301.st" NavigateUri="https://301.st" Padding="4,0" />
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="4">
+            <TextBlock Text="Browser extension:" VerticalAlignment="Center" />
+            <HyperlinkButton
+              Content="Cloudflare Tools for Edge"
+              NavigateUri="https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc"
+              Padding="4,0"
+            />
+          </StackPanel>
         </StackPanel>
-
-        <TextBlock
-          Text="Open-source contribution to Windows development"
-          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-          TextWrapping="Wrap"
-        />
 
         <TextBlock
           Text="Powered by Cloudflare API v4"

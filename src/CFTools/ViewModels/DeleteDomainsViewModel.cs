@@ -70,6 +70,14 @@ public partial class DeleteDomainsViewModel : ObservableObject
             );
         _observedAccountId = App.CurrentAccountId;
         App.AuthStateChanged += () => _dispatcher.TryEnqueue(HandleAuthStateChanged);
+        App.ZoneListChanged += () =>
+            _dispatcher.TryEnqueue(() =>
+            {
+                if (!IsBusy && !IsRunning && _loadedAccountId is not null)
+                {
+                    ResetLoadedZones("Zone list changed. Press Load Zones to refresh.");
+                }
+            });
     }
 
     [RelayCommand]
@@ -278,11 +286,13 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
             if (!invalidated)
             {
-                ProgressText =
+                StatusText =
                     wasCancelled == 1
                         ? $"Cancelled: {succeeded} deleted, {failed} not completed out of {total}"
                         : $"Done: {succeeded} deleted, {failed} failed out of {total}";
-                StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
+
+                await LoadZonesAsync();
+                App.NotifyZoneListChanged();
             }
         }
     }

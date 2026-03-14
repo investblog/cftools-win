@@ -70,6 +70,14 @@ public partial class PurgeCacheViewModel : ObservableObject
             );
         _observedAccountId = App.CurrentAccountId;
         App.AuthStateChanged += () => _dispatcher.TryEnqueue(HandleAuthStateChanged);
+        App.ZoneListChanged += () =>
+            _dispatcher.TryEnqueue(() =>
+            {
+                if (!IsBusy && !IsRunning && _loadedAccountId is not null)
+                {
+                    ResetLoadedZones("Zone list changed. Press Load Zones to refresh.");
+                }
+            });
     }
 
     [RelayCommand]
@@ -134,7 +142,7 @@ public partial class PurgeCacheViewModel : ObservableObject
         if (IsBusy || IsRunning)
             return;
 
-        foreach (var zone in VisibleZones)
+        foreach (var zone in VisibleZones.Where(z => z.IsActive))
             zone.IsSelected = true;
 
         UpdateCommandStates();
