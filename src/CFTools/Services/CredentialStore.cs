@@ -14,19 +14,9 @@ public sealed class CredentialStore
     /// </summary>
     public void Save(string email, string apiKey)
     {
+        Delete();
+
         var vault = new PasswordVault();
-
-        // Remove existing credential if any
-        try
-        {
-            var existing = vault.Retrieve(Resource, email);
-            vault.Remove(existing);
-        }
-        catch (Exception)
-        {
-            // No existing credential, that's fine
-        }
-
         vault.Add(new PasswordCredential(Resource, email, apiKey));
     }
 

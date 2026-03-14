@@ -98,10 +98,11 @@ public sealed class CloudflareApi : IDisposable
 
     public async Task<(bool Exists, string? ZoneId)> CheckZoneExists(
         string domain,
+        string? accountId = null,
         CancellationToken ct = default
     )
     {
-        var result = await ListZones(name: domain, perPage: 1, ct: ct);
+        var result = await ListZones(accountId: accountId, name: domain, perPage: 1, ct: ct);
         if (result.Items.Count > 0)
             return (true, result.Items[0].Id);
         return (false, null);

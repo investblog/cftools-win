@@ -44,6 +44,11 @@ public partial class AddDomainsViewModel : ObservableObject
 
     public ObservableCollection<PreflightEntry> PreflightResults { get; } = new();
 
+    public string AccountContextText =>
+        App.CurrentAccountName is { Length: > 0 } name
+            ? $"Current account: {name}"
+            : "Current account: not selected";
+
     private readonly List<string> _domainsToCreate = new();
     private readonly DispatcherQueue _dispatcher;
     private CancellationTokenSource? _batchCts;
@@ -63,9 +68,9 @@ public partial class AddDomainsViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(DomainInput))
             return;
 
-        if (!App.Api.IsConfigured)
+        if (!App.Api.IsConfigured || App.CurrentAccountId is null)
         {
-            StatusText = "Connect to Cloudflare first";
+            StatusText = "Connect and select a Cloudflare account first";
             return;
         }
 
@@ -92,14 +97,18 @@ public partial class AddDomainsViewModel : ObservableObject
                 return;
             }
 
-            StatusText = $"Checking {parsed.Domains.Count} domains against Cloudflare...";
+            StatusText =
+                $"Checking {parsed.Domains.Count} domains in {App.CurrentAccountName ?? "the selected account"}...";
 
             var willCreate = 0;
             var exists = 0;
 
             foreach (var domain in parsed.Domains)
             {
-                var (zoneExists, zoneId) = await App.Api.CheckZoneExists(domain);
+                var (zoneExists, zoneId) = await App.Api.CheckZoneExists(
+                    domain,
+                    App.CurrentAccountId
+                );
 
                 if (zoneExists)
                 {
@@ -178,7 +187,7 @@ public partial class AddDomainsViewModel : ObservableObject
         ShowProgress = true;
         ProgressValue = 0;
         ProgressMaximum = _domainsToCreate.Count;
-        StatusText = "Creating zones...";
+        StatusText = $"Creating zones in {App.CurrentAccountName ?? "the selected account"}...";
         UpdateCommandStates();
 
         var accountId = App.CurrentAccountId;

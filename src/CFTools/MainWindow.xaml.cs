@@ -21,27 +21,42 @@ public sealed partial class MainWindow : Window
         appWindow.Resize(new Windows.Graphics.SizeInt32(900, 650));
         appWindow.Changed += AppWindow_Changed;
 
-        ContentFrame.Navigate(typeof(AddDomainsPage));
-        NavView.SelectedItem = NavView.MenuItems[0];
+        ContentFrame.Navigate(typeof(AuthPage));
+        NavView.SelectedItem = AuthNavItem;
 
         App.AuthStateChanged += OnAuthStateChanged;
+        OnAuthStateChanged();
     }
 
-    private void OnAuthStateChanged(bool isConnected)
+    private void OnAuthStateChanged()
     {
         DispatcherQueue.TryEnqueue(() =>
         {
-            if (isConnected)
-            {
-                AuthIcon.Foreground = new SolidColorBrush(Microsoft.UI.Colors.Green);
-                AuthNavItem.Content = App.CurrentEmail;
-                ToolTipService.SetToolTip(AuthNavItem, $"Connected: {App.CurrentEmail}");
-            }
-            else
+            if (App.CurrentEmail is null)
             {
                 AuthIcon.ClearValue(IconElement.ForegroundProperty);
                 AuthNavItem.Content = "Not connected";
                 ToolTipService.SetToolTip(AuthNavItem, "Not connected");
+                return;
+            }
+
+            if (App.CurrentAccountName is not null)
+            {
+                AuthIcon.Foreground = new SolidColorBrush(Microsoft.UI.Colors.Green);
+                AuthNavItem.Content = App.CurrentAccountName;
+                ToolTipService.SetToolTip(
+                    AuthNavItem,
+                    $"Connected: {App.CurrentEmail}\nAccount: {App.CurrentAccountName}"
+                );
+            }
+            else
+            {
+                AuthIcon.ClearValue(IconElement.ForegroundProperty);
+                AuthNavItem.Content = "Select account";
+                ToolTipService.SetToolTip(
+                    AuthNavItem,
+                    $"Authenticated as {App.CurrentEmail}. Select an account to continue."
+                );
             }
         });
     }

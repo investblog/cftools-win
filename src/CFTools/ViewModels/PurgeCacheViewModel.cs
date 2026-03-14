@@ -48,6 +48,11 @@ public partial class PurgeCacheViewModel : ObservableObject
 
     public ObservableCollection<ZoneSelection> VisibleZones { get; } = new();
 
+    public string AccountContextText =>
+        App.CurrentAccountName is { Length: > 0 } name
+            ? $"Current account: {name}"
+            : "Current account: not selected";
+
     private readonly DispatcherQueue _dispatcher;
     private CancellationTokenSource? _batchCts;
 
@@ -65,7 +70,7 @@ public partial class PurgeCacheViewModel : ObservableObject
     {
         if (!App.Api.IsConfigured || App.CurrentAccountId is null)
         {
-            StatusText = "Connect to Cloudflare first";
+            StatusText = "Connect and select a Cloudflare account first";
             return;
         }
 
@@ -77,7 +82,7 @@ public partial class PurgeCacheViewModel : ObservableObject
         UpdateCommandStates();
         Zones.Clear();
         VisibleZones.Clear();
-        StatusText = "Loading zones...";
+        StatusText = $"Loading zones for {App.CurrentAccountName ?? "the selected account"}...";
 
         try
         {
@@ -142,7 +147,8 @@ public partial class PurgeCacheViewModel : ObservableObject
         ShowProgress = true;
         ProgressValue = 0;
         ProgressMaximum = selected.Count;
-        StatusText = $"Purging cache for {selected.Count} zone(s)...";
+        StatusText =
+            $"Purging cache for {selected.Count} zone(s) in {App.CurrentAccountName ?? "the selected account"}...";
         foreach (var zone in selected)
             zone.StatusText = "Queued";
 

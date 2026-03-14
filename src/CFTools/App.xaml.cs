@@ -17,14 +17,30 @@ public partial class App : Application
     /// <summary>
     /// Fired when auth state changes so all pages can react.
     /// </summary>
-    public static event Action<bool>? AuthStateChanged;
+    public static event Action? AuthStateChanged;
 
     public static string? CurrentAccountId { get; set; }
+    public static string? CurrentAccountName { get; set; }
     public static string? CurrentEmail { get; set; }
 
-    public static void NotifyAuthChanged(bool isConnected)
+    public static void ClearAuthSession(bool clearStoredCredentials = false)
     {
-        AuthStateChanged?.Invoke(isConnected);
+        Api.ClearCredentials();
+
+        if (clearStoredCredentials)
+        {
+            Credentials.Delete();
+        }
+
+        CurrentAccountId = null;
+        CurrentAccountName = null;
+        CurrentEmail = null;
+        NotifyAuthChanged();
+    }
+
+    public static void NotifyAuthChanged()
+    {
+        AuthStateChanged?.Invoke();
     }
 
     public static void ApplyTheme(int themeIndex)

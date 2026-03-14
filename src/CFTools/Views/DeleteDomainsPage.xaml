@@ -36,6 +36,7 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
@@ -45,12 +46,19 @@
 
       <TextBlock
         Grid.Row="1"
+        Text="{x:Bind ViewModel.AccountContextText, Mode=OneWay}"
+        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+        TextWrapping="WrapWholeWords"
+      />
+
+      <TextBlock
+        Grid.Row="2"
         Text="{x:Bind ViewModel.StatusText, Mode=OneWay}"
         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
         TextWrapping="WrapWholeWords"
       />
 
-      <Grid Grid.Row="2">
+      <Grid Grid.Row="3">
         <Grid x:Name="NarrowToolbar" RowSpacing="8">
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -119,7 +127,7 @@
       </Grid>
 
       <ListView
-        Grid.Row="3"
+        Grid.Row="4"
         ItemsSource="{x:Bind ViewModel.VisibleZones, Mode=OneWay}"
         IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
         SelectionMode="None"
@@ -174,7 +182,7 @@
       </ListView>
 
       <StackPanel
-        Grid.Row="4"
+        Grid.Row="5"
         Spacing="8"
         Visibility="{x:Bind ViewModel.ShowProgress, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
       >
@@ -189,7 +197,7 @@
         />
       </StackPanel>
 
-      <StackPanel Grid.Row="5" Orientation="Horizontal" Spacing="8">
+      <StackPanel Grid.Row="6" Orientation="Horizontal" Spacing="8">
         <Button
           Content="Delete Selected"
           Click="DeleteButton_Click"

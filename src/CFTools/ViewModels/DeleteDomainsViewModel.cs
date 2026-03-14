@@ -48,6 +48,11 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
     public ObservableCollection<ZoneSelection> VisibleZones { get; } = new();
 
+    public string AccountContextText =>
+        App.CurrentAccountName is { Length: > 0 } name
+            ? $"Current account: {name}"
+            : "Current account: not selected";
+
     private readonly DispatcherQueue _dispatcher;
     private CancellationTokenSource? _batchCts;
 
@@ -65,7 +70,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
     {
         if (!App.Api.IsConfigured || App.CurrentAccountId is null)
         {
-            StatusText = "Connect to Cloudflare first";
+            StatusText = "Connect and select a Cloudflare account first";
             return;
         }
 
@@ -76,7 +81,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
         ProgressMaximum = 1;
         Zones.Clear();
         VisibleZones.Clear();
-        StatusText = "Loading zones...";
+        StatusText = $"Loading zones for {App.CurrentAccountName ?? "the selected account"}...";
         UpdateCommandStates();
 
         try
@@ -154,7 +159,8 @@ public partial class DeleteDomainsViewModel : ObservableObject
         ShowProgress = true;
         ProgressValue = 0;
         ProgressMaximum = selected.Count;
-        StatusText = $"Deleting {selected.Count} zone(s)...";
+        StatusText =
+            $"Deleting {selected.Count} zone(s) from {App.CurrentAccountName ?? "the selected account"}...";
         ProgressText = string.Empty;
         foreach (var zone in selected)
         {

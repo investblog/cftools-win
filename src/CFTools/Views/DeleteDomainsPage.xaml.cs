@@ -38,6 +38,7 @@ public sealed partial class DeleteDomainsPage : Page
             return;
         }
 
+        var accountName = App.CurrentAccountName ?? "the selected account";
         var warning =
             count > 50
                 ? "\n\nWarning: this is a large delete request and may remove many zones at once."
@@ -47,10 +48,10 @@ public sealed partial class DeleteDomainsPage : Page
         {
             Title = "Delete zones",
             Content =
-                $"Permanently delete {count} zone(s) from Cloudflare?\nThis cannot be undone.{warning}",
+                $"Permanently delete {count} zone(s) from {accountName}?\nThis cannot be undone.{warning}",
             PrimaryButtonText = "Delete",
             CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Close,
+            DefaultButton = ContentDialogButton.Primary,
             XamlRoot = this.XamlRoot,
             Resources =
             {

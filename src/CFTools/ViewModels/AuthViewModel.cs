@@ -1,4 +1,5 @@
-﻿using CFTools.Models;
+﻿using System.Collections.ObjectModel;
+using CFTools.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
@@ -11,12 +12,17 @@ public partial class AuthViewModel : ObservableObject
     public partial string Email { get; set; } = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
     public partial string ApiKey { get; set; } = string.Empty;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowConnectAction))]
+    [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
+    [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
     public partial bool IsConnected { get; set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
     public partial bool IsBusy { get; set; }
 
     [ObservableProperty]
@@ -27,6 +33,23 @@ public partial class AuthViewModel : ObservableObject
 
     [ObservableProperty]
     public partial InfoBarSeverity InfoBarSeverity { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowConnectAction))]
+    [NotifyPropertyChangedFor(nameof(ShowDisconnectAction))]
+    [NotifyPropertyChangedFor(nameof(CanEditCredentials))]
+    public partial bool ShowAccountPicker { get; set; }
+
+    [ObservableProperty]
+    public partial CfAccount? SelectedAccount { get; set; }
+
+    public ObservableCollection<CfAccount> Accounts { get; } = new();
+
+    public bool ShowConnectAction => !IsConnected && !ShowAccountPicker;
+
+    public bool ShowDisconnectAction => IsConnected || ShowAccountPicker;
+
+    public bool CanEditCredentials => !IsBusy && !ShowAccountPicker && !IsConnected;
 
     public AuthViewModel()
     {
@@ -49,6 +72,11 @@ public partial class AuthViewModel : ObservableObject
 
         IsBusy = true;
         IsStatusOpen = false;
+        IsConnected = false;
+        ShowAccountPicker = false;
+        Accounts.Clear();
+        SelectedAccount = null;
+        App.ClearAuthSession();
 
         try
         {
@@ -59,21 +87,35 @@ public partial class AuthViewModel : ObservableObject
             if (accounts.Count == 0)
             {
                 ShowStatus("No accounts found for this user", InfoBarSeverity.Error);
-                App.Api.ClearCredentials();
+                App.ClearAuthSession();
                 return;
             }
 
-            App.CurrentAccountId = accounts[0].Id;
             App.CurrentEmail = user.Email;
-            App.Credentials.Save(Email.Trim(), ApiKey.Trim());
 
-            IsConnected = true;
-            ShowStatus($"Connected as {user.Email} ({accounts[0].Name})", InfoBarSeverity.Success);
-            App.NotifyAuthChanged(true);
+            if (accounts.Count == 1)
+            {
+                Accounts.Add(accounts[0]);
+                SelectAccount(accounts[0]);
+            }
+            else
+            {
+                foreach (var account in accounts)
+                {
+                    Accounts.Add(account);
+                }
+
+                ShowAccountPicker = true;
+                App.NotifyAuthChanged();
+                ShowStatus(
+                    $"Authenticated as {user.Email}. Select an account.",
+                    InfoBarSeverity.Informational
+                );
+            }
         }
         catch (CfApiException ex)
         {
-            App.Api.ClearCredentials();
+            App.ClearAuthSession();
             ShowStatus(
                 $"Auth failed: {ex.Normalized.Message} - {ex.Normalized.Recommendation}",
                 InfoBarSeverity.Error
@@ -81,7 +123,7 @@ public partial class AuthViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            App.Api.ClearCredentials();
+            App.ClearAuthSession();
             ShowStatus($"Connection error: {ex.Message}", InfoBarSeverity.Error);
         }
         finally
@@ -90,19 +132,37 @@ public partial class AuthViewModel : ObservableObject
         }
     }
 
+    partial void OnSelectedAccountChanged(CfAccount? value)
+    {
+        if (value is not null)
+        {
+            SelectAccount(value);
+        }
+    }
+
+    private void SelectAccount(CfAccount account)
+    {
+        App.CurrentAccountId = account.Id;
+        App.CurrentAccountName = account.Name;
+        App.Credentials.Save(Email.Trim(), ApiKey.Trim());
+        IsConnected = true;
+        ShowAccountPicker = false;
+        ShowStatus($"Connected as {App.CurrentEmail} ({account.Name})", InfoBarSeverity.Success);
+        App.NotifyAuthChanged();
+    }
+
     [RelayCommand]
     private void Disconnect()
     {
-        App.Api.ClearCredentials();
-        App.Credentials.Delete();
-        App.CurrentAccountId = null;
-        App.CurrentEmail = null;
-
         IsConnected = false;
+        ShowAccountPicker = false;
+        Accounts.Clear();
+        SelectedAccount = null;
+        Email = string.Empty;
         ApiKey = string.Empty;
+        StatusMessage = string.Empty;
         IsStatusOpen = false;
-
-        App.NotifyAuthChanged(false);
+        App.ClearAuthSession(clearStoredCredentials: true);
     }
 
     private void ShowStatus(string message, InfoBarSeverity severity)

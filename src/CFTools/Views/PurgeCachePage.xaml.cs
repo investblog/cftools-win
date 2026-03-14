@@ -37,6 +37,7 @@ public sealed partial class PurgeCachePage : Page
             return;
         }
 
+        var accountName = App.CurrentAccountName ?? "the selected account";
         var warning =
             count > 50
                 ? "\n\nWarning: this is a large purge request and may affect many sites at once."
@@ -45,7 +46,8 @@ public sealed partial class PurgeCachePage : Page
         var dialog = new ContentDialog
         {
             Title = "Purge cache",
-            Content = $"Purge cache for {count} zone(s)? This cannot be undone.{warning}",
+            Content =
+                $"Purge cache for {count} zone(s) in {accountName}? This cannot be undone.{warning}",
             PrimaryButtonText = "Purge",
             CloseButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Close,
