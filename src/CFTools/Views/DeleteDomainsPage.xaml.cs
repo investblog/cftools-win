@@ -63,6 +63,24 @@ public sealed partial class DeleteDomainsPage : Page
                 ["AccentButtonBackgroundPressed"] = new SolidColorBrush(
                     Windows.UI.Color.FromArgb(0xFF, 0x86, 0x1D, 0x12)
                 ),
+                ["AccentButtonForeground"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF)
+                ),
+                ["AccentButtonForegroundPointerOver"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF)
+                ),
+                ["AccentButtonForegroundPressed"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xCC, 0xFF, 0xFF, 0xFF)
+                ),
+                ["AccentButtonBorderBrush"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xFF, 0xC4, 0x2B, 0x1C)
+                ),
+                ["AccentButtonBorderBrushPointerOver"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xFF, 0xA1, 0x23, 0x16)
+                ),
+                ["AccentButtonBorderBrushPressed"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xFF, 0x86, 0x1D, 0x12)
+                ),
             },
         };
 

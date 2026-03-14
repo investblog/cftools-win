@@ -271,6 +271,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
     partial void OnFilterTextChanged(string value)
     {
+        DeselectHiddenSelections(value);
         RefreshVisibleZones();
         UpdateCommandStates();
     }
@@ -292,9 +293,28 @@ public partial class DeleteDomainsViewModel : ObservableObject
             return Zones;
         }
 
-        return Zones.Where(z =>
-            z.Zone.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase)
-        );
+        return Zones.Where(z => MatchesFilter(z, FilterText));
+    }
+
+    private void DeselectHiddenSelections(string filterText)
+    {
+        foreach (var zone in Zones)
+        {
+            if (!MatchesFilter(zone, filterText))
+            {
+                zone.IsSelected = false;
+            }
+        }
+    }
+
+    private static bool MatchesFilter(ZoneSelection zone, string filterText)
+    {
+        if (string.IsNullOrWhiteSpace(filterText))
+        {
+            return true;
+        }
+
+        return zone.Zone.Name.Contains(filterText, StringComparison.OrdinalIgnoreCase);
     }
 
     private void UpdateDeleteProgress(int processed, int success, int failed, int total)
