@@ -55,17 +55,25 @@
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
 
-          <Button
+          <TextBox
             Grid.Row="0"
+            PlaceholderText="Filter zones..."
+            Text="{x:Bind ViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+          />
+
+          <Button
+            Grid.Row="1"
             Content="Load Zones"
             Style="{StaticResource AccentButtonStyle}"
             Command="{x:Bind ViewModel.LoadZonesCommand}"
             IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
           />
 
-          <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+          <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
             <Button
               Content="Select All"
               Command="{x:Bind ViewModel.SelectAllCommand}"
@@ -91,6 +99,12 @@
             Command="{x:Bind ViewModel.LoadZonesCommand}"
             IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
           />
+          <TextBox
+            Width="220"
+            PlaceholderText="Filter zones..."
+            Text="{x:Bind ViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+          />
           <Button
             Content="Select All"
             Command="{x:Bind ViewModel.SelectAllCommand}"
@@ -106,7 +120,7 @@
 
       <ListView
         Grid.Row="3"
-        ItemsSource="{x:Bind ViewModel.Zones, Mode=OneWay}"
+        ItemsSource="{x:Bind ViewModel.VisibleZones, Mode=OneWay}"
         IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
         SelectionMode="None"
       >
@@ -180,9 +194,19 @@
           Content="Delete Selected"
           Click="DeleteButton_Click"
           IsEnabled="{x:Bind ViewModel.CanDelete, Mode=OneWay}"
-          Background="#C42B1C"
-          Foreground="White"
-        />
+        >
+          <Button.Resources>
+            <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
+            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A12316" />
+            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#861D12" />
+            <SolidColorBrush x:Key="ButtonForeground" Color="White" />
+            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
+            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#CCFFFFFF" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#C42B1C" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#A12316" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#861D12" />
+          </Button.Resources>
+        </Button>
         <Button
           Content="Cancel"
           Command="{x:Bind ViewModel.CancelBatchCommand}"

@@ -41,7 +41,12 @@ public partial class DeleteDomainsViewModel : ObservableObject
     [ObservableProperty]
     public partial bool ShowProgress { get; set; }
 
+    [ObservableProperty]
+    public partial string FilterText { get; set; } = string.Empty;
+
     public ObservableCollection<ZoneSelection> Zones { get; } = new();
+
+    public ObservableCollection<ZoneSelection> VisibleZones { get; } = new();
 
     private readonly DispatcherQueue _dispatcher;
     private CancellationTokenSource? _batchCts;
@@ -70,6 +75,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
         ProgressValue = 0;
         ProgressMaximum = 1;
         Zones.Clear();
+        VisibleZones.Clear();
         StatusText = "Loading zones...";
         UpdateCommandStates();
 
@@ -82,6 +88,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
                 Zones.Add(new ZoneSelection(zone));
             }
 
+            RefreshVisibleZones();
             StatusText = $"{zones.Count} zones loaded";
         }
         catch (CfApiException ex)
@@ -107,7 +114,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
             return;
         }
 
-        foreach (var zone in Zones)
+        foreach (var zone in VisibleZones)
         {
             zone.IsSelected = true;
         }
@@ -123,7 +130,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
             return;
         }
 
-        foreach (var zone in Zones)
+        foreach (var zone in VisibleZones)
         {
             zone.IsSelected = false;
         }
@@ -134,7 +141,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
     [RelayCommand]
     private async Task DeleteSelectedAsync()
     {
-        var selected = Zones.Where(z => z.IsSelected).ToList();
+        var selected = VisibleZones.Where(z => z.IsSelected).ToList();
         if (selected.Count == 0)
         {
             return;
@@ -259,7 +266,35 @@ public partial class DeleteDomainsViewModel : ObservableObject
         CanLoadZones = !IsBusy && !IsRunning;
         CanChangeSelection = !IsBusy && !IsRunning;
         CanCancel = IsRunning;
-        CanDelete = !IsBusy && !IsRunning && Zones.Any(z => z.IsSelected);
+        CanDelete = !IsBusy && !IsRunning && VisibleZones.Any(z => z.IsSelected);
+    }
+
+    partial void OnFilterTextChanged(string value)
+    {
+        RefreshVisibleZones();
+        UpdateCommandStates();
+    }
+
+    private void RefreshVisibleZones()
+    {
+        VisibleZones.Clear();
+
+        foreach (var zone in GetFilteredZones())
+        {
+            VisibleZones.Add(zone);
+        }
+    }
+
+    private IEnumerable<ZoneSelection> GetFilteredZones()
+    {
+        if (string.IsNullOrWhiteSpace(FilterText))
+        {
+            return Zones;
+        }
+
+        return Zones.Where(z =>
+            z.Zone.Name.Contains(FilterText, StringComparison.OrdinalIgnoreCase)
+        );
     }
 
     private void UpdateDeleteProgress(int processed, int success, int failed, int total)

@@ -1,6 +1,7 @@
 using CFTools.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace CFTools.Views;
 
@@ -31,7 +32,7 @@ public sealed partial class DeleteDomainsPage : Page
 
     private async void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        var count = ViewModel.Zones.Count(z => z.IsSelected);
+        var count = ViewModel.VisibleZones.Count(z => z.IsSelected);
         if (count == 0)
         {
             return;
@@ -51,6 +52,18 @@ public sealed partial class DeleteDomainsPage : Page
             CloseButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Close,
             XamlRoot = this.XamlRoot,
+            Resources =
+            {
+                ["AccentButtonBackground"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xFF, 0xC4, 0x2B, 0x1C)
+                ),
+                ["AccentButtonBackgroundPointerOver"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xFF, 0xA1, 0x23, 0x16)
+                ),
+                ["AccentButtonBackgroundPressed"] = new SolidColorBrush(
+                    Windows.UI.Color.FromArgb(0xFF, 0x86, 0x1D, 0x12)
+                ),
+            },
         };
 
         var result = await dialog.ShowAsync();
