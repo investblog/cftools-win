@@ -72,7 +72,6 @@
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
 
           <TextBox
@@ -82,15 +81,13 @@
             IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
           />
 
-          <Button
-            Grid.Row="1"
-            Content="Load Zones"
-            Style="{StaticResource AccentButtonStyle}"
-            Command="{x:Bind ViewModel.LoadZonesCommand}"
-            IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
-          />
-
-          <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8">
+          <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+            <Button
+              Content="Load Zones"
+              Style="{StaticResource AccentButtonStyle}"
+              Command="{x:Bind ViewModel.LoadZonesCommand}"
+              IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
+            />
             <Button
               Content="Select All"
               Command="{x:Bind ViewModel.SelectAllCommand}"
@@ -146,6 +143,7 @@
           <Style TargetType="ListViewItem">
             <Setter Property="Padding" Value="0" />
             <Setter Property="MinHeight" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
           </Style>
         </ListView.ItemContainerStyle>
         <ListView.ItemTemplate>

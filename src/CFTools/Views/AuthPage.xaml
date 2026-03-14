@@ -18,7 +18,7 @@
     />
 
     <ScrollViewer Grid.Row="1">
-      <StackPanel Padding="24" Spacing="16" MaxWidth="400" HorizontalAlignment="Stretch">
+      <StackPanel Padding="16" Spacing="16" MaxWidth="480" HorizontalAlignment="Left">
         <TextBlock Text="Cloudflare Authentication" Style="{StaticResource TitleTextBlockStyle}" />
 
         <TextBlock
@@ -100,6 +100,37 @@
               <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#861D12" />
             </Button.Resources>
           </Button>
+        </StackPanel>
+
+        <StackPanel
+          Spacing="8"
+          Margin="0,24,0,0"
+          Opacity="0.7"
+          Visibility="{x:Bind ViewModel.CanEditCredentials, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
+        >
+          <TextBlock
+            Text="Where to get your API Key"
+            FontWeight="SemiBold"
+          />
+          <TextBlock
+            TextWrapping="Wrap"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          >
+            <Run Text="Log in to" />
+            <Hyperlink NavigateUri="https://dash.cloudflare.com/profile/api-tokens">dash.cloudflare.com</Hyperlink>
+            <Run Text="→ My Profile → API Tokens → Global API Key → View." />
+          </TextBlock>
+
+          <TextBlock
+            Text="Why Global API Key?"
+            FontWeight="SemiBold"
+            Margin="0,8,0,0"
+          />
+          <TextBlock
+            Text="API Tokens have an undocumented quota on new accounts: you can only add as many zones as already exist. From zero — one at a time, making bulk add impossible. Global API Key has no such limit. Stored in Windows Credential Manager, sent only to the Cloudflare API."
+            TextWrapping="Wrap"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          />
         </StackPanel>
       </StackPanel>
     </ScrollViewer>

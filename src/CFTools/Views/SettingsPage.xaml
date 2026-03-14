@@ -4,7 +4,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 >
   <ScrollViewer>
-    <StackPanel Padding="24" Spacing="24" MaxWidth="600" HorizontalAlignment="Stretch">
+    <StackPanel Padding="16" Spacing="24" MaxWidth="480" HorizontalAlignment="Left">
       <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
 
       <!-- Request Pool -->

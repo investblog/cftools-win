@@ -64,8 +64,8 @@
         <TextBox
           Grid.Row="0"
           Grid.Column="0"
-          Header="Paste domains (one per line)"
-          PlaceholderText="example.com&#x0a;test.org&#x0a;foo.net"
+          Header="Paste domains from any source"
+          PlaceholderText="Paste anything: plain list, CSV, HTML,&#x0a;email text, URLs, tables — domains&#x0a;will be extracted automatically.&#x0a;&#x0a;IDN supported (e.g. beispiel.de, сайт.рф)&#x0a;Subdomains filtered to root domains.&#x0a;Duplicates detected."
           AcceptsReturn="True"
           TextWrapping="Wrap"
           IsEnabled="{x:Bind ViewModel.CanCheck, Mode=OneWay}"

@@ -8,7 +8,9 @@
     <NavigationView
       x:Name="NavView"
       IsBackButtonVisible="Collapsed"
-      PaneDisplayMode="LeftCompact"
+      PaneDisplayMode="Auto"
+      CompactModeThresholdWidth="0"
+      ExpandedModeThresholdWidth="850"
       SelectionChanged="NavView_SelectionChanged"
     >
       <NavigationView.MenuItems>
