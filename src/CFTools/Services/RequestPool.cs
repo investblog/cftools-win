@@ -92,15 +92,23 @@ public sealed class RequestPool : IDisposable
 
     public void Cancel()
     {
+        List<QueuedTask> cancelledTasks = [];
+
         lock (_lock)
         {
             _poolCts?.Cancel();
 
             while (_queue.TryDequeue(out var task))
-                task.LinkedCts.Dispose();
+                cancelledTasks.Add(task);
 
             _poolCts?.Dispose();
             _poolCts = new CancellationTokenSource();
+        }
+
+        foreach (var task in cancelledTasks)
+        {
+            task.SetCanceled?.Invoke(task.LinkedCts.Token);
+            task.LinkedCts.Dispose();
         }
     }
 

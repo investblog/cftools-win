@@ -70,6 +70,10 @@ public partial class PurgeCacheViewModel : ObservableObject
         }
 
         IsBusy = true;
+        ProgressText = string.Empty;
+        ShowProgress = false;
+        ProgressValue = 0;
+        ProgressMaximum = 1;
         UpdateCommandStates();
         Zones.Clear();
         VisibleZones.Clear();
@@ -103,6 +107,9 @@ public partial class PurgeCacheViewModel : ObservableObject
     [RelayCommand]
     private void SelectAll()
     {
+        if (IsBusy || IsRunning)
+            return;
+
         foreach (var zone in VisibleZones)
             zone.IsSelected = true;
 
@@ -112,6 +119,9 @@ public partial class PurgeCacheViewModel : ObservableObject
     [RelayCommand]
     private void SelectNone()
     {
+        if (IsBusy || IsRunning)
+            return;
+
         foreach (var zone in VisibleZones)
             zone.IsSelected = false;
 

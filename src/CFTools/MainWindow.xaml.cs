@@ -15,46 +15,16 @@ public sealed partial class MainWindow : Window
     {
         this.InitializeComponent();
 
-        // Set window size
         var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
         var appWindow = AppWindow.GetFromWindowId(windowId);
         appWindow.Resize(new Windows.Graphics.SizeInt32(900, 650));
-
-        // Enforce minimum window size
         appWindow.Changed += AppWindow_Changed;
 
-        // Navigate to AddDomains page by default
         ContentFrame.Navigate(typeof(AddDomainsPage));
         NavView.SelectedItem = NavView.MenuItems[0];
 
-        // Listen for auth changes
         App.AuthStateChanged += OnAuthStateChanged;
-    }
-
-    private void NavView_DisplayModeChanged(
-        NavigationView sender,
-        NavigationViewDisplayModeChangedEventArgs args
-    )
-    {
-        // Minimal: show custom hamburger (top-right, like on websites)
-        // Compact: icons only, no toggle — prevents overlay-on-content issue
-        // Expanded: full pane with labels, no toggle needed
-        PaneToggleBtn.Visibility =
-            sender.DisplayMode == NavigationViewDisplayMode.Minimal
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-
-        // Close pane when entering Compact to prevent stale overlay
-        if (sender.DisplayMode == NavigationViewDisplayMode.Compact)
-        {
-            NavView.IsPaneOpen = false;
-        }
-    }
-
-    private void PaneToggle_Click(object sender, RoutedEventArgs e)
-    {
-        NavView.IsPaneOpen = !NavView.IsPaneOpen;
     }
 
     private void OnAuthStateChanged(bool isConnected)
@@ -78,18 +48,20 @@ public sealed partial class MainWindow : Window
 
     private static void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args)
     {
-        if (args.DidSizeChange)
+        if (!args.DidSizeChange)
         {
-            var size = sender.Size;
-            if (size.Width < MinWidth || size.Height < MinHeight)
-            {
-                sender.Resize(
-                    new Windows.Graphics.SizeInt32(
-                        Math.Max(size.Width, MinWidth),
-                        Math.Max(size.Height, MinHeight)
-                    )
-                );
-            }
+            return;
+        }
+
+        var size = sender.Size;
+        if (size.Width < MinWidth || size.Height < MinHeight)
+        {
+            sender.Resize(
+                new Windows.Graphics.SizeInt32(
+                    Math.Max(size.Width, MinWidth),
+                    Math.Max(size.Height, MinHeight)
+                )
+            );
         }
     }
 
@@ -105,7 +77,9 @@ public sealed partial class MainWindow : Window
         }
 
         if (args.SelectedItem is not NavigationViewItem item)
+        {
             return;
+        }
 
         var tag = item.Tag as string;
         switch (tag)

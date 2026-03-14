@@ -205,6 +205,32 @@ public class RequestPoolTests : IDisposable
     }
 
     [Fact]
+    public async Task Cancel_CompletesQueuedTasksAsCanceled()
+    {
+        using var pool = new RequestPool(maxConcurrency: 1, maxRetries: 0);
+        var tasks = Enumerable
+            .Range(0, 3)
+            .Select(index =>
+                pool.Add(async ct =>
+                {
+                    await Task.Delay(index == 0 ? 300 : 30, ct);
+                    return index;
+                })
+            )
+            .ToArray();
+
+        await Task.Delay(50);
+        pool.Cancel();
+
+        var whenAll = Task.WhenAll(tasks);
+        var completedTask = await Task.WhenAny(whenAll, Task.Delay(1000));
+
+        Assert.Same(whenAll, completedTask);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await whenAll);
+        Assert.All(tasks, task => Assert.True(task.IsCanceled));
+    }
+
+    [Fact]
     public void GetStats_ReturnsCorrectState()
     {
         var stats = _pool.GetStats();

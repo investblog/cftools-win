@@ -9,10 +9,7 @@
       x:Name="NavView"
       IsBackButtonVisible="Collapsed"
       PaneDisplayMode="Auto"
-      IsPaneToggleButtonVisible="False"
-      ExpandedModeThresholdWidth="800"
       SelectionChanged="NavView_SelectionChanged"
-      DisplayModeChanged="NavView_DisplayModeChanged"
     >
       <NavigationView.MenuItems>
         <NavigationViewItem Content="Add Domains" Tag="AddDomains">
@@ -47,20 +44,5 @@
 
       <Frame x:Name="ContentFrame" />
     </NavigationView>
-
-    <!-- Custom hamburger for minimal mode — top-right like on websites -->
-    <Button
-      x:Name="PaneToggleBtn"
-      Click="PaneToggle_Click"
-      HorizontalAlignment="Right"
-      VerticalAlignment="Top"
-      Margin="0,8,8,0"
-      Padding="10"
-      Background="Transparent"
-      BorderBrush="Transparent"
-      Visibility="Collapsed"
-    >
-      <FontIcon Glyph="&#xE700;" FontSize="16" />
-    </Button>
   </Grid>
 </Window>

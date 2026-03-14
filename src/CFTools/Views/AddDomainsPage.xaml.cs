@@ -6,19 +6,19 @@ namespace CFTools.Views;
 
 public sealed partial class AddDomainsPage : Page
 {
+    private const double WideLayoutMinWidth = 720;
+
     public AddDomainsViewModel ViewModel { get; } = new();
 
     public AddDomainsPage()
     {
         this.InitializeComponent();
-
-        // Switch between single/two column based on actual content width
         TwoColumnGrid.SizeChanged += TwoColumnGrid_SizeChanged;
     }
 
     private void TwoColumnGrid_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        if (e.NewSize.Width >= 700)
+        if (e.NewSize.Width >= WideLayoutMinWidth)
         {
             TwoColumnGrid.ColumnSpacing = 16;
             TwoColumnGrid.RowSpacing = 0;

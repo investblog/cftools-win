@@ -6,12 +6,16 @@
 >
   <Grid>
     <VisualStateManager.VisualStateGroups>
-      <VisualStateGroup>
+      <VisualStateGroup x:Name="LayoutStates">
         <VisualState x:Name="NarrowLayout" />
         <VisualState x:Name="WideLayout">
           <VisualState.StateTriggers>
             <AdaptiveTrigger MinWindowWidth="720" />
           </VisualState.StateTriggers>
+          <VisualState.Setters>
+            <Setter Target="NarrowToolbar.Visibility" Value="Collapsed" />
+            <Setter Target="WideToolbar.Visibility" Value="Visible" />
+          </VisualState.Setters>
         </VisualState>
       </VisualStateGroup>
     </VisualStateManager.VisualStateGroups>
@@ -46,20 +50,58 @@
         TextWrapping="WrapWholeWords"
       />
 
-      <Grid Grid.Row="2" RowSpacing="8">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-          <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+      <Grid Grid.Row="2">
+        <Grid x:Name="NarrowToolbar" RowSpacing="8">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
 
-        <TextBox
-          Grid.Row="0"
-          PlaceholderText="Filter zones..."
-          Text="{x:Bind ViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-          IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
-        />
+          <TextBox
+            Grid.Row="0"
+            PlaceholderText="Filter zones..."
+            Text="{x:Bind ViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+          />
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+          <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
+            <Button
+              Content="Load Zones"
+              Style="{StaticResource AccentButtonStyle}"
+              Command="{x:Bind ViewModel.LoadZonesCommand}"
+              IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
+            />
+            <Button
+              Content="Select All"
+              Command="{x:Bind ViewModel.SelectAllCommand}"
+              IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+            />
+            <Button
+              Content="Select None"
+              Command="{x:Bind ViewModel.SelectNoneCommand}"
+              IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+            />
+          </StackPanel>
+        </Grid>
+
+        <StackPanel
+          x:Name="WideToolbar"
+          Orientation="Horizontal"
+          Spacing="8"
+          Visibility="Collapsed"
+        >
+          <Button
+            Content="Load Zones"
+            Style="{StaticResource AccentButtonStyle}"
+            Command="{x:Bind ViewModel.LoadZonesCommand}"
+            IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
+          />
+          <TextBox
+            Width="220"
+            PlaceholderText="Filter zones..."
+            Text="{x:Bind ViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+          />
           <Button
             Content="Select All"
             Command="{x:Bind ViewModel.SelectAllCommand}"
@@ -133,7 +175,7 @@
         <Button
           Content="Purge Selected"
           Style="{StaticResource AccentButtonStyle}"
-          Command="{x:Bind ViewModel.PurgeSelectedCommand}"
+          Click="PurgeButton_Click"
           IsEnabled="{x:Bind ViewModel.CanPurge, Mode=OneWay}"
         />
         <Button
