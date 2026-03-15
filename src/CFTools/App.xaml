@@ -47,11 +47,13 @@
           <SolidColorBrush x:Key="SubtleFillColorTransparentBrush" Color="Transparent" />
           <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush" Color="#10FFFFFF" />
 
-          <!-- InfoBar -->
+          <!-- InfoBar: ensure light text on dark severity backgrounds -->
           <SolidColorBrush x:Key="InfoBarInformationalSeverityBackgroundBrush" Color="#1F2229" />
           <SolidColorBrush x:Key="InfoBarSuccessSeverityBackgroundBrush" Color="#042C1C" />
           <SolidColorBrush x:Key="InfoBarWarningSeverityBackgroundBrush" Color="#38240A" />
           <SolidColorBrush x:Key="InfoBarErrorSeverityBackgroundBrush" Color="#3D0915" />
+          <SolidColorBrush x:Key="InfoBarTitleForeground" Color="#E7E9EE" />
+          <SolidColorBrush x:Key="InfoBarMessageForeground" Color="#E7E9EE" />
         </ResourceDictionary>
       </ResourceDictionary.ThemeDictionaries>
       <conv:BoolToVisibilityConverter x:Key="BoolToVisConverter" />
