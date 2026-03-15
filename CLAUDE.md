@@ -185,12 +185,41 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 4. **Bulk Delete** — загрузка зон → фильтр → multi-select → danger confirmation → delete с прогрессом + cancel. Авто-перезагрузка после удаления
 5. **Cross-page sync** — ZoneListChanged event инвалидирует кэш зон при add/delete. Account switch сбрасывает загруженные данные
 6. **Adaptive layout** — NavigationView Auto (Compact/Expanded), NavigationCacheMode, OnNavigatedTo, HyperlinkButton к Auth
+7. **Dark theme** — 301-ui design system, theme-aware badge colors (BadgeColors helper), ThemeChanged event для live refresh
+8. **About page** — отдельная страница с иконкой, фичами, описанием 301.st, ссылками
+9. **App icon** — SVG → multi-res ICO + PNG, отображается в taskbar/title bar/exe
+10. **Domain remove** — кнопка "X" для удаления доменов из preflight перед созданием
+11. **Punycode tooltips** — hover на xn-- доменах показывает Unicode оригинал
+12. **MSIX packaging** — Package.appxmanifest с Store identity, сборка через MSBuild CLI
+13. **InnoSetup installer** — для GitHub Releases (standalone distribution)
+
+## Store
+
+- **Partner Center**: MSIX app, identity `301.CloudflareTools`, publisher `CN=BEE1F94B-ABDE-4CF8-9F30-1DF4DAFDAE83`
+- **Статус**: submitted, ожидает approval
+- **Store listings готовы**: EN, RU, ZH, DE, ES (в temp/)
+- **После апрува**: добавить переводы листинга на 4 языка
+
+## Сборка MSIX для Store
+
+```bash
+# MSIX пакет (без подписи — Store подпишет сам)
+"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe" \
+  src/CFTools/CFTools.csproj \
+  -p:Platform=x64 -p:Configuration=Release -p:RuntimeIdentifier=win-x64 \
+  -p:GenerateAppxPackageOnBuild=true -p:AppxBundle=Never \
+  -p:UapAppxPackageBuildMode=StoreUpload \
+  -p:AppxPackageDir=temp/AppPackages/
+
+# InnoSetup installer (для GitHub Releases)
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss
+```
 
 ## Очередь разработки
 
-P1: App icon + branding assets, Zone List + CSV Export, batch result export
-P2: API Token auth (с fallback на Global Key), DNS Import/Export, file logging, i18n (resource keys + plurals)
-P3: Bulk SSL Mode, Security Level, Always HTTPS, MSIX packaging for Store
+P1: Store listing translations (RU, ZH, DE, ES), Zone List + CSV Export, batch result export
+P2: API Token auth (с fallback на Global Key), DNS Import/Export, file logging
+P3: Bulk SSL Mode, Security Level, Always HTTPS
 
 ## Logging
 
