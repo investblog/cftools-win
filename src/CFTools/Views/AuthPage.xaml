@@ -120,7 +120,7 @@
           >
             <Run Text="Log in to" />
             <Hyperlink NavigateUri="https://dash.cloudflare.com/profile/api-tokens">dash.cloudflare.com</Hyperlink>
-            <Run Text="→ My Profile → API Tokens → Global API Key → View." />
+            <Run Text=" and open My Profile > API Tokens > Global API Key > View." />
           </TextBlock>
 
           <TextBlock
@@ -129,7 +129,7 @@
             Margin="0,8,0,0"
           />
           <TextBlock
-            Text="API Tokens have an undocumented quota on new accounts: you can only add as many zones as already exist. From zero — one at a time, making bulk add impossible. Global API Key has no such limit. Stored in Windows Credential Manager, sent only to the Cloudflare API."
+            Text="Built for bulk work: Global API Key does not hit the zone-creation limit that can block API Tokens on some new accounts. Your key stays in Windows Credential Manager and is sent only to the Cloudflare API."
             TextWrapping="Wrap"
             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
           />

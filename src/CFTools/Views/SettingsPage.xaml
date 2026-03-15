@@ -68,7 +68,7 @@
         </StackPanel>
 
         <TextBlock
-          Text="Cloudflare Tools for Windows — bulk zone management"
+          Text="Cloudflare Tools for Windows - fast, reliable bulk zone management"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
           TextWrapping="Wrap"
         />

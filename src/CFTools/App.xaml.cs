@@ -10,7 +10,7 @@ public partial class App : Application
     public static FrameworkElement? MainRoot =>
         (Current as App)?._window?.Content as FrameworkElement;
 
-    // Shared services — simple singleton access for MVP
+    // Shared services - simple singleton access for MVP
     public static AppSettings Settings { get; } = AppSettings.Load();
     public static CloudflareApi Api { get; } = new();
     public static CredentialStore Credentials { get; } = new();

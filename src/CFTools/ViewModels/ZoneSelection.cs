@@ -14,6 +14,9 @@ public partial class ZoneSelection : ObservableObject
 
     public string ZoneStatus => Zone.Status;
 
+    public string? PurgeTooltip =>
+        IsActive ? null : $"Zone is {Zone.Status} - only active zones can be purged";
+
     public bool IsActive => Zone.Status == "active";
 
     [ObservableProperty]
@@ -33,5 +36,6 @@ public partial class ZoneSelection : ObservableObject
     public void RefreshThemeBindings()
     {
         OnPropertyChanged(nameof(ZoneStatus));
+        OnPropertyChanged(nameof(PurgeTooltip));
     }
 }

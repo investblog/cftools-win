@@ -154,7 +154,7 @@
               ColumnSpacing="6"
               Padding="0,2"
               Opacity="{x:Bind IsActive, Converter={StaticResource BoolToOpacityConverter}}"
-              ToolTipService.ToolTip="{x:Bind ZoneStatus, Converter={StaticResource PurgeTooltipConverter}}"
+              ToolTipService.ToolTip="{x:Bind PurgeTooltip}"
             >
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />

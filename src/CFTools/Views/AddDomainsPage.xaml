@@ -65,7 +65,7 @@
           Grid.Row="0"
           Grid.Column="0"
           Header="Paste domains from any source"
-          PlaceholderText="Paste anything: plain list, CSV, HTML,&#x0a;email text, URLs, tables — domains&#x0a;will be extracted automatically.&#x0a;&#x0a;IDN/Punycode supported (例え.jp → xn--).&#x0a;Subdomains filtered to root domains.&#x0a;Duplicates detected."
+          PlaceholderText="Paste raw lists, CSV, HTML,&#x0a;email text, URLs, or exports.&#x0a;Domains will be extracted automatically.&#x0a;&#x0a;IDN and Punycode supported.&#x0a;Subdomains filtered to root domains.&#x0a;Duplicates detected before create."
           AcceptsReturn="True"
           TextWrapping="Wrap"
           IsEnabled="{x:Bind ViewModel.CanCheck, Mode=OneWay}"

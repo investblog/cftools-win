@@ -1,92 +1,92 @@
 # Cloudflare Tools for Windows
 
-Desktop app for bulk Cloudflare zone management. Windows port of the [Cloudflare Tools](https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc) browser extension.
+Cloudflare Tools for Windows is a desktop app for fast, high-confidence Cloudflare zone work at scale. It brings the core workflows of the Cloudflare Tools browser extension to a native Windows UI with a cleaner, safer bulk-operations experience.
 
 **Stack:** C# / .NET 8 / WinUI 3 (Windows App SDK 1.6)
 
-## Features
+## Highlights
 
-- **Bulk Add Domains** — paste domains from any source (plain text, CSV, HTML, email, URLs). Auto-extracts root domains, handles IDN/Punycode conversion (e.g. сайт.рф → xn--), detects duplicates. Preflight check with per-domain remove before creation.
-- **Bulk Purge Cache** — load all zones, filter, multi-select, purge cache with progress tracking. Non-active zones are shown but disabled.
-- **Bulk Delete Zones** — load zones, filter, multi-select with confirmation dialog. Auto-reloads after deletion.
-- **Multi-account support** — switch between Cloudflare accounts under the same login.
-- **Smart domain parser** — extracts domains from any text input, converts Unicode to Punycode, filters subdomains, deduplicates.
-- **Rate-limited request pool** — concurrent API calls with exponential backoff, retry on rate limits, pause/resume/cancel.
+- **Bulk Add Domains** - paste raw exports, CSV, HTML, emails, URLs, or mixed text. The parser extracts root domains automatically, handles IDN and Punycode, flags duplicates and invalid items, and lets you remove individual domains before creation.
+- **Bulk Purge Cache** - load zones for the active account, filter quickly, select only what you need, and run a determinate batch with per-zone status.
+- **Bulk Delete Zones** - safer destructive workflow with account-aware confirmation, progress tracking, and automatic reload after deletion.
+- **Multi-account workflow** - sign in once, choose an active account, and switch accounts without re-entering credentials.
+- **Responsive Windows UI** - optimized for compact and full-width layouts, with light, dark, and system theme support.
+- **Resilient request pipeline** - concurrent API calls with retry handling, rate-limit awareness, and cancellation that keeps UI state consistent.
 
 ## Why Global API Key?
 
-API Tokens have an undocumented quota on new accounts: you can only add as many zones as already exist. Starting from zero — one at a time, making bulk operations impossible. Global API Key has no such limit.
+For this app's bulk zone creation workflow, Global API Key is the most reliable option. API Tokens can hit an undocumented limit on some new accounts: you may only be able to add as many zones as already exist, which makes true bulk add impossible from zero.
 
-Your key is stored locally in Windows Credential Manager and sent only to the Cloudflare API.
+Credentials are stored locally in Windows Credential Manager and sent only to the Cloudflare API.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Windows 10 (1904x) or later
+- Windows 10 (19041) or later
 - Visual Studio 2022 with .NET desktop and WinUI workloads
 
 ### Build
 
-```bash
-# WinUI 3 requires VS2022 MSBuild
-"C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" \
-  src/CFTools/CFTools.csproj -p:Platform=x64 -p:Configuration=Debug
+From the repo root:
 
-# Run
-src/CFTools/bin/x64/Debug/net8.0-windows10.0.19041.0/CFTools.exe
+```powershell
+dotnet build CFTools.sln
 ```
 
-### Tests
+### Test
 
-```bash
-dotnet test tests/CFTools.Tests/CFTools.Tests.csproj
+```powershell
+dotnet test CFTools.sln
 ```
 
-### Code Formatting
+### Optional formatting
 
-```bash
+Formatting follows `.editorconfig` and repo style rules. If you use CSharpier locally:
+
+```powershell
 dotnet csharpier format src/ tests/
 ```
 
 ## Usage
 
-1. Open the app — starts on the **Authentication** page
-2. Enter your Cloudflare **email** and **Global API Key** ([where to find it](https://dash.cloudflare.com/profile/api-tokens))
-3. If multiple accounts — select one from the dropdown
-4. Navigate to **Add Domains**, **Purge Cache**, or **Delete Domains**
+1. Open the app. It starts on the Authentication page.
+2. Enter your Cloudflare email and Global API Key.
+3. If multiple accounts are available, choose the active account for this session.
+4. Use Add Domains, Purge Cache, or Delete Domains. The active account stays visible throughout the app.
+5. Switch accounts whenever needed without re-entering credentials.
 
 ## Architecture
 
-```
+```text
 Views (XAML + code-behind)
-  └─ ViewModels (CommunityToolkit.Mvvm)
-       └─ Services
-            ├─ CloudflareApi    — CF API v4 client
-            ├─ RequestPool      — rate-limited concurrent queue
-            ├─ DomainParser     — domain extraction + IDN
-            └─ CredentialStore  — Windows Credential Manager
+  -> ViewModels (CommunityToolkit.Mvvm)
+     -> Services
+        - CloudflareApi    : Cloudflare API v4 client
+        - RequestPool      : rate-aware concurrent work queue
+        - DomainParser     : domain extraction, cleanup, IDN support
+        - CredentialStore  : Windows Credential Manager integration
 ```
 
-MVVM with source-generated partial properties. Batch operations are ephemeral (in-memory) with per-item status tracking and UI-thread-safe updates via `DispatcherQueue`.
+MVVM with source-generated partial properties. Batch workflows keep per-item status in memory and marshal UI updates through `DispatcherQueue`.
 
 ## Project Structure
 
-```
+```text
 cftools-win/
-├── src/CFTools/          # WinUI 3 app
-│   ├── Views/            # XAML pages
-│   ├── ViewModels/       # MVVM view models
-│   ├── Services/         # API, pool, parser, credentials
-│   ├── Models/           # DTOs + error normalization
-│   └── Converters/       # XAML value converters
-├── src/CFTools.Core/     # Pure .NET 8 lib (for testing)
-└── tests/CFTools.Tests/  # xUnit tests (60 tests)
+|-- src/CFTools/          # WinUI 3 app
+|   |-- Views/            # XAML pages
+|   |-- ViewModels/       # MVVM view models
+|   |-- Services/         # API, pool, parser, credentials
+|   |-- Models/           # DTOs and shared models
+|   `-- Converters/       # XAML value converters
+|-- src/CFTools.Core/     # Pure .NET 8 library for testable core logic
+`-- tests/CFTools.Tests/  # xUnit tests
 ```
 
 ## Related
 
-- [Cloudflare Tools for Edge](https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc) — browser extension
+- [Cloudflare Tools for Edge](https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc) - browser extension
 - Author: [301.st](https://301.st)
 
 ## License
