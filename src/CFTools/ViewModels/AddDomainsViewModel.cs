@@ -70,6 +70,7 @@ public partial class AddDomainsViewModel : ObservableObject
             );
         _observedAccountId = App.CurrentAccountId;
         App.AuthStateChanged += () => _dispatcher.TryEnqueue(HandleAuthStateChanged);
+        App.ThemeChanged += () => _dispatcher.TryEnqueue(RefreshThemeBindings);
     }
 
     [RelayCommand]
@@ -471,6 +472,14 @@ public partial class AddDomainsViewModel : ObservableObject
         ProgressMaximum = 1;
         ProgressText = string.Empty;
         StatusText = statusMessage;
+    }
+
+    private void RefreshThemeBindings()
+    {
+        for (var i = 0; i < PreflightResults.Count; i++)
+        {
+            PreflightResults[i] = PreflightResults[i] with { };
+        }
     }
 
     private Task RunOnUiThreadAsync(Action action)

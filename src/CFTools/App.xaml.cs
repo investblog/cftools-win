@@ -21,6 +21,7 @@ public partial class App : Application
     /// Fired when auth state changes so all pages can react.
     /// </summary>
     public static event Action? AuthStateChanged;
+    public static event Action? ThemeChanged;
     public static event Action? NavigateToAuthRequested;
     public static event Action? ZoneListChanged;
 
@@ -58,6 +59,11 @@ public partial class App : Application
         ZoneListChanged?.Invoke();
     }
 
+    public static void NotifyThemeChanged()
+    {
+        ThemeChanged?.Invoke();
+    }
+
     public static void ApplyTheme(int themeIndex)
     {
         if (Current is App app && app._window?.Content is FrameworkElement root)
@@ -80,6 +86,20 @@ public partial class App : Application
     {
         _window = new MainWindow();
         _window.Activate();
+        AttachThemeObserver();
         ApplyTheme(Settings.ThemeIndex);
+    }
+
+    private void AttachThemeObserver()
+    {
+        if (_window?.Content is FrameworkElement root)
+        {
+            root.ActualThemeChanged += MainRoot_ActualThemeChanged;
+        }
+    }
+
+    private static void MainRoot_ActualThemeChanged(FrameworkElement sender, object args)
+    {
+        NotifyThemeChanged();
     }
 }

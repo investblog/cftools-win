@@ -70,6 +70,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
             );
         _observedAccountId = App.CurrentAccountId;
         App.AuthStateChanged += () => _dispatcher.TryEnqueue(HandleAuthStateChanged);
+        App.ThemeChanged += () => _dispatcher.TryEnqueue(RefreshThemeBindings);
         App.ZoneListChanged += () =>
             _dispatcher.TryEnqueue(() =>
             {
@@ -444,6 +445,14 @@ public partial class DeleteDomainsViewModel : ObservableObject
         ShowProgress = false;
         ProgressValue = 0;
         ProgressMaximum = 1;
+    }
+
+    private void RefreshThemeBindings()
+    {
+        foreach (var zone in Zones)
+        {
+            zone.RefreshThemeBindings();
+        }
     }
 
     private void UpdateDeleteProgress(int processed, int success, int failed, int total)

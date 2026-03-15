@@ -10,6 +10,10 @@ public partial class ZoneSelection : ObservableObject
 {
     public CfZone Zone { get; }
 
+    public string ZoneName => Zone.Name;
+
+    public string ZoneStatus => Zone.Status;
+
     public bool IsActive => Zone.Status == "active";
 
     [ObservableProperty]
@@ -25,4 +29,9 @@ public partial class ZoneSelection : ObservableObject
     public partial string StatusText { get; set; } = string.Empty;
 
     public ZoneSelection(CfZone zone) => Zone = zone;
+
+    public void RefreshThemeBindings()
+    {
+        OnPropertyChanged(nameof(ZoneStatus));
+    }
 }
