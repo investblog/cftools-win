@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\app.ico" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Models\CloudflareModels.cs" />
     <Compile Remove="Models\ErrorModels.cs" />
     <Compile Remove="Services\DomainParser.cs" />

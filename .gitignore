@@ -3,6 +3,9 @@ bin/
 obj/
 out/
 
+# Temp assets
+temp/
+
 # IDE
 .vs/
 *.user

@@ -19,6 +19,7 @@ public sealed partial class MainWindow : Window
         var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
         var appWindow = AppWindow.GetFromWindowId(windowId);
         appWindow.Resize(new Windows.Graphics.SizeInt32(900, 650));
+        appWindow.SetIcon("Assets/app.ico");
         appWindow.Changed += AppWindow_Changed;
 
         ContentFrame.Navigate(typeof(AuthPage));

@@ -100,6 +100,39 @@ public class PurgeTooltipConverter : IValueConverter
         throw new NotImplementedException();
 }
 
+public class PunycodeTooltipConverter : IValueConverter
+{
+    private static readonly System.Globalization.IdnMapping Idn = new();
+
+    public object Convert(object value, Type targetType, object parameter, string language)
+    {
+        if (value is not string domain || !domain.Contains("xn--"))
+            return (object)null!;
+
+        try
+        {
+            var unicode = Idn.GetUnicode(domain);
+            return unicode != domain ? unicode : (object)null!;
+        }
+        catch
+        {
+            return (object)null!;
+        }
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language) =>
+        throw new NotImplementedException();
+}
+
+public class WillCreateToVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language) =>
+        value is Models.PreflightStatus.WillCreate ? Visibility.Visible : Visibility.Collapsed;
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language) =>
+        throw new NotImplementedException();
+}
+
 public class StatusToBadgeBrushConverter : IValueConverter
 {
     public bool IsBackground { get; set; }

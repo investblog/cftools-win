@@ -351,6 +351,32 @@ public partial class AddDomainsViewModel : ObservableObject
         App.Pool.Cancel();
     }
 
+    public void RemoveDomain(string domain)
+    {
+        if (IsBusy || IsRunning)
+            return;
+
+        _domainsToCreate.Remove(domain);
+
+        for (int i = PreflightResults.Count - 1; i >= 0; i--)
+        {
+            if (string.Equals(PreflightResults[i].Domain, domain, StringComparison.OrdinalIgnoreCase))
+            {
+                PreflightResults.RemoveAt(i);
+                break;
+            }
+        }
+
+        var ready = _domainsToCreate.Count;
+        var exists = PreflightResults.Count(e => e.Status == Models.PreflightStatus.Exists);
+        var dups = PreflightResults.Count(e => e.Status == Models.PreflightStatus.Duplicate);
+        var inv = PreflightResults.Count(e => e.Status == Models.PreflightStatus.Invalid);
+        StatusText = $"{ready} ready, {exists} already exist, {dups} duplicates, {inv} invalid";
+
+        IsNextStepCreate = ready > 0;
+        UpdateCommandStates();
+    }
+
     private void UpdateProgress(int processed, int success, int failed, int total)
     {
         ProgressMaximum = total;

@@ -6,7 +6,7 @@ Desktop app for bulk Cloudflare zone management. Windows port of the [Cloudflare
 
 ## Features
 
-- **Bulk Add Domains** — paste domains from any source (plain text, CSV, HTML, email, URLs). Auto-extracts root domains, handles IDN/Punycode, detects duplicates. Preflight check before creation.
+- **Bulk Add Domains** — paste domains from any source (plain text, CSV, HTML, email, URLs). Auto-extracts root domains, handles IDN/Punycode conversion (e.g. сайт.рф → xn--), detects duplicates. Preflight check with per-domain remove before creation.
 - **Bulk Purge Cache** — load all zones, filter, multi-select, purge cache with progress tracking. Non-active zones are shown but disabled.
 - **Bulk Delete Zones** — load zones, filter, multi-select with confirmation dialog. Auto-reloads after deletion.
 - **Multi-account support** — switch between Cloudflare accounts under the same login.

@@ -65,7 +65,7 @@
           Grid.Row="0"
           Grid.Column="0"
           Header="Paste domains from any source"
-          PlaceholderText="Paste anything: plain list, CSV, HTML,&#x0a;email text, URLs, tables — domains&#x0a;will be extracted automatically.&#x0a;&#x0a;IDN supported (e.g. beispiel.de, сайт.рф)&#x0a;Subdomains filtered to root domains.&#x0a;Duplicates detected."
+          PlaceholderText="Paste anything: plain list, CSV, HTML,&#x0a;email text, URLs, tables — domains&#x0a;will be extracted automatically.&#x0a;&#x0a;IDN/Punycode supported (сайт.рф → xn--).&#x0a;Subdomains filtered to root domains.&#x0a;Duplicates detected."
           AcceptsReturn="True"
           TextWrapping="Wrap"
           IsEnabled="{x:Bind ViewModel.CanCheck, Mode=OneWay}"
@@ -82,12 +82,19 @@
         >
           <ListView.ItemTemplate>
             <DataTemplate x:DataType="models:PreflightEntry">
-              <Grid ColumnSpacing="8" Padding="4">
+              <Grid ColumnSpacing="6" Padding="0,2">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{x:Bind Domain}" VerticalAlignment="Center" />
+                <TextBlock
+                  Grid.Column="0"
+                  Text="{x:Bind Domain}"
+                  VerticalAlignment="Center"
+                  TextTrimming="CharacterEllipsis"
+                  ToolTipService.ToolTip="{x:Bind Domain, Converter={StaticResource PunycodeTooltipConverter}}"
+                />
                 <Border
                   Grid.Column="1"
                   Background="{x:Bind Status, Converter={StaticResource PreflightBgConverter}}"
@@ -103,6 +110,20 @@
                     FontWeight="SemiBold"
                   />
                 </Border>
+                <Button
+                  Grid.Column="2"
+                  Click="RemoveDomain_Click"
+                  Tag="{x:Bind Domain}"
+                  Padding="4"
+                  MinWidth="0"
+                  MinHeight="0"
+                  Background="Transparent"
+                  BorderBrush="Transparent"
+                  ToolTipService.ToolTip="Remove from list"
+                  Visibility="{x:Bind Status, Converter={StaticResource WillCreateToVisConverter}}"
+                >
+                  <FontIcon Glyph="&#xE711;" FontSize="12" />
+                </Button>
               </Grid>
             </DataTemplate>
           </ListView.ItemTemplate>

@@ -40,6 +40,14 @@ public sealed partial class AddDomainsPage : Page
     private void GoToAuth_Click(object sender, RoutedEventArgs e) =>
         App.RequestNavigateToAuth();
 
+    private void RemoveDomain_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: string domain })
+        {
+            ViewModel.RemoveDomain(domain);
+        }
+    }
+
     private void TwoColumnGrid_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (e.NewSize.Width >= WideLayoutMinWidth)

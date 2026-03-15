@@ -73,7 +73,7 @@ public static partial class DomainParser
         foreach (var match in matches)
         {
             var domain = NormalizeDomain(match);
-            if (string.IsNullOrEmpty(domain))
+            if (string.IsNullOrEmpty(domain) || IsNumericOnly(domain))
                 continue;
 
             if (!HasValidTld(domain))
@@ -316,6 +316,9 @@ public static partial class DomainParser
         var tld = domain.Split('.')[^1];
         return tld.Any(char.IsLetter);
     }
+
+    private static bool IsNumericOnly(string domain) =>
+        domain.All(c => char.IsDigit(c) || c == '.');
 
     private static bool IsRootDomain(string domain)
     {
