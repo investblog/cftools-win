@@ -6,6 +6,9 @@ out/
 # Temp assets
 temp/
 
+# Installer output
+installer/Output/
+
 # IDE
 .vs/
 *.user
