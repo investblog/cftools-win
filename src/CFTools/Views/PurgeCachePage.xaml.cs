@@ -52,10 +52,10 @@ public sealed partial class PurgeCachePage : Page
         {
             Title = "Purge cache",
             Content =
-                $"Purge cache for {count} zone(s) in {accountName}? This cannot be undone.{warning}",
+                $"Purge all cached files for {count} zone(s) in {accountName}? Cache will rebuild automatically.{warning}",
             PrimaryButtonText = "Purge",
             CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Close,
+            DefaultButton = ContentDialogButton.Primary,
             XamlRoot = this.XamlRoot,
         };
 

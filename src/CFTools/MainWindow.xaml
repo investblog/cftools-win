@@ -11,6 +11,7 @@
       PaneDisplayMode="Auto"
       CompactModeThresholdWidth="0"
       ExpandedModeThresholdWidth="850"
+      OpenPaneLength="200"
       SelectionChanged="NavView_SelectionChanged"
     >
       <NavigationView.MenuItems>

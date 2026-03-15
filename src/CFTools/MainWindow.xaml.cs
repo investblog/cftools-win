@@ -49,10 +49,11 @@ public sealed partial class MainWindow : Window
             if (App.CurrentAccountName is not null)
             {
                 AuthIcon.Foreground = new SolidColorBrush(Microsoft.UI.Colors.Green);
-                AuthNavItem.Content = App.CurrentAccountName;
+                var label = App.CurrentEmail ?? App.CurrentAccountName;
+                AuthNavItem.Content = label.Length > 20 ? label[..17] + "..." : label;
                 ToolTipService.SetToolTip(
                     AuthNavItem,
-                    $"Connected: {App.CurrentEmail}\nAccount: {App.CurrentAccountName}"
+                    $"{App.CurrentEmail}\n{App.CurrentAccountName}"
                 );
             }
             else
