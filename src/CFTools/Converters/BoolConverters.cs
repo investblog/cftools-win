@@ -59,20 +59,20 @@ public class PreflightStatusBrushConverter : IValueConverter
 
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        byte alpha = IsBackground ? (byte)38 : (byte)255;
-        var color = value is Models.PreflightStatus status
+        var dark = ThemeHelper.IsDarkTheme();
+        var (fg, bg) = value is Models.PreflightStatus status
             ? status switch
             {
                 Models.PreflightStatus.WillCreate or Models.PreflightStatus.Created =>
-                    Windows.UI.Color.FromArgb(alpha, 16, 124, 16),
-                Models.PreflightStatus.Creating => Windows.UI.Color.FromArgb(alpha, 0, 120, 212),
-                Models.PreflightStatus.Exists => Windows.UI.Color.FromArgb(alpha, 157, 93, 0),
+                    BadgeColors.Success(dark),
+                Models.PreflightStatus.Creating => BadgeColors.Info(dark),
+                Models.PreflightStatus.Exists => BadgeColors.Warning(dark),
                 Models.PreflightStatus.Failed or Models.PreflightStatus.Invalid =>
-                    Windows.UI.Color.FromArgb(alpha, 196, 43, 28),
-                _ => Windows.UI.Color.FromArgb(alpha, 128, 128, 128),
+                    BadgeColors.Danger(dark),
+                _ => BadgeColors.Neutral(dark),
             }
-            : Windows.UI.Color.FromArgb(alpha, 128, 128, 128);
-        return new SolidColorBrush(color);
+            : BadgeColors.Neutral(dark);
+        return new SolidColorBrush(IsBackground ? bg : fg);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language) =>
@@ -140,17 +140,69 @@ public class StatusToBadgeBrushConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         var status = (value as string ?? "").ToLowerInvariant();
-        byte alpha = IsBackground ? (byte)38 : (byte)255;
-        var color = status switch
+        var dark = ThemeHelper.IsDarkTheme();
+        var (fg, bg) = status switch
         {
-            "active" => Windows.UI.Color.FromArgb(alpha, 16, 124, 16),
-            "moved" => Windows.UI.Color.FromArgb(alpha, 157, 93, 0),
-            "pending" or "initializing" => Windows.UI.Color.FromArgb(alpha, 0, 120, 212),
-            _ => Windows.UI.Color.FromArgb(alpha, 128, 128, 128),
+            "active" => BadgeColors.Success(dark),
+            "moved" => BadgeColors.Warning(dark),
+            "pending" or "initializing" => BadgeColors.Info(dark),
+            _ => BadgeColors.Neutral(dark),
         };
-        return new SolidColorBrush(color);
+        return new SolidColorBrush(IsBackground ? bg : fg);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language) =>
         throw new NotImplementedException();
+}
+
+/// <summary>
+/// Badge color pairs from 301-ui design system. WCAG AA compliant on both themes.
+/// </summary>
+internal static class BadgeColors
+{
+    // Dark: #18C27A on rgba(37,208,164,0.12) — Light: #0E7B4C on rgba(14,123,76,0.16)
+    public static (Windows.UI.Color Fg, Windows.UI.Color Bg) Success(bool dark) =>
+        dark
+            ? (C(0x18, 0xC2, 0x7A), C(30, 0x25, 0xD0, 0xA4))
+            : (C(0x0E, 0x7B, 0x4C), C(40, 0x0E, 0x7B, 0x4C));
+
+    // Dark: #FF4F6E on rgba(255,107,107,0.12) — Light: #D9264A on rgba(217,38,74,0.16)
+    public static (Windows.UI.Color Fg, Windows.UI.Color Bg) Danger(bool dark) =>
+        dark
+            ? (C(0xFF, 0x4F, 0x6E), C(30, 0xFF, 0x6B, 0x6B))
+            : (C(0xD9, 0x26, 0x4A), C(40, 0xD9, 0x26, 0x4A));
+
+    // Dark: #FFB347 on rgba(255,179,71,0.12) — Light: #9A6200 on rgba(154,98,0,0.16)
+    public static (Windows.UI.Color Fg, Windows.UI.Color Bg) Warning(bool dark) =>
+        dark
+            ? (C(0xFF, 0xB3, 0x47), C(30, 0xFF, 0xB3, 0x47))
+            : (C(0x9A, 0x62, 0x00), C(40, 0x9A, 0x62, 0x00));
+
+    // Dark: #4DA3FF on rgba(77,163,255,0.10) — Light: #0055DC on rgba(0,85,220,0.12)
+    public static (Windows.UI.Color Fg, Windows.UI.Color Bg) Info(bool dark) =>
+        dark
+            ? (C(0x4D, 0xA3, 0xFF), C(25, 0x4D, 0xA3, 0xFF))
+            : (C(0x00, 0x55, 0xDC), C(30, 0x00, 0x55, 0xDC));
+
+    // Dark: #A0A4AF — Light: #666A73
+    public static (Windows.UI.Color Fg, Windows.UI.Color Bg) Neutral(bool dark) =>
+        dark
+            ? (C(0xA0, 0xA4, 0xAF), C(20, 0xA0, 0xA4, 0xAF))
+            : (C(0x66, 0x6A, 0x73), C(30, 0x66, 0x6A, 0x73));
+
+    private static Windows.UI.Color C(byte r, byte g, byte b) =>
+        Windows.UI.Color.FromArgb(255, r, g, b);
+
+    private static Windows.UI.Color C(byte a, byte r, byte g, byte b) =>
+        Windows.UI.Color.FromArgb(a, r, g, b);
+}
+
+internal static class ThemeHelper
+{
+    public static bool IsDarkTheme()
+    {
+        if (App.MainRoot is { } root)
+            return root.ActualTheme == ElementTheme.Dark;
+        return Application.Current.RequestedTheme == ApplicationTheme.Dark;
+    }
 }

@@ -7,6 +7,9 @@ public partial class App : Application
 {
     private Window? _window;
 
+    public static FrameworkElement? MainRoot =>
+        (Current as App)?._window?.Content as FrameworkElement;
+
     // Shared services — simple singleton access for MVP
     public static AppSettings Settings { get; } = AppSettings.Load();
     public static CloudflareApi Api { get; } = new();
