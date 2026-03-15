@@ -58,6 +58,7 @@ public sealed partial class DeleteDomainsPage : Page
             CloseButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Primary,
             XamlRoot = this.XamlRoot,
+            RequestedTheme = this.ActualTheme,
             Resources =
             {
                 ["AccentButtonBackground"] = new SolidColorBrush(

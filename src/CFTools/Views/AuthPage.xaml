@@ -56,6 +56,8 @@
           DisplayMemberPath="Name"
           PlaceholderText="Select an account..."
           HorizontalAlignment="Stretch"
+          BorderBrush="{StaticResource SystemControlHighlightAccentBrush}"
+          BorderThickness="2"
           Visibility="{x:Bind ViewModel.ShowAccountPicker, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
         />
 

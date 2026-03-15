@@ -57,6 +57,7 @@ public sealed partial class PurgeCachePage : Page
             CloseButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Primary,
             XamlRoot = this.XamlRoot,
+            RequestedTheme = this.ActualTheme,
         };
 
         var result = await dialog.ShowAsync();
