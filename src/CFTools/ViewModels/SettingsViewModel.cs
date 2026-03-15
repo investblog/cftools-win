@@ -15,9 +15,6 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     public partial int SelectedThemeIndex { get; set; }
 
-    public string Version { get; } =
-        $"v{typeof(SettingsViewModel).Assembly.GetName().Version?.ToString(3) ?? "0.1.0"}";
-
     public SettingsViewModel()
     {
         _isInitializing = true;

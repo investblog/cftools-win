@@ -123,6 +123,9 @@ public sealed partial class MainWindow : Window
             case "Auth":
                 ContentFrame.Navigate(typeof(AuthPage));
                 break;
+            case "About":
+                ContentFrame.Navigate(typeof(AboutPage));
+                break;
         }
     }
 }

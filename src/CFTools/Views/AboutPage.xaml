@@ -1,0 +1,84 @@
+<Page
+  x:Class="CFTools.Views.AboutPage"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  NavigationCacheMode="Required"
+>
+  <ScrollViewer>
+    <StackPanel Padding="16" Spacing="20" MaxWidth="480" HorizontalAlignment="Left">
+
+      <!-- Title -->
+      <StackPanel Spacing="4">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <Image Source="/Assets/logo_48.png" Width="48" Height="48" VerticalAlignment="Center" />
+          <TextBlock
+            Text="Cloudflare Tools"
+            Style="{StaticResource TitleTextBlockStyle}"
+            VerticalAlignment="Center"
+          />
+          <TextBlock
+            Text="{x:Bind Version}"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            VerticalAlignment="Center"
+          />
+        </StackPanel>
+        <TextBlock
+          Text="Fast, reliable bulk zone management for Windows"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          TextWrapping="Wrap"
+        />
+      </StackPanel>
+
+      <!-- Features -->
+      <StackPanel Spacing="6">
+        <TextBlock Text="What it does" Style="{StaticResource SubtitleTextBlockStyle}" />
+        <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+          <Run Text="&#xB7; " /><Run FontWeight="SemiBold" Text="Bulk Add" />
+          <Run Text=" - paste domains from any source. Smart parser handles CSV, HTML, emails, URLs, IDN/Punycode." />
+        </TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+          <Run Text="&#xB7; " /><Run FontWeight="SemiBold" Text="Bulk Purge" />
+          <Run Text=" - clear cache for multiple zones at once with filtering and progress tracking." />
+        </TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+          <Run Text="&#xB7; " /><Run FontWeight="SemiBold" Text="Bulk Delete" />
+          <Run Text=" - remove zones safely with confirmation, auto-reload, and per-zone status." />
+        </TextBlock>
+        <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+          <Run Text="&#xB7; " /><Run FontWeight="SemiBold" Text="Multi-account" />
+          <Run Text=" - switch between Cloudflare accounts without re-entering credentials." />
+        </TextBlock>
+      </StackPanel>
+
+      <!-- 301.st -->
+      <StackPanel Spacing="6">
+        <TextBlock Text="Built by 301.st" Style="{StaticResource SubtitleTextBlockStyle}" />
+        <TextBlock
+          Text="301.st is an edge redirect management platform built on Cloudflare Workers. It delivers intelligent URL redirects with GEO/UA filtering, real-time analytics, and sub-20ms response times globally."
+          TextWrapping="Wrap"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+        />
+        <TextBlock
+          Text="Cloudflare Tools started as a browser extension to simplify bulk zone operations and is now available as a native Windows app with a cleaner, safer workflow."
+          TextWrapping="Wrap"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+        />
+      </StackPanel>
+
+      <!-- Links -->
+      <StackPanel Spacing="4">
+        <TextBlock Text="Links" Style="{StaticResource SubtitleTextBlockStyle}" />
+        <HyperlinkButton Content="301.st - edge redirect platform" NavigateUri="https://301.st" Padding="0" />
+        <HyperlinkButton Content="Cloudflare Tools for Edge" NavigateUri="https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc" Padding="0" />
+      </StackPanel>
+
+      <!-- Footer -->
+      <TextBlock
+        Text="Powered by Cloudflare API v4"
+        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+        FontSize="12"
+      />
+
+    </StackPanel>
+  </ScrollViewer>
+</Page>

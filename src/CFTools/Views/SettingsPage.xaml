@@ -5,7 +5,8 @@
 >
   <ScrollViewer>
     <StackPanel Padding="16" Spacing="24" MaxWidth="480" HorizontalAlignment="Left">
-      <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
+      <!-- Force StackPanel to match Auth/About width -->
+      <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" MinWidth="448" />
 
       <!-- Request Pool -->
       <StackPanel Spacing="16">
@@ -19,6 +20,7 @@
           StepFrequency="1"
           TickFrequency="1"
           TickPlacement="Outside"
+          HorizontalAlignment="Stretch"
           Value="{x:Bind ViewModel.MaxConcurrency, Mode=TwoWay}"
         />
 
@@ -30,6 +32,7 @@
           StepFrequency="1"
           TickFrequency="1"
           TickPlacement="Outside"
+          HorizontalAlignment="Stretch"
           Value="{x:Bind ViewModel.MaxRetries, Mode=TwoWay}"
         />
       </StackPanel>
@@ -49,52 +52,6 @@
         </ComboBox>
       </StackPanel>
 
-      <!-- About -->
-      <StackPanel Spacing="8">
-        <TextBlock Text="About" Style="{StaticResource SubtitleTextBlockStyle}" />
-
-        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
-          <TextBlock
-            Text="Cloudflare Tools"
-            FontWeight="SemiBold"
-            FontSize="18"
-            VerticalAlignment="Center"
-          />
-          <TextBlock
-            Text="{x:Bind ViewModel.Version}"
-            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-            VerticalAlignment="Center"
-          />
-        </StackPanel>
-
-        <TextBlock
-          Text="Cloudflare Tools for Windows - fast, reliable bulk zone management"
-          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-          TextWrapping="Wrap"
-        />
-
-        <StackPanel Spacing="4" Margin="0,8,0,0">
-          <StackPanel Orientation="Horizontal" Spacing="4">
-            <TextBlock Text="Author:" VerticalAlignment="Center" />
-            <HyperlinkButton Content="301.st" NavigateUri="https://301.st" Padding="4,0" />
-          </StackPanel>
-          <StackPanel Orientation="Horizontal" Spacing="4">
-            <TextBlock Text="Browser extension:" VerticalAlignment="Center" />
-            <HyperlinkButton
-              Content="Cloudflare Tools for Edge"
-              NavigateUri="https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc"
-              Padding="4,0"
-            />
-          </StackPanel>
-        </StackPanel>
-
-        <TextBlock
-          Text="Powered by Cloudflare API v4"
-          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-          FontSize="12"
-          Margin="0,8,0,0"
-        />
-      </StackPanel>
     </StackPanel>
   </ScrollViewer>
 </Page>

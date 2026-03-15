@@ -43,6 +43,11 @@
             <FontIcon x:Name="AuthIcon" Glyph="&#xE77B;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
+        <NavigationViewItem Content="About" Tag="About">
+          <NavigationViewItem.Icon>
+            <FontIcon Glyph="&#xE946;" />
+          </NavigationViewItem.Icon>
+        </NavigationViewItem>
       </NavigationView.FooterMenuItems>
 
       <Frame x:Name="ContentFrame" />
