@@ -12,7 +12,7 @@
         <StackPanel Orientation="Horizontal" Spacing="12">
           <Image Source="/Assets/logo_48.png" Width="48" Height="48" VerticalAlignment="Center" />
           <TextBlock
-            Text="Cloudflare Tools"
+            Text="CFTools"
             Style="{StaticResource TitleTextBlockStyle}"
             VerticalAlignment="Center"
           />
@@ -59,7 +59,7 @@
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
         />
         <TextBlock
-          Text="Cloudflare Tools started as a browser extension to simplify bulk zone operations and is now available as a native Windows app with a cleaner, safer workflow."
+          Text="CFTools started as a browser extension to simplify bulk zone operations and is now available as a native Windows app with a cleaner, safer workflow."
           TextWrapping="Wrap"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
         />
@@ -69,7 +69,7 @@
       <StackPanel Spacing="4">
         <TextBlock Text="Links" Style="{StaticResource SubtitleTextBlockStyle}" />
         <HyperlinkButton Content="301.st - edge redirect platform" NavigateUri="https://301.st" Padding="0" />
-        <HyperlinkButton Content="Cloudflare Tools for Edge" NavigateUri="https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc" Padding="0" />
+        <HyperlinkButton Content="CFTools for Edge" NavigateUri="https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc" Padding="0" />
       </StackPanel>
 
       <!-- Footer -->

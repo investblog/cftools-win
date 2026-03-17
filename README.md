@@ -1,9 +1,9 @@
-# Cloudflare Tools for Windows
+# CFTools for Windows
 
 [![GitHub release](https://img.shields.io/github/v/release/investblog/cftools-win)](https://github.com/investblog/cftools-win/releases/latest)
 [![Sponsor](https://img.shields.io/badge/sponsor-301.st-orange)](https://301.st)
 
-Cloudflare Tools for Windows is a desktop app for fast, high-confidence Cloudflare zone work at scale. It brings the core workflows of the Cloudflare Tools browser extension to a native Windows UI with a cleaner, safer bulk-operations experience.
+CFTools for Windows is a desktop app for fast, high-confidence Cloudflare zone work at scale. It brings the core workflows of the CFTools browser extension to a native Windows UI with a cleaner, safer bulk-operations experience.
 
 **Stack:** C# / .NET 8 / WinUI 3 (Windows App SDK 1.6)
 
@@ -91,7 +91,7 @@ cftools-win/
 
 ## Related
 
-- [Cloudflare Tools for Edge](https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc) - browser extension
+- [CFTools for Edge](https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc) - browser extension
 - Author: [301.st](https://301.st)
 
 ## License

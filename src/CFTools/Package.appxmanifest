@@ -16,7 +16,7 @@
   <mp:PhoneIdentity PhoneProductId="7B2F4E8A-CF01-4D5B-9A3E-2F1C8D6E9B0A" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
 
   <Properties>
-    <DisplayName>Cloudflare Tools</DisplayName>
+    <DisplayName>CFTools</DisplayName>
     <PublisherDisplayName>301</PublisherDisplayName>
     <Logo>Assets\logo_48.png</Logo>
   </Properties>
@@ -35,7 +35,7 @@
       EntryPoint="$targetentrypoint$">
 
       <uap:VisualElements
-        DisplayName="Cloudflare Tools"
+        DisplayName="CFTools"
         Description="Fast, reliable bulk zone management for Cloudflare"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\logo_128.png"

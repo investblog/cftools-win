@@ -1,7 +1,7 @@
-; Cloudflare Tools for Windows - InnoSetup Script
+; CFTools for Windows - InnoSetup Script
 ; Compile with: ISCC.exe setup.iss
 
-#define MyAppName "Cloudflare Tools"
+#define MyAppName "CFTools"
 #define MyAppVersion "1.1.0"
 #define MyAppPublisher "301.st"
 #define MyAppURL "https://301.st"
@@ -16,11 +16,11 @@ AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
-DefaultDirName={autopf}\CloudflareTools
+DefaultDirName={autopf}\CFTools
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=..\temp
-OutputBaseFilename=CloudflareTools-v{#MyAppVersion}-x64-setup
+OutputBaseFilename=CFTools-v{#MyAppVersion}-x64-setup
 SetupIconFile=..\src\CFTools\Assets\app.ico
 UninstallDisplayIcon={app}\Assets\app.ico
 Compression=lzma2/ultra64
