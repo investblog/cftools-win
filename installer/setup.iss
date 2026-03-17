@@ -2,7 +2,7 @@
 ; Compile with: ISCC.exe setup.iss
 
 #define MyAppName "CFTools"
-#define MyAppVersion "1.1.0"
+#define MyAppVersion "1.1.1"
 #define MyAppPublisher "301.st"
 #define MyAppURL "https://301.st"
 #define MyAppExeName "CFTools.exe"

@@ -10,7 +10,7 @@
   <Identity
     Name="301.CloudflareTools"
     Publisher="CN=BEE1F94B-ABDE-4CF8-9F30-1DF4DAFDAE83"
-    Version="1.1.0.0"
+    Version="1.1.1.0"
     ProcessorArchitecture="x64" />
 
   <mp:PhoneIdentity PhoneProductId="7B2F4E8A-CF01-4D5B-9A3E-2F1C8D6E9B0A" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
