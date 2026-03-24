@@ -1,13 +1,13 @@
 # CFTools for Windows
 
-[![GitHub release](https://img.shields.io/github/v/release/investblog/cftools-win)](https://github.com/investblog/cftools-win/releases/latest)
+[![Microsoft Store](https://img.shields.io/badge/Microsoft_Store-download-blue?logo=microsoft)](https://apps.microsoft.com/detail/9pn4wf799808)
 [![Sponsor](https://img.shields.io/badge/sponsor-301.st-orange)](https://301.st)
 
 CFTools for Windows is a desktop app for fast, high-confidence Cloudflare zone work at scale. It brings the core workflows of the CFTools browser extension to a native Windows UI with a cleaner, safer bulk-operations experience.
 
 **Stack:** C# / .NET 8 / WinUI 3 (Windows App SDK 1.6)
 
-**[Download latest release](https://github.com/investblog/cftools-win/releases/latest)**
+**[Get it from Microsoft Store](https://apps.microsoft.com/detail/9pn4wf799808)**
 
 ## Highlights
 
