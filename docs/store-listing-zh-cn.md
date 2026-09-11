@@ -2,9 +2,7 @@
 
 ## Description
 
-Cloudflare® 是 Cloudflare, Inc. 的注册商标。Cloudflare Tools 是由 301.st 开发的独立开源应用，与 Cloudflare, Inc. 无关联，未获其认可或赞助。它通过公开的 Cloudflare API v4 操作您自己的 Cloudflare 账户。
-
-Cloudflare Tools 将快速、可靠的区域批量管理带到 Windows 桌面。专为在多个 Cloudflare 账户中管理数十甚至数百个区域的域名专业人士打造。
+Cloudflare Tools 将快速、可靠的区域批量管理带到 Windows 桌面。专为在多个 Cloudflare 账户中管理数十甚至数百个区域的域名专业人士打造。 它通过公开的 Cloudflare API v4 操作您自己的 Cloudflare 账户。
 
 • 批量添加域名 — 从任意来源粘贴域名：列表、CSV、HTML、邮件、URL 或导出文件。解析器自动提取根域名，支持 IDN 和 Punycode，标记重复项，并允许在创建前检查列表。
 • 区域列表与 CSV 导出 — 查看每个区域的状态、套餐和名称服务器；按名称筛选并导出为 CSV，可导出单个账户或一次性导出全部账户。
@@ -43,3 +41,21 @@ Cloudflare Tools 将快速、可靠的区域批量管理带到 Windows 桌面。
 ## Search terms (Store — max 7 terms, 30 chars each)
 
 cloudflare 批量, 添加域名, 清除缓存, 删除区域, 区域导出 csv, cloudflare api 令牌, dns 区域
+
+## Short title (50)
+
+```
+Cloudflare Tools
+```
+
+## Short description (1000)
+
+```
+Windows 上的 Cloudflare 区域批量管理：从任意列表添加域名，浏览并导出区域为 CSV，批量清除缓存和删除区域。支持 API 令牌或 Global API Key、多账户和 12 种语言。
+```
+
+## Copyright and trademark info (200)
+
+```
+Cloudflare® 是 Cloudflare, Inc. 的注册商标。Cloudflare Tools 是 301.st 的独立应用，与 Cloudflare, Inc. 无关联，未获其认可或赞助。© 2026 301.st，MIT 许可证。
+```

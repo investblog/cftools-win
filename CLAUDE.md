@@ -240,7 +240,9 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
   -p:GenerateAppxPackageOnBuild=true -p:AppxBundle=Never \
   -p:UapAppxPackageBuildMode=StoreUpload \
   -p:AppxPackageDir=temp/AppPackages/
-# Output: src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/CFTools_<ver>_x64.msix (path is relative to csproj)
+# Output: src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/CFTools_<ver>_x64.msix — путь относителен csproj, НЕ корня репо!
+# Для подачи копировать в temp/AppPackages/ (корень), где лежат прошлые версии:
+#   cp src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/*.msix temp/AppPackages/CFTools_<ver>_x64_Test/
 # Partner Center accepts the .msix directly; no .msixupload is produced without mspdbcmf.exe (symbols).
 
 # GitHub / SourceForge assets: installer + zip + SHA256SUMS из self-contained сборки в temp/release/<ver>/

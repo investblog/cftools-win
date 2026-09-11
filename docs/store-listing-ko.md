@@ -2,9 +2,7 @@
 
 ## Description
 
-Cloudflare®는 Cloudflare, Inc.의 등록 상표입니다. Cloudflare Tools는 301.st가 만든 독립적인 오픈소스 앱으로, Cloudflare, Inc.와 제휴·승인·후원 관계가 없습니다. 공개 Cloudflare API v4를 통해 사용자 본인의 Cloudflare 계정을 다룹니다.
-
-Cloudflare Tools는 빠르고 안정적인 영역(zone) 대량 관리를 Windows 데스크톱에서 제공합니다. 여러 Cloudflare 계정에서 수십에서 수백 개의 영역을 관리하는 도메인 전문가를 위한 도구입니다.
+Cloudflare Tools는 빠르고 안정적인 영역(zone) 대량 관리를 Windows 데스크톱에서 제공합니다. 여러 Cloudflare 계정에서 수십에서 수백 개의 영역을 관리하는 도메인 전문가를 위한 도구입니다. 공개 Cloudflare API v4를 통해 사용자 본인의 Cloudflare 계정을 다룹니다.
 
 • 도메인 대량 추가 — 목록, CSV, HTML, 이메일, URL, 내보내기 등 어떤 형태의 텍스트든 붙여 넣기만 하면 됩니다. 파서가 루트 도메인을 추출하고 IDN과 Punycode를 처리하며 중복을 표시하고, 생성 전에 목록을 확인할 수 있습니다.
 • 영역 목록과 CSV 내보내기 — 모든 영역의 상태, 요금제, 네임서버 표시. 이름으로 필터링하고 한 계정 또는 모든 계정을 한 번에 CSV로 내보내기.
@@ -43,3 +41,21 @@ Cloudflare Tools는 빠르고 안정적인 영역(zone) 대량 관리를 Windows
 ## Search terms (Store — max 7 terms, 30 chars each)
 
 cloudflare 대량, 도메인 추가, 캐시 삭제, 영역 삭제, 영역 csv 내보내기, cloudflare api 토큰, dns 영역
+
+## Short title (50)
+
+```
+Cloudflare Tools
+```
+
+## Short description (1000)
+
+```
+Windows용 Cloudflare 영역 대량 관리: 어떤 목록에서든 도메인 추가, 영역 조회와 CSV 내보내기, 캐시 일괄 삭제, 영역 일괄 삭제. API 토큰 또는 Global API Key, 다중 계정, 12개 언어 지원.
+```
+
+## Copyright and trademark info (200)
+
+```
+Cloudflare®는 Cloudflare, Inc.의 등록 상표입니다. Cloudflare Tools는 301.st의 독립 앱으로 Cloudflare, Inc.와 제휴·승인·후원 관계가 없습니다. © 2026 301.st, MIT 라이선스.
+```

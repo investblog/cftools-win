@@ -2,9 +2,7 @@
 
 ## Description
 
-Cloudflare® é uma marca registrada da Cloudflare, Inc. O Cloudflare Tools é um aplicativo independente e de código aberto da 301.st. Não é afiliado, endossado nem patrocinado pela Cloudflare, Inc. Ele funciona com a sua própria conta Cloudflare por meio da API pública Cloudflare v4.
-
-O Cloudflare Tools traz gestão em massa de zonas, rápida e confiável, para a área de trabalho do Windows. Feito para profissionais de domínios que administram dezenas ou centenas de zonas em várias contas Cloudflare.
+O Cloudflare Tools traz gestão em massa de zonas, rápida e confiável, para a área de trabalho do Windows. Feito para profissionais de domínios que administram dezenas ou centenas de zonas em várias contas Cloudflare. Funciona com a sua própria conta Cloudflare por meio da API pública Cloudflare v4.
 
 • Adicionar domínios em massa — cole domínios de qualquer fonte: listas, CSV, HTML, e-mails, URLs ou exportações. O analisador extrai domínios raiz, trata IDN e Punycode, sinaliza duplicados e permite revisar a lista antes de criar qualquer coisa.
 • Lista de zonas e exportação CSV — cada zona com status, plano e servidores de nomes; filtre por nome e exporte em CSV, de uma conta ou de todas de uma vez.
@@ -43,3 +41,21 @@ Versão 1.2.0:
 ## Search terms (Store — max 7 terms, 30 chars each)
 
 cloudflare em massa, adicionar domínios, limpar cache, excluir zonas, exportar zonas csv, token api cloudflare, zonas dns
+
+## Short title (50)
+
+```
+Cloudflare Tools
+```
+
+## Short description (1000)
+
+```
+Gestão em massa de zonas Cloudflare no Windows: adicione domínios de qualquer lista, navegue e exporte zonas para CSV, limpe o cache e exclua zonas em lote. Token de API ou Global API Key, várias contas, 12 idiomas.
+```
+
+## Copyright and trademark info (200)
+
+```
+Cloudflare® é marca registrada da Cloudflare, Inc. Cloudflare Tools é um aplicativo independente da 301.st, sem afiliação com a Cloudflare, Inc. © 2026 301.st, licença MIT.
+```

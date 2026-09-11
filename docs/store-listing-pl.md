@@ -2,9 +2,7 @@
 
 ## Description
 
-Cloudflare® jest zastrzeżonym znakiem towarowym Cloudflare, Inc. Cloudflare Tools to niezależna aplikacja open source od 301.st. Nie jest powiązana z Cloudflare, Inc., ani przez nią zatwierdzona czy sponsorowana. Działa z Twoim własnym kontem Cloudflare przez publiczne Cloudflare API v4.
-
-Cloudflare Tools przenosi szybkie i niezawodne masowe zarządzanie strefami na pulpit Windows. Dla specjalistów od domen, którzy prowadzą dziesiątki lub setki stref na kilku kontach Cloudflare.
+Cloudflare Tools przenosi szybkie i niezawodne masowe zarządzanie strefami na pulpit Windows. Dla specjalistów od domen, którzy prowadzą dziesiątki lub setki stref na kilku kontach Cloudflare. Działa z Twoim własnym kontem Cloudflare przez publiczne Cloudflare API v4.
 
 • Masowe dodawanie domen — wklej domeny z dowolnego źródła: listy, CSV, HTML, e-maile, adresy URL lub eksporty. Parser wyodrębnia domeny główne, obsługuje IDN i Punycode, oznacza duplikaty i pozwala sprawdzić listę przed utworzeniem czegokolwiek.
 • Lista stref i eksport CSV — każda strefa ze statusem, planem i serwerami nazw; filtruj po nazwie i eksportuj do CSV, dla jednego konta lub wszystkich kont naraz.
@@ -43,3 +41,21 @@ Wersja 1.2.0:
 ## Search terms (Store — max 7 terms, 30 chars each)
 
 cloudflare masowo, dodaj domeny, wyczyść cache, usuń strefy, eksport stref csv, token api cloudflare, strefy dns
+
+## Short title (50)
+
+```
+Cloudflare Tools
+```
+
+## Short description (1000)
+
+```
+Masowe zarządzanie strefami Cloudflare w Windows: dodawaj domeny z dowolnej listy, przeglądaj i eksportuj strefy do CSV, czyść cache i usuwaj strefy partiami. Token API lub Global API Key, wiele kont, 12 języków.
+```
+
+## Copyright and trademark info (200)
+
+```
+Cloudflare® jest zastrzeżonym znakiem towarowym Cloudflare, Inc. Cloudflare Tools to niezależna aplikacja 301.st, niepowiązana z Cloudflare, Inc. © 2026 301.st, licencja MIT.
+```

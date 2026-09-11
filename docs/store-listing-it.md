@@ -2,9 +2,7 @@
 
 ## Description
 
-Cloudflare® è un marchio registrato di Cloudflare, Inc. Cloudflare Tools è un'app indipendente e open source di 301.st. Non è affiliata a Cloudflare, Inc., né approvata o sponsorizzata da essa. Funziona con il tuo account Cloudflare tramite l'API pubblica Cloudflare v4.
-
-Cloudflare Tools porta la gestione massiva delle zone, rapida e affidabile, sul desktop Windows. Pensata per i professionisti dei domini che gestiscono decine o centinaia di zone su più account Cloudflare.
+Cloudflare Tools porta la gestione massiva delle zone, rapida e affidabile, sul desktop Windows. Pensata per i professionisti dei domini che gestiscono decine o centinaia di zone su più account Cloudflare. Funziona con il tuo account Cloudflare tramite l'API pubblica Cloudflare v4.
 
 • Aggiunta domini in blocco — incolla domini da qualsiasi fonte: elenchi, CSV, HTML, e-mail, URL o esportazioni. Il parser estrae i domini radice, gestisce IDN e Punycode, segnala i duplicati e ti lascia controllare l'elenco prima di creare qualcosa.
 • Elenco zone ed esportazione CSV — ogni zona con stato, piano e name server; filtra per nome ed esporta in CSV, per un account o per tutti gli account insieme.
@@ -43,3 +41,21 @@ Versione 1.2.0:
 ## Search terms (Store — max 7 terms, 30 chars each)
 
 cloudflare in blocco, aggiungere domini, svuotare cache, eliminare zone, esportare zone csv, token api cloudflare, zone dns
+
+## Short title (50)
+
+```
+Cloudflare Tools
+```
+
+## Short description (1000)
+
+```
+Gestione massiva delle zone Cloudflare su Windows: aggiungi domini da qualsiasi elenco, sfoglia ed esporta le zone in CSV, svuota la cache ed elimina zone in blocco. Token API o Global API Key, più account, 12 lingue.
+```
+
+## Copyright and trademark info (200)
+
+```
+Cloudflare® è un marchio registrato di Cloudflare, Inc. Cloudflare Tools è un'app indipendente di 301.st, non affiliata a Cloudflare, Inc. © 2026 301.st, licenza MIT.
+```

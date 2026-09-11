@@ -2,9 +2,7 @@
 
 ## Description
 
-Cloudflare®, Cloudflare, Inc.'in tescilli ticari markasıdır. Cloudflare Tools, 301.st tarafından geliştirilen bağımsız ve açık kaynaklı bir uygulamadır. Cloudflare, Inc. ile bağlantılı değildir; onun tarafından onaylanmamış veya desteklenmemiştir. Herkese açık Cloudflare API v4 üzerinden kendi Cloudflare hesabınızla çalışır.
-
-Cloudflare Tools, hızlı ve güvenilir toplu bölge (zone) yönetimini Windows masaüstüne taşır. Birden fazla Cloudflare hesabında onlarca veya yüzlerce bölgeyi yöneten alan adı uzmanları için tasarlandı.
+Cloudflare Tools, hızlı ve güvenilir toplu bölge (zone) yönetimini Windows masaüstüne taşır. Birden fazla Cloudflare hesabında onlarca veya yüzlerce bölgeyi yöneten alan adı uzmanları için tasarlandı. Herkese açık Cloudflare API v4 üzerinden kendi Cloudflare hesabınızla çalışır.
 
 • Toplu alan adı ekleme — alan adlarını herhangi bir kaynaktan yapıştırın: listeler, CSV, HTML, e-postalar, URL'ler veya dışa aktarmalar. Ayrıştırıcı kök alan adlarını çıkarır, IDN ve Punycode'u destekler, yinelenenleri işaretler ve oluşturmadan önce listeyi kontrol etmenizi sağlar.
 • Bölge listesi ve CSV dışa aktarma — her bölge durumu, planı ve ad sunucularıyla; ada göre filtreleyin ve tek bir hesap ya da tüm hesaplar için CSV'ye aktarın.
@@ -43,3 +41,21 @@ Sürüm 1.2.0:
 ## Search terms (Store — max 7 terms, 30 chars each)
 
 cloudflare toplu, alan adı ekle, önbellek temizle, bölge sil, bölge csv dışa aktar, cloudflare api belirteci, dns bölgeleri
+
+## Short title (50)
+
+```
+Cloudflare Tools
+```
+
+## Short description (1000)
+
+```
+Windows'ta toplu Cloudflare bölge yönetimi: herhangi bir listeden alan adı ekleyin, bölgeleri görüntüleyip CSV'ye aktarın, önbelleği temizleyin ve bölgeleri toplu silin. API belirteci veya Global API Key, birden fazla hesap, 12 dil.
+```
+
+## Copyright and trademark info (200)
+
+```
+Cloudflare®, Cloudflare, Inc.'in tescilli ticari markasıdır. Cloudflare Tools, 301.st'nin bağımsız uygulamasıdır; Cloudflare, Inc. ile bağlantılı değildir. © 2026 301.st, MIT lisansı.
+```

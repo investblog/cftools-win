@@ -18,7 +18,7 @@ from pathlib import Path
 LANGS = ["en", "ru", "de", "fr", "es", "it", "pt-br", "ja", "ko", "zh-cn", "pl", "tr"]
 DOCS = Path(__file__).resolve().parent.parent / "docs"
 
-LIMITS = {"description": 10000, "whats_new": 1500, "feature": 200, "features": 20, "term": 30, "terms": 7}
+LIMITS = {"description": 10000, "whats_new": 1500, "feature": 200, "features": 20, "term": 30, "terms": 7, "short_title": 50, "short_description": 1000, "copyright": 200}
 
 
 def section(text: str, title: str) -> str:
@@ -55,6 +55,15 @@ def check(lang: str) -> list[str]:
     for i, feature in enumerate(features, 1):
         if len(feature) > LIMITS["feature"]:
             errors.append(f"Feature {i}: {len(feature)} chars > {LIMITS['feature']}")
+
+    for title, key in (("Short title", "short_title"), ("Short description", "short_description"), ("Copyright and trademark info", "copyright")):
+        body = section(text, title)
+        m = re.search(r"```\n(.*?)\n```", body, re.S)
+        value = m.group(1) if m else ""
+        if not value:
+            errors.append(f"{title}: empty")
+        elif len(value.encode("utf-16-le")) // 2 > LIMITS[key]:
+            errors.append(f"{title}: {len(value)} chars > {LIMITS[key]}")
 
     terms_text = section(text, "Search terms")
     terms = [t.strip() for t in terms_text.replace("\n", " ").split(",") if t.strip()]

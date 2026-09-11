@@ -2,9 +2,7 @@
 
 ## Description
 
-Cloudflare® は Cloudflare, Inc. の登録商標です。Cloudflare Tools は 301.st が開発する独立したオープンソースアプリで、Cloudflare, Inc. とは提携・承認・後援のいずれの関係もありません。公開されている Cloudflare API v4 を通じて、ご自身の Cloudflare アカウントを操作します。
-
-Cloudflare Tools は、高速で信頼できるゾーンの一括管理を Windows デスクトップにもたらします。複数の Cloudflare アカウントで数十〜数百のゾーンを扱うドメイン担当者のためのツールです。
+Cloudflare Tools は、高速で信頼できるゾーンの一括管理を Windows デスクトップにもたらします。複数の Cloudflare アカウントで数十〜数百のゾーンを扱うドメイン担当者のためのツールです。 公開されている Cloudflare API v4 を通じて、ご自身の Cloudflare アカウントを操作します。
 
 • ドメインの一括追加 — リスト、CSV、HTML、メール、URL、エクスポートなど、どんな形式のテキストでも貼り付けるだけ。パーサーがルートドメインを抽出し、IDN と Punycode に対応、重複を検出し、作成前にリストを確認できます。
 • ゾーン一覧と CSV エクスポート — 全ゾーンのステータス、プラン、ネームサーバーを表示。名前で絞り込み、1 アカウントまたは全アカウントをまとめて CSV に出力。
@@ -43,3 +41,21 @@ Cloudflare Tools は、高速で信頼できるゾーンの一括管理を Windo
 ## Search terms (Store — max 7 terms, 30 chars each)
 
 cloudflare 一括, ドメイン追加, キャッシュ削除, ゾーン削除, ゾーン csv エクスポート, cloudflare api トークン, dns ゾーン
+
+## Short title (50)
+
+```
+Cloudflare Tools
+```
+
+## Short description (1000)
+
+```
+Windows 向けの Cloudflare ゾーン一括管理: 任意のリストからドメインを追加、ゾーンの閲覧と CSV エクスポート、キャッシュの一括削除、ゾーンの一括削除。API トークンまたは Global API Key、複数アカウント、12 言語対応。
+```
+
+## Copyright and trademark info (200)
+
+```
+Cloudflare® は Cloudflare, Inc. の登録商標です。Cloudflare Tools は 301.st の独立したアプリで、Cloudflare, Inc. とは提携・承認・後援の関係にありません。© 2026 301.st, MIT ライセンス。
+```

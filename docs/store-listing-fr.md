@@ -2,9 +2,7 @@
 
 ## Description
 
-Cloudflare® est une marque déposée de Cloudflare, Inc. Cloudflare Tools est une application indépendante et open source de 301.st. Elle n'est ni affiliée à Cloudflare, Inc., ni approuvée ou sponsorisée par elle. Elle fonctionne avec votre propre compte Cloudflare via l'API publique Cloudflare v4.
-
-Cloudflare Tools apporte une gestion de zones en masse, rapide et fiable, sur le bureau Windows. Conçu pour les professionnels des domaines qui gèrent des dizaines ou des centaines de zones sur plusieurs comptes Cloudflare.
+Cloudflare Tools apporte une gestion de zones en masse, rapide et fiable, sur le bureau Windows. Conçu pour les professionnels des domaines qui gèrent des dizaines ou des centaines de zones sur plusieurs comptes Cloudflare. Elle fonctionne avec votre propre compte Cloudflare via l'API publique Cloudflare v4.
 
 • Ajout de domaines en masse — collez des domaines depuis n'importe quelle source : listes, CSV, HTML, e-mails, URL ou exports. L'analyseur extrait les domaines racine, gère IDN et Punycode, signale les doublons et vous laisse vérifier la liste avant toute création.
 • Liste des zones et export CSV — chaque zone avec statut, plan et serveurs de noms ; filtrez par nom et exportez en CSV, pour un compte ou pour tous les comptes à la fois.
@@ -43,3 +41,21 @@ Version 1.2.0 :
 ## Search terms (Store — max 7 terms, 30 chars each)
 
 cloudflare en masse, ajouter domaines, purger cache, supprimer zones, export zones csv, jeton api cloudflare, zones dns
+
+## Short title (50)
+
+```
+Cloudflare Tools
+```
+
+## Short description (1000)
+
+```
+Gestion de zones Cloudflare en masse sur Windows : ajoutez des domaines depuis n'importe quelle liste, parcourez et exportez les zones en CSV, purgez le cache et supprimez des zones par lots. Jeton d'API ou Global API Key, plusieurs comptes, 12 langues.
+```
+
+## Copyright and trademark info (200)
+
+```
+Cloudflare® est une marque déposée de Cloudflare, Inc. Cloudflare Tools est une application indépendante de 301.st, sans lien avec Cloudflare, Inc. © 2026 301.st, licence MIT.
+```
