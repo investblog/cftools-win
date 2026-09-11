@@ -1,6 +1,14 @@
 # SourceForge project listing
 
-**Status: prepared, not yet created.** Form-ready values for the GitHub Project Importer and for
+**Status: live since 2026-09-11 at <https://sourceforge.net/projects/cloudflare-tools/>** (unixname
+`cloudflare-tools`, 16 characters: the importer accepted it, so the 15-character limit this file
+assumed earlier was wrong). Filled and read back from the server the same day: Name, Homepage,
+Summary, Description (945 characters as stored), 10 features, support URL, all 23 categories,
+4 screenshots with captions; v1.2.0 imported into Files with the release notes as README; the
+installer pinned as Default Download for Windows and confirmed through `best_release.json`.
+Still open: the GitHub release webhook (see "Keeping releases flowing").
+
+Form-ready values for the GitHub Project Importer and for
 the project admin pages, in the layout the spintax-studio project used
 (`W:\Projects\spintax-studio\docs\sourceforge-listing.md`). The field limits below are the ones
 read off SourceForge's admin form there on 2026-09-05: Name 40, Short Summary 70, Full
@@ -19,7 +27,7 @@ folder behind the big green Download button. If it runs first, the page advertis
 | GitHub Repository URL | `https://github.com/investblog/cftools-win` |
 | Github User / Organization | `investblog` |
 | GitHub Repo Name | `cftools-win` |
-| SourceForge URL Name | `cftools-win` — fixed forever once created. SourceForge unixnames are 3–15 characters (lowercase letters, digits, hyphens), so `cloudflare-tools` (16) is rejected; `cftools` belongs to an unrelated project |
+| SourceForge URL Name | `cloudflare-tools` (used; accepted at 16 characters). `cftools` belongs to an unrelated project |
 | Downloads | **tick** — imports the GitHub releases into Files |
 | Source Code | **tick** — a read-only mirror of the repo; the Store listing already says "source on GitHub" |
 | Issues | **untick** — issues stay on GitHub; a second tracker splits reports |
@@ -105,7 +113,7 @@ listing's Product features, in SourceForge's narrower column.
   SourceForge picks by heuristic and has picked source archives before.
 - The MSIX is never a GitHub asset (unsigned outside the Store, so it cannot be installed), so
   nothing needs deleting here.
-- Verify from outside, logged out: `https://sourceforge.net/projects/cftools-win/files/latest/download`
+- Verify from outside, logged out: `https://sourceforge.net/projects/cloudflare-tools/files/latest/download`
   must resolve to the installer.
 
 ## Screenshots
@@ -117,6 +125,6 @@ upload the Zones page too once it is captured. 1500×890 works well on the page.
 
 The importer is one-shot. For later releases either re-run the import form (Downloads only) or
 add a GitHub webhook the narrow way, as spintax-studio did: repository → Settings → Webhooks →
-`https://sourceforge.net/p/<unixname>/files-sf/github_webhook`, content type `form`, event
+`https://sourceforge.net/p/cloudflare-tools/files-sf/github_webhook`, content type `form`, event
 `release` only, secret from the SourceForge Files admin page. It sends events to SourceForge and
 grants it nothing.
