@@ -231,19 +231,32 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 ## Сборка MSIX для Store
 
 ```bash
-# MSIX пакет (без подписи — Store подпишет сам)
+# MSIX пакет (без подписи — Store подпишет сам). SelfContained=true ОБЯЗАТЕЛЬНО: без него в пакете нет
+# .NET-рантайма (нет coreclr.dll, нет PackageDependency) и на чистой машине приложение просит установить .NET.
+# 1.1.x уходили в Store framework-dependent — это было ошибкой, с 1.2.0 self-contained (~65 МБ msix вместо 31).
 "/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe" \
   src/CFTools/CFTools.csproj \
-  -p:Platform=x64 -p:Configuration=Release -p:RuntimeIdentifier=win-x64 \
+  -p:Platform=x64 -p:Configuration=Release -p:RuntimeIdentifier=win-x64 -p:SelfContained=true \
   -p:GenerateAppxPackageOnBuild=true -p:AppxBundle=Never \
   -p:UapAppxPackageBuildMode=StoreUpload \
   -p:AppxPackageDir=temp/AppPackages/
 # Output: src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/CFTools_<ver>_x64.msix (path is relative to csproj)
 # Partner Center accepts the .msix directly; no .msixupload is produced without mspdbcmf.exe (symbols).
 
-# InnoSetup installer (для GitHub Releases)
-"W:\Program Files\Inno Setup 6\ISCC.exe" installer\setup.iss   # ISCC is on W:, not C:
+# GitHub / SourceForge assets: installer + zip + SHA256SUMS из self-contained сборки в temp/release/<ver>/
+python scripts/make-release.py --build     # --build запускает MSBuild -p:RuntimeIdentifier=win-x64 -p:SelfContained=true
+# (ISCC лежит на W:\Program Files\Inno Setup 6\ISCC.exe; setup.iss берёт bin\...\win-x64 по умолчанию)
 ```
+
+## Релиз: что куда
+
+| Канал | Артефакт | Как |
+|---|---|---|
+| Microsoft Store | `src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/CFTools_<ver>_x64.msix` | Partner Center руками; листинги 12 языков из `docs/store-listing-*.md`, notes for certification из EN |
+| GitHub Releases | `temp/release/<ver>/` — setup.exe, zip, SHA256SUMS | тело релиза = `docs/release-notes/v<ver>.md` (первым делом «какой файл качать»); msix НЕ прикладывать (без подписи не ставится, SourceForge сделает его default download) |
+| SourceForge | зеркало GitHub Releases | `docs/sourceforge-listing.md`: значения для GitHub Project Importer, тексты под лимиты формы (страж `scripts/check-sourceforge-listing.py`), категории, default download = setup.exe. Сначала публикуется GitHub-релиз, потом импорт |
+
+Подписи кода нет (SmartScreen предупреждает). План как у Buho: SignPath Foundation для OSS.
 
 ## Очередь разработки
 

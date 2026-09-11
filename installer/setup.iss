@@ -6,7 +6,13 @@
 #define MyAppPublisher "301.st"
 #define MyAppURL "https://301.st"
 #define MyAppExeName "CFTools.exe"
-#define BuildDir "..\src\CFTools\bin\x64\Release\net8.0-windows10.0.19041.0"
+; Self-contained x64 build (MSBuild -p:RuntimeIdentifier=win-x64 -p:SelfContained=true): the
+; installed app needs no .NET runtime. scripts/make-release.py overrides this via /DBuildDirOverride.
+#ifdef BuildDirOverride
+  #define BuildDir BuildDirOverride
+#else
+  #define BuildDir "..\src\CFTools\bin\x64\Release\net8.0-windows10.0.19041.0\win-x64"
+#endif
 
 [Setup]
 AppId={{7B2F4E8A-CF01-4D5B-9A3E-2F1C8D6E9B0A}
@@ -38,7 +44,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#BuildDir}\*"; DestDir: "{app}"; Excludes: "win-x64,win-x86,win-arm64,*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#BuildDir}\*"; DestDir: "{app}"; Excludes: "win-x64,win-x86,win-arm64,*.pdb,*.appxrecipe,AppxManifest.xml"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
