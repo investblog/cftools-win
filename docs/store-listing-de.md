@@ -60,6 +60,12 @@ Massenverwaltung von Cloudflare-Zonen unter Windows: Domains aus jeder Liste hin
 Cloudflare® ist eine eingetragene Marke von Cloudflare, Inc. Cloudflare Tools ist eine unabhängige App von 301.st ohne Verbindung zu Cloudflare, Inc. © 2026 301.st, MIT-Lizenz.
 ```
 
+## Developed by (255)
+
+```
+301.st — die Plattform für Edge-Redirects und Domainverwaltung auf Cloudflare: Massen-Redirects, TDS-Routing, Zoneninventar mit Nameserver-Prüfung und Ablaufverfolgung. Kostenlos bis 10 Domains. https://301.st
+```
+
 ## Screenshot captions (temp/screenshots, 200 each)
 
 - `adddomains.png` — Domains hinzufügen: beliebige Liste einfügen, der Parser extrahiert Root-Domains und prüft sie vor dem Anlegen

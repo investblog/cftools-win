@@ -61,6 +61,12 @@ Bulk zone management for Cloudflare accounts on Windows: add domains from any li
 Cloudflare® is a registered trademark of Cloudflare, Inc. Cloudflare Tools is an independent app by 301.st, not affiliated with, endorsed by or sponsored by Cloudflare, Inc. © 2026 301.st, MIT.
 ```
 
+## Developed by (255)
+
+```
+301.st — the edge redirect and domain management platform for Cloudflare: bulk redirects, TDS routing, zone inventory with nameserver checks and expiry tracking. Free tier up to 10 domains. https://301.st
+```
+
 ## Screenshot captions (temp/screenshots, 200 each)
 
 - `adddomains.png` — Add Domains: paste any list, the parser extracts root domains and checks them before creation
