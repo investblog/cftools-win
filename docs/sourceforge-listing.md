@@ -19,7 +19,7 @@ folder behind the big green Download button. If it runs first, the page advertis
 | GitHub Repository URL | `https://github.com/investblog/cftools-win` |
 | Github User / Organization | `investblog` |
 | GitHub Repo Name | `cftools-win` |
-| SourceForge URL Name | `cloudflare-tools` — fixed forever once created; falls back to `cftools-win` if taken |
+| SourceForge URL Name | `cftools-win` — fixed forever once created. SourceForge unixnames are 3–15 characters (lowercase letters, digits, hyphens), so `cloudflare-tools` (16) is rejected; `cftools` belongs to an unrelated project |
 | Downloads | **tick** — imports the GitHub releases into Files |
 | Source Code | **tick** — a read-only mirror of the repo; the Store listing already says "source on GitHub" |
 | Issues | **untick** — issues stay on GitHub; a second tracker splits reports |
@@ -105,7 +105,7 @@ listing's Product features, in SourceForge's narrower column.
   SourceForge picks by heuristic and has picked source archives before.
 - The MSIX is never a GitHub asset (unsigned outside the Store, so it cannot be installed), so
   nothing needs deleting here.
-- Verify from outside, logged out: `https://sourceforge.net/projects/<unixname>/files/latest/download`
+- Verify from outside, logged out: `https://sourceforge.net/projects/cftools-win/files/latest/download`
   must resolve to the installer.
 
 ## Screenshots
