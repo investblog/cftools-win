@@ -1,0 +1,45 @@
+# Cloudflare Tools — Store Listing (Türkçe / tr)
+
+## Description
+
+Cloudflare®, Cloudflare, Inc.'in tescilli ticari markasıdır. Cloudflare Tools, 301.st tarafından geliştirilen bağımsız ve açık kaynaklı bir uygulamadır. Cloudflare, Inc. ile bağlantılı değildir; onun tarafından onaylanmamış veya desteklenmemiştir. Herkese açık Cloudflare API v4 üzerinden kendi Cloudflare hesabınızla çalışır.
+
+Uygulama arayüzü İngilizcedir.
+
+Cloudflare Tools, hızlı ve güvenilir toplu bölge (zone) yönetimini Windows masaüstüne taşır. Birden fazla Cloudflare hesabında onlarca veya yüzlerce bölgeyi yöneten alan adı uzmanları için tasarlandı.
+
+• Toplu alan adı ekleme — alan adlarını herhangi bir kaynaktan yapıştırın: listeler, CSV, HTML, e-postalar, URL'ler veya dışa aktarmalar. Ayrıştırıcı kök alan adlarını çıkarır, IDN ve Punycode'u destekler, yinelenenleri işaretler ve oluşturmadan önce listeyi kontrol etmenizi sağlar.
+• Bölge listesi ve CSV dışa aktarma — her bölge durumu, planı ve ad sunucularıyla; ada göre filtreleyin ve tek bir hesap ya da tüm hesaplar için CSV'ye aktarın.
+• Toplu önbellek temizleme — bölgeleri seçin, toplu temizlemeyi başlatın ve her bölgenin ilerlemesini izleyin.
+• Toplu bölge silme — filtreleyin, seçin, güvenlik iletişim kutusunda onaylayın, her bölgenin durumunu izleyin; liste bitince yenilenir.
+• Sonuçları dışa aktarma — her ekleme, temizleme veya silme işleminden sonra alan adı başına durum ve hata metni içeren bir CSV kaydedin.
+• API belirteci veya Global API Key — kullanıcı belirteci (cfut_), hesap belirteci (cfat_) veya klasik anahtarla oturum açın; tür yapıştırılan gizli anahtardan otomatik algılanır.
+• Birden fazla hesap — bir kez oturum açın, kimlik bilgilerini yeniden girmeden hesap değiştirin.
+• Koyu ve açık tema — Windows ayarına göre veya elle.
+
+Kimlik bilgileri Windows Kimlik Bilgisi Yöneticisi'nde kalır ve yalnızca Cloudflare API'ye gönderilir. Telemetri yok, analiz yok, satın alma yok. Kaynak kodu GitHub'da.
+
+Aynı adla Chrome, Edge ve Firefox için tarayıcı uzantısı olarak da mevcuttur. Uç yönlendirme yönetim platformu 301.st tarafından geliştirildi.
+
+## What's new
+
+Sürüm 1.2.0:
+• CSV dışa aktarmalı Bölgeler sayfası (tek hesap veya tüm hesaplar)
+• Global API Key'in yanı sıra API belirteçleriyle (cfut_ / cfat_) oturum açma
+• Toplu işlem sonuçlarını (ekleme / temizleme / silme) CSV'ye aktarma
+• Hakkında sayfasında "Uygulamayı değerlendir", uzantı bağlantıları ve ticari marka bildirimi
+
+## Product features (keyword-first, ≤200 chars each)
+
+1. Cloudflare'e toplu alan adı ekleme: liste, CSV, HTML veya URL yapıştırın — kök alan adları çıkarılır, IDN ve Punycode desteklenir, yinelenenler işaretlenir, oluşturmadan önce ön kontrol
+2. Durum, plan ve ad sunucularıyla bölge listesi — ada göre filtre, tek hesap veya tüm hesaplar için CSV dışa aktarma
+3. Seçili bölgeler için toplu önbellek temizleme, bölge başına ilerleme ve iptal
+4. Güvenlik onayı, bölge başına durum ve otomatik yenilemeyle toplu bölge silme
+5. Toplu işlem sonuçlarını CSV'ye aktarma: alan adı, durum, hata — kayıt veya yeniden deneme için
+6. API belirteci (cfut_ / cfat_) veya Global API Key ile oturum açma, tür otomatik algılanır; gizli anahtarlar Windows Kimlik Bilgisi Yöneticisi'nde kalır
+7. Birden fazla hesap: tek oturum açma, kimlik bilgilerini yeniden girmeden Cloudflare hesabı değiştirme
+8. Hız sınırına duyarlı istek kuyruğu, yeniden deneme ve geri çekilme ile; koyu ve açık tema; açık kaynak, telemetri yok
+
+## Search terms (Store — max 7 terms, 30 chars each)
+
+cloudflare toplu, alan adı ekle, önbellek temizle, bölge sil, bölge csv dışa aktar, cloudflare api belirteci, dns bölgeleri

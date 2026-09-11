@@ -1,0 +1,45 @@
+# Cloudflare Tools — Store Listing (Español / es)
+
+## Description
+
+Cloudflare® es una marca registrada de Cloudflare, Inc. Cloudflare Tools es una aplicación independiente y de código abierto creada por 301.st. No está afiliada a Cloudflare, Inc., ni respaldada ni patrocinada por ella. Funciona con su propia cuenta de Cloudflare a través de la API pública de Cloudflare v4.
+
+La interfaz de la aplicación está en inglés.
+
+Cloudflare Tools lleva la gestión masiva de zonas, rápida y fiable, al escritorio de Windows. Pensada para profesionales de dominios que administran decenas o cientos de zonas en varias cuentas de Cloudflare.
+
+• Agregar dominios en masa — pegue dominios desde cualquier fuente: listas, CSV, HTML, correos, URL o exportaciones. El analizador extrae dominios raíz, admite IDN y Punycode, marca duplicados y le deja revisar la lista antes de crear nada.
+• Lista de zonas y exportación CSV — cada zona con estado, plan y servidores de nombres; filtre por nombre y exporte a CSV, de una cuenta o de todas a la vez.
+• Purga de caché en masa — seleccione zonas, ejecute la purga por lotes y siga el progreso de cada zona.
+• Eliminación de zonas en masa — filtre, seleccione, confirme en un diálogo de seguridad, siga el estado de cada zona; la lista se recarga al terminar.
+• Exportación de resultados — tras cualquier adición, purga o eliminación, guarde un CSV con el estado y el texto de error por dominio.
+• Token de API o Global API Key — inicie sesión con un token de usuario (cfut_), un token de cuenta (cfat_) o la clave clásica; el tipo se detecta a partir del secreto pegado.
+• Varias cuentas — inicie sesión una vez y cambie de cuenta sin volver a introducir credenciales.
+• Temas oscuro y claro — según Windows o manual.
+
+Las credenciales permanecen en el Administrador de credenciales de Windows y solo se envían a la API de Cloudflare. Sin telemetría, sin analítica, sin compras. Código fuente en GitHub.
+
+También disponible como extensión para Chrome, Edge y Firefox con el mismo nombre. Creada por 301.st, una plataforma de gestión de redirecciones en el edge.
+
+## What's new
+
+Versión 1.2.0:
+• Página Zonas con exportación CSV (una cuenta o todas)
+• Inicio de sesión con tokens de API (cfut_ / cfat_) además de la Global API Key
+• Exportación de resultados de lote (agregar / purgar / eliminar) a CSV
+• «Valorar la aplicación», enlaces a las extensiones y aviso de marca en la página Acerca de
+
+## Product features (keyword-first, ≤200 chars each)
+
+1. Agregar dominios en masa a Cloudflare: pegue listas, CSV, HTML o URL — dominios raíz extraídos, IDN y Punycode, duplicados marcados, comprobación previa antes de crear
+2. Lista de zonas con estado, plan y servidores de nombres — filtro por nombre, exportación CSV de una cuenta o de todas a la vez
+3. Purga de caché en masa para las zonas seleccionadas, con progreso por zona y cancelación
+4. Eliminación de zonas en masa con confirmación de seguridad, estado por zona y recarga automática
+5. Exportación de resultados de lote a CSV: dominio, estado, error — para sus registros o un reintento
+6. Inicio de sesión con token de API (cfut_ / cfat_) o Global API Key, tipo detectado automáticamente; los secretos quedan en el Administrador de credenciales de Windows
+7. Varias cuentas: un solo inicio de sesión, cambio de cuenta de Cloudflare sin volver a escribir credenciales
+8. Cola de solicitudes que respeta los límites, con reintentos y backoff; temas oscuro y claro; código abierto, sin telemetría
+
+## Search terms (Store — max 7 terms, 30 chars each)
+
+cloudflare en masa, agregar dominios, purgar caché, eliminar zonas, exportar zonas csv, token api cloudflare, zonas dns

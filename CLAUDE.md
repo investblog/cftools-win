@@ -215,8 +215,8 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 
 - **Partner Center**: MSIX app, identity `301.CloudflareTools`, publisher `CN=BEE1F94B-ABDE-4CF8-9F30-1DF4DAFDAE83`
 - **Статус**: опубликовано как «CFTools» (1.1.1), https://apps.microsoft.com/detail/9pn4wf799808
-- **v1.2.0 (2026-09-11)**: собрано под именем «Cloudflare Tools» (зарезервировано в Partner Center). План: подать с trademark-дисклеймером первой строкой описания + notes for certification (см. temp/store-listing-en.md). Если отклонят по 10.1.1.1 — фолбэк «CFTools for Cloudflare» (паттерн «X for Y»: зарезервировать имя, поменять DisplayName в манифесте/About/README, пересобрать).
-- **Store listings готовы**: EN, RU, ZH, DE, ES (в temp/, обновлены под 1.2.0 с дисклеймером)
+- **v1.2.0 (2026-09-11)**: собрано под именем «Cloudflare Tools» (зарезервировано в Partner Center). План: подать с trademark-дисклеймером первой строкой описания + notes for certification (см. docs/store-listing-en.md). Если отклонят по 10.1.1.1 — фолбэк «CFTools for Cloudflare» (паттерн «X for Y»: зарезервировать имя, поменять DisplayName в манифесте/About/README, пересобрать).
+- **Store listings**: 12 языков по принципу Buho (en, ru, de, fr, es, it, pt-br, ja, ko, zh-cn, pl, tr) в `docs/store-listing-<lang>.md`: Description (дисклеймер первой строкой + «интерфейс на английском»), What's new, Product features ≤200 симв., Search terms ≤7×30. Проверка лимитов: `python scripts/check-store-listings.py`. Манифест объявляет только `en-us` (UI не локализован, политика 10.7), языки листинга добавляются в Partner Center отдельно. На 2026-09-11 в Partner Center загружен только EN.
 
 ## Сборка MSIX для Store
 
