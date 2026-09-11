@@ -6,6 +6,8 @@
 
 Windows-порт браузерного расширения [cloudflare-tools](W:\Projects\cloudflare-tools) — десктопное приложение для bulk-операций с Cloudflare зонами.
 
+**Имя продукта:** «Cloudflare Tools» (с v1.2.0; в 1.1.x было «CFTools» после отказа Store по 10.1.1.1). Внутренние идентификаторы (namespace `CFTools`, exe, Credential Manager resource, папка настроек) не переименовываются.
+
 **Стек:** C# / .NET 8 / WinUI 3 (Windows App SDK 1.6) / CommunityToolkit.Mvvm
 **Спецификация:** `SPEC.md` — **читай перед любой работой**
 
@@ -24,29 +26,38 @@ cftools-win/
 │   ├── Converters/BoolConverters.cs  # Bool↔Visibility
 │   ├── Views/
 │   │   ├── AuthPage.xaml/.cs
+│   │   ├── ZonesPage.xaml/.cs           # Zone list + CSV export
 │   │   ├── AddDomainsPage.xaml/.cs
 │   │   ├── PurgeCachePage.xaml/.cs
 │   │   └── DeleteDomainsPage.xaml/.cs
 │   ├── ViewModels/
 │   │   ├── AuthViewModel.cs
+│   │   ├── ZonesViewModel.cs             # ZoneRow + export commands
 │   │   ├── AddDomainsViewModel.cs
 │   │   ├── PurgeCacheViewModel.cs
 │   │   ├── DeleteDomainsViewModel.cs
 │   │   └── ZoneSelection.cs          # Shared zone wrapper for Purge/Delete
 │   ├── Services/
-│   │   ├── CloudflareApi.cs          # CF API v4 client
-│   │   ├── CredentialStore.cs        # Windows Credential Manager
+│   │   ├── CloudflareApi.cs          # CF API v4 client (Bearer / X-Auth-Key)
+│   │   ├── CredentialStore.cs        # Windows Credential Manager (kind encoded in UserName)
+│   │   ├── CsvBuilder.cs             # Pure CSV assembly (Core, tested)
+│   │   ├── FileExporter.cs           # FileSavePicker + write (UI thread)
 │   │   ├── RequestPool.cs            # Rate-limited queue with backoff
 │   │   └── DomainParser.cs           # Domain extraction from text
 │   └── Models/
 │       ├── CloudflareModels.cs       # API DTOs + state models
+│       ├── CredentialModels.cs       # CredentialKind / CfCredential / detector (Core, tested)
 │       └── ErrorModels.cs            # Error normalization
 ├── src/CFTools.Core/                 # Pure .NET 8 library (no WinUI)
 │   └── CFTools.Core.csproj           # Links Models/ + Services/ for testing
 ├── tests/CFTools.Tests/              # xUnit (targets net8.0 via Core)
-│   ├── DomainParserTests.cs          # 14 tests
-│   ├── ErrorNormalizerTests.cs       # 12 tests
-│   └── RequestPoolTests.cs           # 8 tests
+│   ├── DomainParserTests.cs
+│   ├── ErrorNormalizerTests.cs
+│   ├── RequestPoolTests.cs
+│   ├── CredentialDetectorTests.cs
+│   ├── CredentialVaultCodecTests.cs  # Credential Manager user-name encoding round-trips
+│   ├── CsvBuilderTests.cs
+│   └── ApiResponseTests.cs           # messages[] are objects, not strings — 93 tests total
 └── SPEC.md
 ```
 
@@ -77,11 +88,13 @@ dotnet csharpier check src/ tests/
 
 Base URL: `https://api.cloudflare.com/client/v4/` (trailing slash обязателен для HttpClient.BaseAddress!)
 
-Headers: `X-Auth-Email` + `X-Auth-Key`
+Headers: `X-Auth-Email` + `X-Auth-Key` (Global API Key) **или** `Authorization: Bearer <token>` (cfut_/cfat_). Тип определяется по префиксу секрета (`CredentialDetector`), 37-hex без префикса = legacy Global Key, неизвестный формат: с email → key, без → token.
 
 Endpoints:
 ```
-GET    user                          → верификация
+GET    user                          → верификация (Global API Key)
+GET    user/tokens/verify            → верификация user token (cfut_)
+GET    accounts/{id}/tokens/verify   → верификация account token (cfat_)
 GET    accounts                      → список аккаунтов
 GET    zones?account.id=X&page=P     → список зон
 GET    zones?name=domain.com         → preflight-проверка
@@ -192,13 +205,18 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 11. **Punycode tooltips** — hover на xn-- доменах показывает Unicode оригинал
 12. **MSIX packaging** — Package.appxmanifest с Store identity, сборка через MSBuild CLI
 13. **InnoSetup installer** — для GitHub Releases (standalone distribution)
+14. **Zone List** (v1.2.0) — страница Zones: список зон аккаунта (status/plan/NS), фильтр, Export CSV (видимые) и Export all accounts (по `App.AvailableAccounts`)
+15. **API Token auth** (v1.2.0) — cfut_/cfat_ с автоопределением, для cfat_ опциональный Account ID; `App.CurrentEmail` для токенов хранит label «API token xxxxxxxx»
+16. **Batch result export** (v1.2.0) — кнопка «Export results» после батча в Add/Purge/Delete → CSV `domain,status,error`
+17. **Rate this app** + ссылки на расширения + trademark-дисклеймер на About
+18. **301.st tips** (v1.2.0) — контекстное промо своего сервиса: InfoBar после успешного Bulk Add (закрытие запоминается в `AppSettings.AfterCreateTipDismissed`), строка на Zones при наличии не-active зон, строка на Auth. Ссылки через `PromoLinks` с utm_campaign per placement. Выключается в Settings → «Show 301.st tips». Глиф — `Views/Controls/Logo301` (Path из 301-ui `brand/301.svg`).
 
 ## Store
 
 - **Partner Center**: MSIX app, identity `301.CloudflareTools`, publisher `CN=BEE1F94B-ABDE-4CF8-9F30-1DF4DAFDAE83`
-- **Статус**: submitted, ожидает approval
-- **Store listings готовы**: EN, RU, ZH, DE, ES (в temp/)
-- **После апрува**: добавить переводы листинга на 4 языка
+- **Статус**: опубликовано как «CFTools» (1.1.1), https://apps.microsoft.com/detail/9pn4wf799808
+- **v1.2.0 (2026-09-11)**: собрано под именем «Cloudflare Tools» (зарезервировано в Partner Center). План: подать с trademark-дисклеймером первой строкой описания + notes for certification (см. temp/store-listing-en.md). Если отклонят по 10.1.1.1 — фолбэк «CFTools for Cloudflare» (паттерн «X for Y»: зарезервировать имя, поменять DisplayName в манифесте/About/README, пересобрать).
+- **Store listings готовы**: EN, RU, ZH, DE, ES (в temp/, обновлены под 1.2.0 с дисклеймером)
 
 ## Сборка MSIX для Store
 
@@ -210,15 +228,17 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
   -p:GenerateAppxPackageOnBuild=true -p:AppxBundle=Never \
   -p:UapAppxPackageBuildMode=StoreUpload \
   -p:AppxPackageDir=temp/AppPackages/
+# Output: src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/CFTools_<ver>_x64.msix (path is relative to csproj)
+# Partner Center accepts the .msix directly; no .msixupload is produced without mspdbcmf.exe (symbols).
 
 # InnoSetup installer (для GitHub Releases)
-"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss
+"W:\Program Files\Inno Setup 6\ISCC.exe" installer\setup.iss   # ISCC is on W:, not C:
 ```
 
 ## Очередь разработки
 
-P1: Store listing translations (RU, ZH, DE, ES), Zone List + CSV Export, batch result export
-P2: API Token auth (с fallback на Global Key), DNS Import/Export, file logging
+P1: несколько профилей учётных данных (как в расширении v0.2.0), RU-локализация UI (resw), загрузить переводы листинга в Partner Center
+P2: DNS Import/Export, file logging
 P3: Bulk SSL Mode, Security Level, Always HTTPS
 
 ## Logging

@@ -82,7 +82,7 @@ public static class ErrorNormalizer
                 ErrorCategory.Auth,
                 code,
                 message,
-                "Check your email and Global API Key",
+                "Check your API token, or your email and Global API Key",
                 Retryable: false
             );
         }

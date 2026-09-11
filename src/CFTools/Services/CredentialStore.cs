@@ -1,30 +1,35 @@
+using CFTools.Models;
 using Windows.Security.Credentials;
 
 namespace CFTools.Services;
 
 /// <summary>
-/// Stores Cloudflare credentials in Windows Credential Manager.
+/// Stores the Cloudflare credential in Windows Credential Manager. The credential kind is
+/// encoded in the entry's user name (see <see cref="CredentialVaultCodec"/>).
 /// </summary>
 public sealed class CredentialStore
 {
     private const string Resource = "CFTools";
 
     /// <summary>
-    /// Save credentials to Windows Credential Manager.
+    /// Save the credential to Windows Credential Manager (replaces any existing entry).
     /// </summary>
-    public void Save(string email, string apiKey)
+    public void Save(CfCredential credential)
     {
         Delete();
 
+        var userName = CredentialVaultCodec.EncodeUserName(credential);
+        if (userName is null || string.IsNullOrEmpty(credential.Secret))
+            return;
+
         var vault = new PasswordVault();
-        vault.Add(new PasswordCredential(Resource, email, apiKey));
+        vault.Add(new PasswordCredential(Resource, userName, credential.Secret));
     }
 
     /// <summary>
-    /// Load credentials from Windows Credential Manager.
-    /// Returns null if no credentials are stored.
+    /// Load the stored credential. Returns null if nothing is stored.
     /// </summary>
-    public (string Email, string ApiKey)? Load()
+    public CfCredential? Load()
     {
         try
         {
@@ -37,7 +42,7 @@ public sealed class CredentialStore
             var credential = credentials[0];
             credential.RetrievePassword();
 
-            return (credential.UserName, credential.Password);
+            return CredentialVaultCodec.Decode(credential.UserName, credential.Password);
         }
         catch (Exception)
         {
@@ -46,7 +51,7 @@ public sealed class CredentialStore
     }
 
     /// <summary>
-    /// Delete all CFTools credentials from Windows Credential Manager.
+    /// Delete all stored credentials from Windows Credential Manager.
     /// </summary>
     public void Delete()
     {
@@ -67,7 +72,7 @@ public sealed class CredentialStore
     }
 
     /// <summary>
-    /// Check if credentials exist in Windows Credential Manager.
+    /// Check if a credential exists in Windows Credential Manager.
     /// </summary>
     public bool Exists()
     {

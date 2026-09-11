@@ -13,6 +13,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +33,8 @@
   <ItemGroup>
     <Compile Remove="Models\CloudflareModels.cs" />
     <Compile Remove="Models\ErrorModels.cs" />
+    <Compile Remove="Models\CredentialModels.cs" />
+    <Compile Remove="Services\CsvBuilder.cs" />
     <Compile Remove="Services\DomainParser.cs" />
     <Compile Remove="Services\RequestPool.cs" />
   </ItemGroup>

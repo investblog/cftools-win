@@ -22,6 +22,15 @@ public class InvertBoolToVisibilityConverter : IValueConverter
         value is Visibility.Collapsed;
 }
 
+public class StringToVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, string language) =>
+        string.IsNullOrWhiteSpace(value as string) ? Visibility.Collapsed : Visibility.Visible;
+
+    public object ConvertBack(object value, Type targetType, object parameter, string language) =>
+        throw new NotImplementedException();
+}
+
 public class InvertBoolConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language) =>
@@ -93,7 +102,9 @@ public class PurgeTooltipConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         var status = value as string ?? "";
-        return status == "active" ? (object)null! : $"Zone is {status} — only active zones can be purged";
+        return status == "active"
+            ? (object)null!
+            : $"Zone is {status} — only active zones can be purged";
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language) =>

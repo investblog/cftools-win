@@ -26,6 +26,14 @@ public sealed partial class MainWindow : Window
         }
         appWindow.Changed += AppWindow_Changed;
 
+        // Apply the saved theme BEFORE the first page is created: ThemeResource values
+        // inside control VisualState setters (InfoBar severity backgrounds) are resolved
+        // when the page loads and would otherwise keep the light-theme colors.
+        if (Content is FrameworkElement root)
+        {
+            root.RequestedTheme = App.ThemeFor(App.Settings.ThemeIndex);
+        }
+
         ContentFrame.Navigate(typeof(AuthPage));
         NavView.SelectedItem = AuthNavItem;
 
@@ -111,6 +119,9 @@ public sealed partial class MainWindow : Window
         var tag = item.Tag as string;
         switch (tag)
         {
+            case "Zones":
+                ContentFrame.Navigate(typeof(ZonesPage));
+                break;
             case "AddDomains":
                 ContentFrame.Navigate(typeof(AddDomainsPage));
                 break;

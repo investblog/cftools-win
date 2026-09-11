@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using CFTools.Models;
@@ -18,30 +19,39 @@ public sealed class CloudflareApi : IDisposable
     };
 
     private readonly HttpClient _http;
-    private string? _email;
-    private string? _apiKey;
+    private CfCredential? _credential;
 
-    public bool IsConfigured => _email is not null && _apiKey is not null;
+    public bool IsConfigured => _credential is not null;
+
+    public CfCredential? Credential => _credential;
 
     public CloudflareApi()
     {
         _http = new HttpClient { BaseAddress = new Uri(BaseUrl), Timeout = DefaultTimeout };
     }
 
-    public void SetCredentials(string email, string apiKey)
+    public void SetCredentials(CfCredential credential)
     {
-        _email = email;
-        _apiKey = apiKey;
+        _credential = credential;
 
         _http.DefaultRequestHeaders.Clear();
-        _http.DefaultRequestHeaders.Add("X-Auth-Email", email);
-        _http.DefaultRequestHeaders.Add("X-Auth-Key", apiKey);
+        if (credential.Kind == CredentialKind.GlobalKey)
+        {
+            _http.DefaultRequestHeaders.Add("X-Auth-Email", credential.Email ?? string.Empty);
+            _http.DefaultRequestHeaders.Add("X-Auth-Key", credential.Secret);
+        }
+        else
+        {
+            _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+                "Bearer",
+                credential.Secret
+            );
+        }
     }
 
     public void ClearCredentials()
     {
-        _email = null;
-        _apiKey = null;
+        _credential = null;
         _http.DefaultRequestHeaders.Clear();
     }
 
@@ -49,14 +59,90 @@ public sealed class CloudflareApi : IDisposable
     // API Methods
     // ========================================================================
 
-    public async Task<CfUser> VerifyCredentials(CancellationToken ct = default)
+    /// <summary>
+    /// Verify the configured credential, routed by kind:
+    /// global-key → GET user; user-token → GET user/tokens/verify;
+    /// account-token → GET accounts/{id}/tokens/verify (account discovered via GET accounts
+    /// when the credential does not name one).
+    /// </summary>
+    public async Task<CredentialIdentity> VerifyCredentials(CancellationToken ct = default)
     {
-        return await Get<CfUser>("user", ct);
+        EnsureConfigured();
+        var credential = _credential!;
+
+        if (credential.Kind == CredentialKind.GlobalKey)
+        {
+            var user = await Get<CfUser>("user", ct);
+            return new CredentialIdentity(user.Email, user.Email, null);
+        }
+
+        string path;
+        if (credential.Kind == CredentialKind.UserToken)
+        {
+            path = "user/tokens/verify";
+        }
+        else
+        {
+            var accountId = credential.AccountId;
+            if (string.IsNullOrWhiteSpace(accountId))
+            {
+                var accounts = await GetAccounts(ct);
+                accountId =
+                    accounts.FirstOrDefault()?.Id
+                    ?? throw new CfApiException(
+                        ErrorNormalizer.Normalize(
+                            10001,
+                            "Account-owned token: no account visible. Enter the Account ID."
+                        )
+                    );
+            }
+            path = $"accounts/{accountId}/tokens/verify";
+        }
+
+        var result = await Get<CfTokenVerifyResult>(path, ct);
+        if (!string.Equals(result.Status, "active", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new CfApiException(
+                ErrorNormalizer.Normalize(10001, $"Token status is \"{result.Status}\"")
+            );
+        }
+
+        return new CredentialIdentity(
+            CredentialDetector.DefaultLabel(credential.Kind, null, result.Id),
+            null,
+            result.Id
+        );
     }
 
+    /// <summary>
+    /// All accounts visible to the credential (every page; CF caps per_page at 50).
+    /// </summary>
     public async Task<List<CfAccount>> GetAccounts(CancellationToken ct = default)
     {
-        return await Get<List<CfAccount>>("accounts", ct);
+        const int maxPages = 40; // safety cap: 40 * 50 = 2k accounts
+        var all = new List<CfAccount>();
+        var page = 1;
+
+        while (true)
+        {
+            ct.ThrowIfCancellationRequested();
+            var result = await GetPaginated<CfAccount>($"accounts?page={page}&per_page=50", ct);
+            all.AddRange(result.Items);
+
+            if (result.Items.Count == 0 || page >= result.Pagination.TotalPages)
+                break;
+            if (page >= maxPages)
+            {
+                throw new CfApiException(
+                    ErrorNormalizer.NetworkError(
+                        $"More than {maxPages * 50} accounts; account listing aborted"
+                    )
+                );
+            }
+            page++;
+        }
+
+        return all;
     }
 
     public async Task<PaginatedResult<CfZone>> ListZones(

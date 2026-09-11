@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CFTools.ViewModels;
+using CFTools.Views.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -13,6 +14,7 @@ public sealed partial class AuthPage : Page
     {
         this.InitializeComponent();
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        ActualThemeChanged += (_, _) => InfoBarThemeFix.Reapply(StatusBar);
 
         // Restore saved API key to PasswordBox if available
         if (!string.IsNullOrEmpty(ViewModel.ApiKey))
@@ -21,7 +23,10 @@ public sealed partial class AuthPage : Page
 
     private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(AuthViewModel.ApiKey) && ApiKeyBox.Password != ViewModel.ApiKey)
+        if (
+            e.PropertyName == nameof(AuthViewModel.ApiKey)
+            && ApiKeyBox.Password != ViewModel.ApiKey
+        )
         {
             ApiKeyBox.Password = ViewModel.ApiKey;
         }

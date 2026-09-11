@@ -26,8 +26,7 @@ public sealed partial class PurgeCachePage : Page
         await ViewModel.LoadZonesCommand.ExecuteAsync(null);
     }
 
-    private void GoToAuth_Click(object sender, RoutedEventArgs e) =>
-        App.RequestNavigateToAuth();
+    private void GoToAuth_Click(object sender, RoutedEventArgs e) => App.RequestNavigateToAuth();
 
     private void CheckBox_Changed(object sender, RoutedEventArgs e)
     {

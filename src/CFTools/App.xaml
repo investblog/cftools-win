@@ -59,6 +59,7 @@
       <conv:BoolToVisibilityConverter x:Key="BoolToVisConverter" />
       <conv:InvertBoolToVisibilityConverter x:Key="InvertBoolToVisConverter" />
       <conv:InvertBoolConverter x:Key="InvertBoolConverter" />
+      <conv:StringToVisibilityConverter x:Key="StringToVisConverter" />
       <conv:PreflightStatusTextConverter x:Key="PreflightTextConverter" />
       <conv:PreflightStatusBrushConverter x:Key="PreflightBgConverter" IsBackground="True" />
       <conv:PreflightStatusBrushConverter x:Key="PreflightFgConverter" IsBackground="False" />

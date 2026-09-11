@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using CFTools.Models;
+using CFTools.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Dispatching;
@@ -48,10 +49,65 @@ public partial class PurgeCacheViewModel : ObservableObject
 
     public ObservableCollection<ZoneSelection> VisibleZones { get; } = new();
 
+    [ObservableProperty]
+    public partial bool HasBatchResults { get; set; }
+
+    private readonly List<BatchResultRow> _batchResults = new();
+    private readonly object _resultsLock = new();
+
+    [RelayCommand]
+    private async Task ExportResultsAsync()
+    {
+        List<BatchResultRow> rows;
+        lock (_resultsLock)
+            rows = _batchResults.ToList();
+        if (rows.Count == 0)
+            return;
+
+        var fileName = $"cftools-purge-results-{DateTime.Now:yyyy-MM-dd-HHmm}.csv";
+        if (await FileExporter.SaveCsvAsync(fileName, CsvBuilder.BatchResultsCsv(rows)))
+            StatusText = $"Exported {rows.Count} result(s) to {fileName}";
+    }
+
+    private void RecordResult(string domain, string status, string? error = null)
+    {
+        lock (_resultsLock)
+            _batchResults.Add(new BatchResultRow(domain, status, error));
+    }
+
+    private void ClearBatchResults()
+    {
+        lock (_resultsLock)
+            _batchResults.Clear();
+        HasBatchResults = false;
+    }
+
+    /// <summary>
+    /// Items the pool never started (cancelled while queued) get no callback, so after a
+    /// cancelled batch they must be recorded explicitly. Returns the domains added.
+    /// </summary>
+    private List<string> MarkUnrecordedAsCancelled(IEnumerable<string> domains)
+    {
+        var added = new List<string>();
+        lock (_resultsLock)
+        {
+            var recorded = _batchResults
+                .Select(r => r.Domain)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var domain in domains)
+            {
+                if (recorded.Add(domain))
+                {
+                    _batchResults.Add(new BatchResultRow(domain, "cancelled", null));
+                    added.Add(domain);
+                }
+            }
+        }
+        return added;
+    }
+
     public string AccountContextText =>
-        App.CurrentAccountName is { Length: > 0 } name
-            ? $"Current account: {name}"
-            : string.Empty;
+        App.CurrentAccountName is { Length: > 0 } name ? $"Current account: {name}" : string.Empty;
 
     public bool IsAccountMissing => App.CurrentAccountId is null;
 
@@ -76,7 +132,10 @@ public partial class PurgeCacheViewModel : ObservableObject
             {
                 if (!IsBusy && !IsRunning && _loadedAccountId is not null)
                 {
-                    ResetLoadedZones("Zone list changed. Press Load Zones to refresh.");
+                    ResetLoadedZones(
+                        "Zone list changed. Press Load Zones to refresh.",
+                        clearResults: false
+                    );
                 }
             });
     }
@@ -180,6 +239,7 @@ public partial class PurgeCacheViewModel : ObservableObject
 
         _batchCts?.Dispose();
         _batchCts = new CancellationTokenSource();
+        ClearBatchResults();
 
         IsRunning = true;
         ShowProgress = true;
@@ -208,6 +268,7 @@ public partial class PurgeCacheViewModel : ObservableObject
                         try
                         {
                             await App.Api.PurgeCacheEverything(zone.Zone.Id, ct);
+                            RecordResult(zone.Zone.Name, "purged");
 
                             var successCount = Interlocked.Increment(ref succeeded);
                             var processedCount = Interlocked.Increment(ref processed);
@@ -222,6 +283,7 @@ public partial class PurgeCacheViewModel : ObservableObject
                         catch (OperationCanceledException)
                         {
                             Interlocked.Exchange(ref wasCancelled, 1);
+                            RecordResult(zone.Zone.Name, "cancelled");
                             var failureCount = Interlocked.Increment(ref failed);
                             var processedCount = Interlocked.Increment(ref processed);
 
@@ -233,6 +295,7 @@ public partial class PurgeCacheViewModel : ObservableObject
                         }
                         catch (CfApiException ex)
                         {
+                            RecordResult(zone.Zone.Name, "failed", ex.Normalized.Message);
                             var failureCount = Interlocked.Increment(ref failed);
                             var processedCount = Interlocked.Increment(ref processed);
 
@@ -244,6 +307,7 @@ public partial class PurgeCacheViewModel : ObservableObject
                         }
                         catch (Exception ex)
                         {
+                            RecordResult(zone.Zone.Name, "failed", ex.Message);
                             var failureCount = Interlocked.Increment(ref failed);
                             var processedCount = Interlocked.Increment(ref processed);
 
@@ -265,9 +329,25 @@ public partial class PurgeCacheViewModel : ObservableObject
         {
             await Task.WhenAll(tasks);
         }
+        catch (OperationCanceledException)
+        {
+            // Queued items that never started are cancelled by the pool without a callback.
+            Interlocked.Exchange(ref wasCancelled, 1);
+        }
         finally
         {
             IsRunning = false;
+            var neverStarted = MarkUnrecordedAsCancelled(selected.Select(z => z.Zone.Name));
+            foreach (var zone in selected.Where(z => neverStarted.Contains(z.Zone.Name)))
+                zone.StatusText = "Cancelled";
+            if (neverStarted.Count > 0)
+            {
+                failed += neverStarted.Count;
+                processed += neverStarted.Count;
+                UpdatePurgeProgress(processed, succeeded, failed, total);
+            }
+            lock (_resultsLock)
+                HasBatchResults = _batchResults.Count > 0;
             var invalidated = ApplyPendingAccountInvalidationIfNeeded();
             UpdateCommandStates();
 
@@ -330,8 +410,7 @@ public partial class PurgeCacheViewModel : ObservableObject
         if (!IsBusy && !IsRunning && _loadedAccountId is not null)
         {
             var total = VisibleZones.Count;
-            StatusText =
-                selected > 0 ? $"{selected} of {total} selected" : $"{total} zones loaded";
+            StatusText = selected > 0 ? $"{selected} of {total} selected" : $"{total} zones loaded";
         }
     }
 
@@ -398,9 +477,11 @@ public partial class PurgeCacheViewModel : ObservableObject
         return true;
     }
 
-    private void ResetLoadedZones(string statusMessage)
+    private void ResetLoadedZones(string statusMessage, bool clearResults = true)
     {
         ClearLoadedZones();
+        if (clearResults)
+            ClearBatchResults();
         StatusText = statusMessage;
         UpdateCommandStates();
     }

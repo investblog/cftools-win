@@ -1,3 +1,4 @@
+using CFTools.Models;
 using CFTools.Services;
 using Microsoft.UI.Xaml;
 
@@ -24,10 +25,20 @@ public partial class App : Application
     public static event Action? ThemeChanged;
     public static event Action? NavigateToAuthRequested;
     public static event Action? ZoneListChanged;
+    public static event Action? TipsSettingChanged;
 
     public static string? CurrentAccountId { get; set; }
     public static string? CurrentAccountName { get; set; }
+
+    /// <summary>Display label of the signed-in identity: e-mail for a Global API Key, "API token …" for tokens.</summary>
     public static string? CurrentEmail { get; set; }
+
+    /// <summary>Accounts visible to the active credential (for cross-account export).</summary>
+    public static IReadOnlyList<CfAccount> AvailableAccounts { get; set; } =
+        Array.Empty<CfAccount>();
+
+    /// <summary>HWND of the main window, needed to parent pickers and dialogs.</summary>
+    public static IntPtr MainWindowHandle { get; private set; }
 
     public static void ClearAuthSession(bool clearStoredCredentials = false)
     {
@@ -41,6 +52,7 @@ public partial class App : Application
         CurrentAccountId = null;
         CurrentAccountName = null;
         CurrentEmail = null;
+        AvailableAccounts = Array.Empty<CfAccount>();
         NotifyAuthChanged();
     }
 
@@ -59,21 +71,29 @@ public partial class App : Application
         ZoneListChanged?.Invoke();
     }
 
+    public static void NotifyTipsSettingChanged()
+    {
+        TipsSettingChanged?.Invoke();
+    }
+
     public static void NotifyThemeChanged()
     {
         ThemeChanged?.Invoke();
     }
 
+    public static ElementTheme ThemeFor(int themeIndex) =>
+        themeIndex switch
+        {
+            1 => ElementTheme.Light,
+            2 => ElementTheme.Dark,
+            _ => ElementTheme.Default,
+        };
+
     public static void ApplyTheme(int themeIndex)
     {
         if (Current is App app && app._window?.Content is FrameworkElement root)
         {
-            root.RequestedTheme = themeIndex switch
-            {
-                1 => ElementTheme.Light,
-                2 => ElementTheme.Dark,
-                _ => ElementTheme.Default,
-            };
+            root.RequestedTheme = ThemeFor(themeIndex);
         }
     }
 
@@ -85,6 +105,7 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         _window = new MainWindow();
+        MainWindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(_window);
         _window.Activate();
         AttachThemeObserver();
         ApplyTheme(Settings.ThemeIndex);

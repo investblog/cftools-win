@@ -15,6 +15,9 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     public partial int SelectedThemeIndex { get; set; }
 
+    [ObservableProperty]
+    public partial bool Show301Tips { get; set; }
+
     public SettingsViewModel()
     {
         _isInitializing = true;
@@ -25,6 +28,7 @@ public partial class SettingsViewModel : ObservableObject
         MaxConcurrency = settings.MaxConcurrency;
         MaxRetries = settings.MaxRetries;
         SelectedThemeIndex = settings.ThemeIndex;
+        Show301Tips = settings.Show301Tips;
 
         _isInitializing = false;
     }
@@ -69,6 +73,19 @@ public partial class SettingsViewModel : ObservableObject
         if (!_isInitializing)
             SaveSettings();
         App.ApplyTheme(normalized);
+    }
+
+    partial void OnShow301TipsChanged(bool value)
+    {
+        if (_isInitializing)
+            return;
+
+        var settings = App.Settings;
+        settings.Show301Tips = value;
+        if (value)
+            settings.AfterCreateTipDismissed = false; // re-enabling brings the tips back
+        settings.Save();
+        App.NotifyTipsSettingChanged();
     }
 
     private void SaveSettings()

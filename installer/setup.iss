@@ -1,8 +1,8 @@
-; CFTools for Windows - InnoSetup Script
+; Cloudflare Tools for Windows - InnoSetup Script
 ; Compile with: ISCC.exe setup.iss
 
-#define MyAppName "CFTools"
-#define MyAppVersion "1.1.1"
+#define MyAppName "Cloudflare Tools"
+#define MyAppVersion "1.2.0"
 #define MyAppPublisher "301.st"
 #define MyAppURL "https://301.st"
 #define MyAppExeName "CFTools.exe"
@@ -16,11 +16,11 @@ AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
-DefaultDirName={autopf}\CFTools
+DefaultDirName={autopf}\Cloudflare Tools
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=..\temp
-OutputBaseFilename=CFTools-v{#MyAppVersion}-x64-setup
+OutputBaseFilename=CloudflareTools-v{#MyAppVersion}-x64-setup
 SetupIconFile=..\src\CFTools\Assets\app.ico
 UninstallDisplayIcon={app}\Assets\app.ico
 Compression=lzma2/ultra64
@@ -38,7 +38,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#BuildDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#BuildDir}\*"; DestDir: "{app}"; Excludes: "win-x64,win-x86,win-arm64,*.pdb"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

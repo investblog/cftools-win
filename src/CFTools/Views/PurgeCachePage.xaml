@@ -154,7 +154,7 @@
               ColumnSpacing="6"
               Padding="0,2"
               Opacity="{x:Bind IsActive, Converter={StaticResource BoolToOpacityConverter}}"
-              ToolTipService.ToolTip="{x:Bind PurgeTooltip}"
+              ToolTipService.ToolTip="{x:Bind PurgeTooltip, Mode=OneWay}"
             >
               <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -172,17 +172,22 @@
                 Checked="CheckBox_Changed"
                 Unchecked="CheckBox_Changed"
               />
-              <TextBlock Grid.Column="1" Text="{x:Bind ZoneName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+              <TextBlock
+                Grid.Column="1"
+                Text="{x:Bind ZoneName}"
+                VerticalAlignment="Center"
+                TextTrimming="CharacterEllipsis"
+              />
               <Border
                 Grid.Column="2"
-                Background="{x:Bind ZoneStatus, Converter={StaticResource StatusToBgConverter}}"
+                Background="{x:Bind ZoneStatus, Mode=OneWay, Converter={StaticResource StatusToBgConverter}}"
                 CornerRadius="4"
                 Padding="8,2"
                 VerticalAlignment="Center"
               >
                 <TextBlock
-                  Text="{x:Bind ZoneStatus}"
-                  Foreground="{x:Bind ZoneStatus, Converter={StaticResource StatusToFgConverter}}"
+                  Text="{x:Bind ZoneStatus, Mode=OneWay}"
+                  Foreground="{x:Bind ZoneStatus, Mode=OneWay, Converter={StaticResource StatusToFgConverter}}"
                   FontSize="11"
                   FontWeight="SemiBold"
                 />
@@ -195,7 +200,7 @@
               />
               <TextBlock
                 Grid.Column="4"
-                Text="{x:Bind StatusText}"
+                Text="{x:Bind StatusText, Mode=OneWay}"
                 VerticalAlignment="Center"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 TextWrapping="WrapWholeWords"
@@ -232,6 +237,12 @@
           Content="Cancel"
           Command="{x:Bind ViewModel.CancelBatchCommand}"
           Visibility="{x:Bind ViewModel.CanCancel, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
+        />
+        <Button
+          Content="Export results"
+          ToolTipService.ToolTip="Save the outcome of the last batch as CSV (domain, status, error)"
+          Command="{x:Bind ViewModel.ExportResultsCommand}"
+          Visibility="{x:Bind ViewModel.HasBatchResults, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
         />
       </StackPanel>
     </Grid>

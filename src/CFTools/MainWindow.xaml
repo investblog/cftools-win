@@ -2,7 +2,7 @@
   x:Class="CFTools.MainWindow"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  Title="CFTools"
+  Title="Cloudflare Tools"
 >
   <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <NavigationView
@@ -15,6 +15,11 @@
       SelectionChanged="NavView_SelectionChanged"
     >
       <NavigationView.MenuItems>
+        <NavigationViewItem Content="Zones" Tag="Zones">
+          <NavigationViewItem.Icon>
+            <FontIcon Glyph="&#xE8FD;" />
+          </NavigationViewItem.Icon>
+        </NavigationViewItem>
         <NavigationViewItem Content="Add Domains" Tag="AddDomains">
           <NavigationViewItem.Icon>
             <FontIcon Glyph="&#xE774;" />

@@ -1,7 +1,8 @@
 <Page
-  x:Class="CFTools.Views.DeleteDomainsPage"
+  x:Class="CFTools.Views.ZonesPage"
   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:controls="using:CFTools.Views.Controls"
   xmlns:vm="using:CFTools.ViewModels"
   NavigationCacheMode="Required"
 >
@@ -39,11 +40,9 @@
         <RowDefinition Height="Auto" />
         <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
 
-      <TextBlock Grid.Row="0" Text="Delete Domains" Style="{StaticResource TitleTextBlockStyle}" />
+      <TextBlock Grid.Row="0" Text="Zones" Style="{StaticResource TitleTextBlockStyle}" />
 
       <StackPanel Grid.Row="1">
         <TextBlock
@@ -60,12 +59,31 @@
         />
       </StackPanel>
 
-      <TextBlock
-        Grid.Row="2"
-        Text="{x:Bind ViewModel.StatusText, Mode=OneWay}"
-        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-        TextWrapping="WrapWholeWords"
-      />
+      <StackPanel Grid.Row="2" Spacing="4">
+        <TextBlock
+          Text="{x:Bind ViewModel.StatusText, Mode=OneWay}"
+          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          TextWrapping="WrapWholeWords"
+        />
+        <StackPanel
+          Orientation="Horizontal"
+          Spacing="6"
+          Visibility="{x:Bind ViewModel.ShowPendingHint, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
+        >
+          <controls:Logo301 Width="14" Height="14" VerticalAlignment="Center" />
+          <TextBlock
+            FontSize="12"
+            VerticalAlignment="Center"
+            TextWrapping="Wrap"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+          >
+            <Run Text="{x:Bind ViewModel.PendingZonesHint, Mode=OneWay}" />
+            <Hyperlink NavigateUri="{x:Bind ViewModel.ZonesPendingUrl}"
+              >Check nameservers in bulk in 301.st</Hyperlink
+            >
+          </TextBlock>
+        </StackPanel>
+      </StackPanel>
 
       <Grid Grid.Row="3">
         <Grid x:Name="NarrowToolbar" RowSpacing="8">
@@ -78,25 +96,26 @@
             Grid.Row="0"
             PlaceholderText="Filter zones..."
             Text="{x:Bind ViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+            IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
           />
 
           <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8">
             <Button
-              Content="Load Zones"
+              Content="Refresh"
               Style="{StaticResource AccentButtonStyle}"
               Command="{x:Bind ViewModel.LoadZonesCommand}"
               IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
             />
             <Button
-              Content="Select All"
-              Command="{x:Bind ViewModel.SelectAllCommand}"
-              IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+              Content="Export CSV"
+              Command="{x:Bind ViewModel.ExportCsvCommand}"
+              IsEnabled="{x:Bind ViewModel.CanExport, Mode=OneWay}"
             />
             <Button
-              Content="Select None"
-              Command="{x:Bind ViewModel.SelectNoneCommand}"
-              IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+              Content="All accounts"
+              ToolTipService.ToolTip="Export zones from every account into one CSV"
+              Command="{x:Bind ViewModel.ExportAllAccountsCsvCommand}"
+              IsEnabled="{x:Bind ViewModel.CanExportAllAccounts, Mode=OneWay}"
             />
           </StackPanel>
         </Grid>
@@ -108,7 +127,7 @@
           Visibility="Collapsed"
         >
           <Button
-            Content="Load Zones"
+            Content="Refresh"
             Style="{StaticResource AccentButtonStyle}"
             Command="{x:Bind ViewModel.LoadZonesCommand}"
             IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
@@ -117,17 +136,18 @@
             Width="220"
             PlaceholderText="Filter zones..."
             Text="{x:Bind ViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+            IsEnabled="{x:Bind ViewModel.CanLoadZones, Mode=OneWay}"
           />
           <Button
-            Content="Select All"
-            Command="{x:Bind ViewModel.SelectAllCommand}"
-            IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+            Content="Export CSV"
+            Command="{x:Bind ViewModel.ExportCsvCommand}"
+            IsEnabled="{x:Bind ViewModel.CanExport, Mode=OneWay}"
           />
           <Button
-            Content="Select None"
-            Command="{x:Bind ViewModel.SelectNoneCommand}"
-            IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
+            Content="Export all accounts"
+            ToolTipService.ToolTip="Export zones from every account into one CSV"
+            Command="{x:Bind ViewModel.ExportAllAccountsCsvCommand}"
+            IsEnabled="{x:Bind ViewModel.CanExportAllAccounts, Mode=OneWay}"
           />
         </StackPanel>
       </Grid>
@@ -135,10 +155,9 @@
       <ListView
         Grid.Row="4"
         ItemsSource="{x:Bind ViewModel.VisibleZones, Mode=OneWay}"
-        IsEnabled="{x:Bind ViewModel.CanChangeSelection, Mode=OneWay}"
         SelectionMode="None"
         Padding="0"
-        MaxWidth="580"
+        MaxWidth="760"
         HorizontalAlignment="Left"
       >
         <ListView.ItemContainerStyle>
@@ -149,28 +168,32 @@
           </Style>
         </ListView.ItemContainerStyle>
         <ListView.ItemTemplate>
-          <DataTemplate x:DataType="vm:ZoneSelection">
-            <Grid ColumnSpacing="6" Padding="0,2">
+          <DataTemplate x:DataType="vm:ZoneRow">
+            <Grid ColumnSpacing="8" Padding="0,3">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
-              <CheckBox
-                Grid.Column="0"
-                MinWidth="0"
-                Padding="0"
-                IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
-                Checked="CheckBox_Changed"
-                Unchecked="CheckBox_Changed"
-              />
+              <StackPanel Grid.Column="0" Spacing="1">
+                <TextBlock
+                  Text="{x:Bind ZoneName}"
+                  TextTrimming="CharacterEllipsis"
+                  ToolTipService.ToolTip="{x:Bind ZoneName, Converter={StaticResource PunycodeTooltipConverter}}"
+                />
+                <TextBlock
+                  Text="{x:Bind NameServersText}"
+                  FontSize="11"
+                  TextTrimming="CharacterEllipsis"
+                  Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                />
+              </StackPanel>
               <TextBlock
                 Grid.Column="1"
-                Text="{x:Bind ZoneName}"
+                Text="{x:Bind PlanName}"
+                FontSize="12"
                 VerticalAlignment="Center"
-                TextTrimming="CharacterEllipsis"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
               />
               <Border
                 Grid.Column="2"
@@ -186,70 +209,10 @@
                   FontWeight="SemiBold"
                 />
               </Border>
-              <FontIcon
-                Grid.Column="3"
-                Glyph="&#xE74D;"
-                Visibility="{x:Bind IsDeleted, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
-                Foreground="Red"
-              />
-              <TextBlock
-                Grid.Column="4"
-                Text="{x:Bind StatusText, Mode=OneWay}"
-                VerticalAlignment="Center"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                TextWrapping="WrapWholeWords"
-              />
             </Grid>
           </DataTemplate>
         </ListView.ItemTemplate>
       </ListView>
-
-      <StackPanel
-        Grid.Row="5"
-        Spacing="8"
-        Visibility="{x:Bind ViewModel.ShowProgress, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
-      >
-        <ProgressBar
-          Minimum="0"
-          Maximum="{x:Bind ViewModel.ProgressMaximum, Mode=OneWay}"
-          Value="{x:Bind ViewModel.ProgressValue, Mode=OneWay}"
-        />
-        <TextBlock
-          Text="{x:Bind ViewModel.ProgressText, Mode=OneWay}"
-          Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-        />
-      </StackPanel>
-
-      <StackPanel Grid.Row="6" Orientation="Horizontal" Spacing="8">
-        <Button
-          Content="Delete Selected"
-          Click="DeleteButton_Click"
-          IsEnabled="{x:Bind ViewModel.CanDelete, Mode=OneWay}"
-        >
-          <Button.Resources>
-            <SolidColorBrush x:Key="ButtonBackground" Color="#C42B1C" />
-            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#A12316" />
-            <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#861D12" />
-            <SolidColorBrush x:Key="ButtonForeground" Color="White" />
-            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
-            <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#CCFFFFFF" />
-            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#C42B1C" />
-            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#A12316" />
-            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#861D12" />
-          </Button.Resources>
-        </Button>
-        <Button
-          Content="Cancel"
-          Command="{x:Bind ViewModel.CancelBatchCommand}"
-          Visibility="{x:Bind ViewModel.CanCancel, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
-        />
-        <Button
-          Content="Export results"
-          ToolTipService.ToolTip="Save the outcome of the last batch as CSV (domain, status, error)"
-          Command="{x:Bind ViewModel.ExportResultsCommand}"
-          Visibility="{x:Bind ViewModel.HasBatchResults, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
-        />
-      </StackPanel>
     </Grid>
   </Grid>
 </Page>

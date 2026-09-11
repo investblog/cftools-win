@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CFTools.ViewModels;
+using CFTools.Views.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -16,6 +17,7 @@ public sealed partial class AddDomainsPage : Page
         this.InitializeComponent();
         TwoColumnGrid.SizeChanged += TwoColumnGrid_SizeChanged;
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        ActualThemeChanged += (_, _) => InfoBarThemeFix.Reapply(AfterCreateTipBar);
     }
 
     private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -37,8 +39,13 @@ public sealed partial class AddDomainsPage : Page
         }
     }
 
-    private void GoToAuth_Click(object sender, RoutedEventArgs e) =>
-        App.RequestNavigateToAuth();
+    private void GoToAuth_Click(object sender, RoutedEventArgs e) => App.RequestNavigateToAuth();
+
+    private void AfterCreateTip_Closed(InfoBar sender, InfoBarClosedEventArgs args)
+    {
+        if (args.Reason == InfoBarCloseReason.CloseButton)
+            ViewModel.DismissAfterCreateTip();
+    }
 
     private void RemoveDomain_Click(object sender, RoutedEventArgs e)
     {

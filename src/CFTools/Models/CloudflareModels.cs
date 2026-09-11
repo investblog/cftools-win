@@ -9,7 +9,7 @@ namespace CFTools.Models;
 public record ApiResponse<T>(
     [property: JsonPropertyName("success")] bool Success,
     [property: JsonPropertyName("errors")] List<ApiError> Errors,
-    [property: JsonPropertyName("messages")] List<string> Messages,
+    [property: JsonPropertyName("messages")] List<ApiError>? Messages,
     [property: JsonPropertyName("result")] T Result,
     [property: JsonPropertyName("result_info")] PaginationInfo? ResultInfo
 );

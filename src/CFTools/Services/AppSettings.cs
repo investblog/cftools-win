@@ -16,6 +16,12 @@ public sealed class AppSettings
     public int MaxRetries { get; set; } = 3;
     public int ThemeIndex { get; set; } // 0=System, 1=Light, 2=Dark
 
+    /// <summary>Contextual hints about the publisher's service (301.st). User-controlled.</summary>
+    public bool Show301Tips { get; set; } = true;
+
+    /// <summary>The after-create tip was closed by the user; do not show it again.</summary>
+    public bool AfterCreateTipDismissed { get; set; }
+
     public static AppSettings Load()
     {
         try

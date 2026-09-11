@@ -47,10 +47,73 @@ public partial class AddDomainsViewModel : ObservableObject
 
     public ObservableCollection<PreflightEntry> PreflightResults { get; } = new();
 
+    [ObservableProperty]
+    public partial bool ShowAfterCreateTip { get; set; }
+
+    [ObservableProperty]
+    public partial string AfterCreateTipText { get; set; } = string.Empty;
+
+    public Uri AfterCreateUrl { get; } = PromoLinks.Uri(PromoLinks.AfterCreateCampaign);
+
+    [ObservableProperty]
+    public partial bool HasBatchResults { get; set; }
+
+    private readonly List<BatchResultRow> _batchResults = new();
+    private readonly object _resultsLock = new();
+
+    [RelayCommand]
+    private async Task ExportResultsAsync()
+    {
+        List<BatchResultRow> rows;
+        lock (_resultsLock)
+            rows = _batchResults.ToList();
+        if (rows.Count == 0)
+            return;
+
+        var fileName = $"cftools-create-results-{DateTime.Now:yyyy-MM-dd-HHmm}.csv";
+        if (await FileExporter.SaveCsvAsync(fileName, CsvBuilder.BatchResultsCsv(rows)))
+            StatusText = $"Exported {rows.Count} result(s) to {fileName}";
+    }
+
+    private void RecordResult(string domain, string status, string? error = null)
+    {
+        lock (_resultsLock)
+            _batchResults.Add(new BatchResultRow(domain, status, error));
+    }
+
+    private void ClearBatchResults()
+    {
+        lock (_resultsLock)
+            _batchResults.Clear();
+        HasBatchResults = false;
+    }
+
+    /// <summary>
+    /// Items the pool never started (cancelled while queued) get no callback, so after a
+    /// cancelled batch they must be recorded explicitly. Returns the domains added.
+    /// </summary>
+    private List<string> MarkUnrecordedAsCancelled(IEnumerable<string> domains)
+    {
+        var added = new List<string>();
+        lock (_resultsLock)
+        {
+            var recorded = _batchResults
+                .Select(r => r.Domain)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            foreach (var domain in domains)
+            {
+                if (recorded.Add(domain))
+                {
+                    _batchResults.Add(new BatchResultRow(domain, "cancelled", null));
+                    added.Add(domain);
+                }
+            }
+        }
+        return added;
+    }
+
     public string AccountContextText =>
-        App.CurrentAccountName is { Length: > 0 } name
-            ? $"Current account: {name}"
-            : string.Empty;
+        App.CurrentAccountName is { Length: > 0 } name ? $"Current account: {name}" : string.Empty;
 
     public bool IsAccountMissing => App.CurrentAccountId is null;
 
@@ -71,6 +134,12 @@ public partial class AddDomainsViewModel : ObservableObject
         _observedAccountId = App.CurrentAccountId;
         App.AuthStateChanged += () => _dispatcher.TryEnqueue(HandleAuthStateChanged);
         App.ThemeChanged += () => _dispatcher.TryEnqueue(RefreshThemeBindings);
+        App.TipsSettingChanged += () =>
+            _dispatcher.TryEnqueue(() =>
+            {
+                if (!App.Settings.Show301Tips)
+                    ShowAfterCreateTip = false;
+            });
     }
 
     [RelayCommand]
@@ -101,6 +170,8 @@ public partial class AddDomainsViewModel : ObservableObject
         PreflightResults.Clear();
         _domainsToCreate.Clear();
         _preflightAccountId = null;
+        ClearBatchResults();
+        ShowAfterCreateTip = false;
         StatusText = "Parsing domains...";
 
         try
@@ -120,10 +191,7 @@ public partial class AddDomainsViewModel : ObservableObject
 
             foreach (var domain in parsed.Domains)
             {
-                var (zoneExists, zoneId) = await App.Api.CheckZoneExists(
-                    domain,
-                    accountId
-                );
+                var (zoneExists, zoneId) = await App.Api.CheckZoneExists(domain, accountId);
 
                 if (zoneExists)
                 {
@@ -215,6 +283,7 @@ public partial class AddDomainsViewModel : ObservableObject
 
         _batchCts?.Dispose();
         _batchCts = new CancellationTokenSource();
+        ClearBatchResults();
 
         IsRunning = true;
         IsBusy = false;
@@ -247,6 +316,7 @@ public partial class AddDomainsViewModel : ObservableObject
                         try
                         {
                             await App.Api.CreateZone(domain, accountId, ct: ct);
+                            RecordResult(domain, "created");
 
                             var successCount = Interlocked.Increment(ref succeeded);
                             var processedCount = Interlocked.Increment(ref processed);
@@ -264,6 +334,7 @@ public partial class AddDomainsViewModel : ObservableObject
                         catch (OperationCanceledException)
                         {
                             Interlocked.Exchange(ref wasCancelled, 1);
+                            RecordResult(domain, "cancelled");
                             var failureCount = Interlocked.Increment(ref failed);
                             var processedCount = Interlocked.Increment(ref processed);
 
@@ -279,6 +350,7 @@ public partial class AddDomainsViewModel : ObservableObject
                         }
                         catch (CfApiException ex)
                         {
+                            RecordResult(domain, "failed", ex.Normalized.Message);
                             var failureCount = Interlocked.Increment(ref failed);
                             var processedCount = Interlocked.Increment(ref processed);
 
@@ -294,6 +366,7 @@ public partial class AddDomainsViewModel : ObservableObject
                         }
                         catch (Exception ex)
                         {
+                            RecordResult(domain, "failed", ex.Message);
                             var failureCount = Interlocked.Increment(ref failed);
                             var processedCount = Interlocked.Increment(ref processed);
 
@@ -315,11 +388,27 @@ public partial class AddDomainsViewModel : ObservableObject
         {
             await Task.WhenAll(tasks);
         }
+        catch (OperationCanceledException)
+        {
+            // Queued items that never started are cancelled by the pool without a callback.
+            Interlocked.Exchange(ref wasCancelled, 1);
+        }
         finally
         {
             IsRunning = false;
             CanCancel = false;
             IsNextStepCreate = false;
+            var neverStarted = MarkUnrecordedAsCancelled(_domainsToCreate);
+            foreach (var domain in neverStarted)
+                UpdatePreflightStatus(domain, PreflightStatus.Cancelled, "Cancelled");
+            if (neverStarted.Count > 0)
+            {
+                failed += neverStarted.Count;
+                processed += neverStarted.Count;
+                UpdateProgress(processed, succeeded, failed, total);
+            }
+            lock (_resultsLock)
+                HasBatchResults = _batchResults.Count > 0;
             var invalidated = ApplyPendingAccountInvalidationIfNeeded();
             UpdateCommandStates();
 
@@ -335,6 +424,7 @@ public partial class AddDomainsViewModel : ObservableObject
                 if (succeeded > 0)
                 {
                     App.NotifyZoneListChanged();
+                    ShowAfterCreateTipIfEnabled(succeeded);
                 }
             }
         }
@@ -361,7 +451,13 @@ public partial class AddDomainsViewModel : ObservableObject
 
         for (int i = PreflightResults.Count - 1; i >= 0; i--)
         {
-            if (string.Equals(PreflightResults[i].Domain, domain, StringComparison.OrdinalIgnoreCase))
+            if (
+                string.Equals(
+                    PreflightResults[i].Domain,
+                    domain,
+                    StringComparison.OrdinalIgnoreCase
+                )
+            )
             {
                 PreflightResults.RemoveAt(i);
                 break;
@@ -376,6 +472,27 @@ public partial class AddDomainsViewModel : ObservableObject
 
         IsNextStepCreate = ready > 0;
         UpdateCommandStates();
+    }
+
+    private void ShowAfterCreateTipIfEnabled(int created)
+    {
+        var settings = App.Settings;
+        if (!settings.Show301Tips || settings.AfterCreateTipDismissed)
+            return;
+
+        AfterCreateTipText =
+            $"{created} zone(s) created and now waiting for a nameserver change at the registrar. "
+            + "301.st shows the assigned Cloudflare nameservers per domain, verifies NS and tracks expiry. "
+            + "Free for up to 10 domains.";
+        ShowAfterCreateTip = true;
+    }
+
+    /// <summary>User closed the tip: remember it so it is not shown after every batch.</summary>
+    public void DismissAfterCreateTip()
+    {
+        ShowAfterCreateTip = false;
+        App.Settings.AfterCreateTipDismissed = true;
+        App.Settings.Save();
     }
 
     private void UpdateProgress(int processed, int success, int failed, int total)
@@ -464,6 +581,7 @@ public partial class AddDomainsViewModel : ObservableObject
         _domainsToCreate.Clear();
         _preflightAccountId = null;
         PreflightResults.Clear();
+        ClearBatchResults();
         CanCreate = false;
         CanCancel = false;
         IsNextStepCreate = false;
