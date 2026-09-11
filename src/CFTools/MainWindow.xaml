@@ -15,22 +15,22 @@
       SelectionChanged="NavView_SelectionChanged"
     >
       <NavigationView.MenuItems>
-        <NavigationViewItem Content="Zones" Tag="Zones">
+        <NavigationViewItem x:Uid="Nav_Zones" Content="Zones" Tag="Zones">
           <NavigationViewItem.Icon>
             <FontIcon Glyph="&#xE8FD;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
-        <NavigationViewItem Content="Add Domains" Tag="AddDomains">
+        <NavigationViewItem x:Uid="Nav_AddDomains" Content="Add Domains" Tag="AddDomains">
           <NavigationViewItem.Icon>
             <FontIcon Glyph="&#xE774;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
-        <NavigationViewItem Content="Purge Cache" Tag="PurgeCache">
+        <NavigationViewItem x:Uid="Nav_PurgeCache" Content="Purge Cache" Tag="PurgeCache">
           <NavigationViewItem.Icon>
             <FontIcon Glyph="&#xE72C;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
-        <NavigationViewItem Content="Delete Domains" Tag="DeleteDomains">
+        <NavigationViewItem x:Uid="Nav_DeleteDomains" Content="Delete Domains" Tag="DeleteDomains">
           <NavigationViewItem.Icon>
             <FontIcon Glyph="&#xE74D;" />
           </NavigationViewItem.Icon>
@@ -48,7 +48,7 @@
             <FontIcon x:Name="AuthIcon" Glyph="&#xE77B;" />
           </NavigationViewItem.Icon>
         </NavigationViewItem>
-        <NavigationViewItem Content="About" Tag="About">
+        <NavigationViewItem x:Uid="Nav_About" Content="About" Tag="About">
           <NavigationViewItem.Icon>
             <FontIcon Glyph="&#xE946;" />
           </NavigationViewItem.Icon>

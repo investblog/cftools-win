@@ -16,6 +16,9 @@ public sealed class AppSettings
     public int MaxRetries { get; set; } = 3;
     public int ThemeIndex { get; set; } // 0=System, 1=Light, 2=Dark
 
+    /// <summary>BCP-47 tag of the UI language override; empty = follow Windows.</summary>
+    public string Language { get; set; } = string.Empty;
+
     /// <summary>Contextual hints about the publisher's service (301.st). User-controlled.</summary>
     public bool Show301Tips { get; set; } = true;
 

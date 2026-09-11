@@ -66,7 +66,7 @@ public partial class PurgeCacheViewModel : ObservableObject
 
         var fileName = $"cftools-purge-results-{DateTime.Now:yyyy-MM-dd-HHmm}.csv";
         if (await FileExporter.SaveCsvAsync(fileName, CsvBuilder.BatchResultsCsv(rows)))
-            StatusText = $"Exported {rows.Count} result(s) to {fileName}";
+            StatusText = Loc.Format("Status_ExportedResults", rows.Count, fileName);
     }
 
     private void RecordResult(string domain, string status, string? error = null)
@@ -107,7 +107,9 @@ public partial class PurgeCacheViewModel : ObservableObject
     }
 
     public string AccountContextText =>
-        App.CurrentAccountName is { Length: > 0 } name ? $"Current account: {name}" : string.Empty;
+        App.CurrentAccountName is { Length: > 0 } name
+            ? Loc.Format("Status_CurrentAccount", name)
+            : string.Empty;
 
     public bool IsAccountMissing => App.CurrentAccountId is null;
 
@@ -132,10 +134,7 @@ public partial class PurgeCacheViewModel : ObservableObject
             {
                 if (!IsBusy && !IsRunning && _loadedAccountId is not null)
                 {
-                    ResetLoadedZones(
-                        "Zone list changed. Press Load Zones to refresh.",
-                        clearResults: false
-                    );
+                    ResetLoadedZones(Loc.Get("Status_ZoneListChangedLoad"), clearResults: false);
                 }
             });
     }
@@ -145,12 +144,12 @@ public partial class PurgeCacheViewModel : ObservableObject
     {
         if (!App.Api.IsConfigured || App.CurrentAccountId is null)
         {
-            StatusText = "Connect and select a Cloudflare account first";
+            StatusText = Loc.Get("Status_ConnectFirst");
             return;
         }
 
         var accountId = App.CurrentAccountId;
-        var accountName = App.CurrentAccountName ?? "the selected account";
+        var accountName = App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback");
 
         IsBusy = true;
         ProgressText = string.Empty;
@@ -159,7 +158,7 @@ public partial class PurgeCacheViewModel : ObservableObject
         ProgressMaximum = 1;
         UpdateCommandStates();
         ClearLoadedZones();
-        StatusText = $"Loading zones for {accountName}...";
+        StatusText = Loc.Format("Status_LoadingZones", accountName);
 
         try
         {
@@ -168,7 +167,10 @@ public partial class PurgeCacheViewModel : ObservableObject
             if (App.CurrentAccountId != accountId)
             {
                 ResetLoadedZones(
-                    $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                    Loc.Format(
+                        "Status_AccountChangedLoad",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
                 );
                 return;
             }
@@ -178,15 +180,15 @@ public partial class PurgeCacheViewModel : ObservableObject
 
             _loadedAccountId = accountId;
             RefreshVisibleZones();
-            StatusText = $"{zones.Count} zones loaded";
+            StatusText = Loc.Format("Status_ZonesLoaded", zones.Count);
         }
         catch (CfApiException ex)
         {
-            StatusText = $"Error: {ex.Normalized.Message}";
+            StatusText = Loc.Format("Status_Error", ex.Normalized.Message);
         }
         catch (Exception ex)
         {
-            StatusText = $"Error: {ex.Message}";
+            StatusText = Loc.Format("Status_Error", ex.Message);
         }
         finally
         {
@@ -231,8 +233,11 @@ public partial class PurgeCacheViewModel : ObservableObject
         {
             ResetLoadedZones(
                 App.CurrentAccountId is null
-                    ? "Connect and select a Cloudflare account first"
-                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                    ? Loc.Get("Status_ConnectFirst")
+                    : Loc.Format(
+                        "Status_AccountChangedLoad",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
             );
             return;
         }
@@ -245,10 +250,13 @@ public partial class PurgeCacheViewModel : ObservableObject
         ShowProgress = true;
         ProgressValue = 0;
         ProgressMaximum = selected.Count;
-        StatusText =
-            $"Purging cache for {selected.Count} zone(s) in {App.CurrentAccountName ?? "the selected account"}...";
+        StatusText = Loc.Format(
+            "Purge_Starting",
+            selected.Count,
+            App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+        );
         foreach (var zone in selected)
-            zone.StatusText = "Queued";
+            zone.StatusText = Loc.Get("Item_Queued");
 
         UpdateCommandStates();
 
@@ -263,7 +271,7 @@ public partial class PurgeCacheViewModel : ObservableObject
                 App.Pool.Add(
                     async ct =>
                     {
-                        await RunOnUiThreadAsync(() => zone.StatusText = "Purging...");
+                        await RunOnUiThreadAsync(() => zone.StatusText = Loc.Get("Purge_Item"));
 
                         try
                         {
@@ -276,7 +284,7 @@ public partial class PurgeCacheViewModel : ObservableObject
                             await RunOnUiThreadAsync(() =>
                             {
                                 zone.IsPurged = true;
-                                zone.StatusText = "Purged";
+                                zone.StatusText = Loc.Get("Purge_ItemDone");
                                 UpdatePurgeProgress(processedCount, successCount, failed, total);
                             });
                         }
@@ -289,7 +297,7 @@ public partial class PurgeCacheViewModel : ObservableObject
 
                             await RunOnUiThreadAsync(() =>
                             {
-                                zone.StatusText = "Cancelled";
+                                zone.StatusText = Loc.Get("Item_Cancelled");
                                 UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
                             });
                         }
@@ -301,7 +309,7 @@ public partial class PurgeCacheViewModel : ObservableObject
 
                             await RunOnUiThreadAsync(() =>
                             {
-                                zone.StatusText = $"Failed: {ex.Normalized.Message}";
+                                zone.StatusText = Loc.Format("Item_Failed", ex.Normalized.Message);
                                 UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
                             });
                         }
@@ -313,7 +321,7 @@ public partial class PurgeCacheViewModel : ObservableObject
 
                             await RunOnUiThreadAsync(() =>
                             {
-                                zone.StatusText = $"Failed: {ex.Message}";
+                                zone.StatusText = Loc.Format("Item_Failed", ex.Message);
                                 UpdatePurgeProgress(processedCount, succeeded, failureCount, total);
                             });
                         }
@@ -339,7 +347,7 @@ public partial class PurgeCacheViewModel : ObservableObject
             IsRunning = false;
             var neverStarted = MarkUnrecordedAsCancelled(selected.Select(z => z.Zone.Name));
             foreach (var zone in selected.Where(z => neverStarted.Contains(z.Zone.Name)))
-                zone.StatusText = "Cancelled";
+                zone.StatusText = Loc.Get("Item_Cancelled");
             if (neverStarted.Count > 0)
             {
                 failed += neverStarted.Count;
@@ -355,9 +363,12 @@ public partial class PurgeCacheViewModel : ObservableObject
             {
                 ProgressText =
                     wasCancelled == 1
-                        ? $"Cancelled: {succeeded} purged, {failed} not completed out of {total}"
-                        : $"Done: {succeeded} purged, {failed} failed out of {total}";
-                StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
+                        ? Loc.Format("Purge_DoneCancelled", succeeded, failed, total)
+                        : Loc.Format("Purge_Done", succeeded, failed, total);
+                StatusText =
+                    wasCancelled == 1
+                        ? Loc.Get("Status_BatchCancelled")
+                        : Loc.Get("Status_BatchFinished");
             }
         }
     }
@@ -368,7 +379,7 @@ public partial class PurgeCacheViewModel : ObservableObject
         if (!IsRunning)
             return;
 
-        StatusText = "Cancelling batch...";
+        StatusText = Loc.Get("Status_Cancelling");
         CanCancel = false;
         _batchCts?.Cancel();
         App.Pool.Cancel();
@@ -410,7 +421,10 @@ public partial class PurgeCacheViewModel : ObservableObject
         if (!IsBusy && !IsRunning && _loadedAccountId is not null)
         {
             var total = VisibleZones.Count;
-            StatusText = selected > 0 ? $"{selected} of {total} selected" : $"{total} zones loaded";
+            StatusText =
+                selected > 0
+                    ? Loc.Format("Status_Selected", selected, total)
+                    : Loc.Format("Status_ZonesLoaded", total);
         }
     }
 
@@ -418,7 +432,7 @@ public partial class PurgeCacheViewModel : ObservableObject
     {
         ProgressMaximum = total;
         ProgressValue = processed;
-        ProgressText = $"{processed}/{total} processed - {success} purged, {failed} failed";
+        ProgressText = Loc.Format("Purge_Progress", processed, total, success, failed);
     }
 
     private IEnumerable<ZoneSelection> GetFilteredZones()
@@ -455,8 +469,11 @@ public partial class PurgeCacheViewModel : ObservableObject
         {
             ResetLoadedZones(
                 currentAccountId is null
-                    ? "Connect and select a Cloudflare account first"
-                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                    ? Loc.Get("Status_ConnectFirst")
+                    : Loc.Format(
+                        "Status_AccountChangedLoad",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
             );
         }
     }
@@ -471,8 +488,11 @@ public partial class PurgeCacheViewModel : ObservableObject
         _pendingAccountInvalidation = false;
         ResetLoadedZones(
             App.CurrentAccountId is null
-                ? "Connect and select a Cloudflare account first"
-                : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                ? Loc.Get("Status_ConnectFirst")
+                : Loc.Format(
+                    "Status_AccountChangedLoad",
+                    App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                )
         );
         return true;
     }

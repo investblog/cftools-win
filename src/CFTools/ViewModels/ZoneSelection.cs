@@ -1,4 +1,5 @@
 ﻿using CFTools.Models;
+using CFTools.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CFTools.ViewModels;
@@ -14,8 +15,7 @@ public partial class ZoneSelection : ObservableObject
 
     public string ZoneStatus => Zone.Status;
 
-    public string? PurgeTooltip =>
-        IsActive ? null : $"Zone is {Zone.Status} - only active zones can be purged";
+    public string? PurgeTooltip => IsActive ? null : Loc.Format("Purge_Tooltip", Zone.Status);
 
     public bool IsActive => Zone.Status == "active";
 

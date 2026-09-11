@@ -4,8 +4,6 @@
 
 Cloudflare® 是 Cloudflare, Inc. 的注册商标。Cloudflare Tools 是由 301.st 开发的独立开源应用，与 Cloudflare, Inc. 无关联，未获其认可或赞助。它通过公开的 Cloudflare API v4 操作您自己的 Cloudflare 账户。
 
-应用界面为英文。
-
 Cloudflare Tools 将快速、可靠的区域批量管理带到 Windows 桌面。专为在多个 Cloudflare 账户中管理数十甚至数百个区域的域名专业人士打造。
 
 • 批量添加域名 — 从任意来源粘贴域名：列表、CSV、HTML、邮件、URL 或导出文件。解析器自动提取根域名，支持 IDN 和 Punycode，标记重复项，并允许在创建前检查列表。
@@ -16,6 +14,7 @@ Cloudflare Tools 将快速、可靠的区域批量管理带到 Windows 桌面。
 • API 令牌或 Global API Key — 使用用户令牌（cfut_）、账户令牌（cfat_）或传统密钥登录；类型根据粘贴的密钥自动识别。
 • 多账户 — 登录一次，无需重新输入凭据即可切换账户。
 • 深色和浅色主题 — 跟随 Windows 或手动设置。
+• 支持 12 种语言（简体中文、英语、俄语、德语、法语、西班牙语、意大利语、葡萄牙语、日语、韩语、波兰语、土耳其语），自动跟随 Windows 显示语言。
 
 凭据保存在 Windows 凭据管理器中，仅发送到 Cloudflare API。无遥测、无分析、无内购。源代码在 GitHub 公开。
 
@@ -39,6 +38,7 @@ Cloudflare Tools 将快速、可靠的区域批量管理带到 Windows 桌面。
 6. 使用 API 令牌（cfut_ / cfat_）或 Global API Key 登录，类型自动识别；密钥保存在 Windows 凭据管理器中
 7. 多账户：登录一次，无需重新输入凭据即可切换 Cloudflare 账户
 8. 遵守速率限制的请求队列，支持重试和退避；深色和浅色主题；开源，无遥测
+9. 支持 12 种语言并跟随 Windows 显示语言；也可在设置中选择语言
 
 ## Search terms (Store — max 7 terms, 30 chars each)
 

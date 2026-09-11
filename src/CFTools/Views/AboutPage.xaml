@@ -23,6 +23,7 @@
           />
         </StackPanel>
         <TextBlock
+          x:Uid="About_Tagline"
           Text="Independent bulk zone management for Cloudflare accounts, on Windows"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
           TextWrapping="Wrap"
@@ -31,41 +32,66 @@
 
       <!-- Features -->
       <StackPanel Spacing="6">
-        <TextBlock Text="What it does" Style="{StaticResource SubtitleTextBlockStyle}" />
+        <TextBlock
+          x:Uid="About_WhatTitle"
+          Text="What it does"
+          Style="{StaticResource SubtitleTextBlockStyle}"
+        />
         <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
           <Run Text="&#xB7; " />
-          <Run FontWeight="SemiBold" Text="Bulk Add" />
-          <Run Text=" - paste domains from any source. Smart parser handles CSV, HTML, emails, URLs, IDN/Punycode." />
+          <Run FontWeight="SemiBold" x:Uid="About_F1Title" Text="Bulk Add" />
+          <Run
+            x:Uid="About_F1Body"
+            Text=" - paste domains from any source. Smart parser handles CSV, HTML, emails, URLs, IDN/Punycode."
+          />
         </TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
           <Run Text="&#xB7; " />
-          <Run FontWeight="SemiBold" Text="Bulk Purge" />
-          <Run Text=" - clear cache for multiple zones at once with filtering and progress tracking." />
+          <Run FontWeight="SemiBold" x:Uid="About_F2Title" Text="Bulk Purge" />
+          <Run
+            x:Uid="About_F2Body"
+            Text=" - clear cache for multiple zones at once with filtering and progress tracking."
+          />
         </TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
           <Run Text="&#xB7; " />
-          <Run FontWeight="SemiBold" Text="Bulk Delete" />
-          <Run Text=" - remove zones safely with confirmation, auto-reload, and per-zone status." />
+          <Run FontWeight="SemiBold" x:Uid="About_F3Title" Text="Bulk Delete" />
+          <Run
+            x:Uid="About_F3Body"
+            Text=" - remove zones safely with confirmation, auto-reload, and per-zone status."
+          />
         </TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
           <Run Text="&#xB7; " />
-          <Run FontWeight="SemiBold" Text="Zone List" />
-          <Run Text=" - browse every zone with status, plan and name servers; export to CSV for one account or all accounts at once." />
+          <Run FontWeight="SemiBold" x:Uid="About_F4Title" Text="Zone List" />
+          <Run
+            x:Uid="About_F4Body"
+            Text=" - browse every zone with status, plan and name servers; export to CSV for one account or all accounts at once."
+          />
         </TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
           <Run Text="&#xB7; " />
-          <Run FontWeight="SemiBold" Text="Batch export" />
-          <Run Text=" - save the outcome of any add, purge or delete run as CSV with per-domain status and error." />
+          <Run FontWeight="SemiBold" x:Uid="About_F5Title" Text="Batch export" />
+          <Run
+            x:Uid="About_F5Body"
+            Text=" - save the outcome of any add, purge or delete run as CSV with per-domain status and error."
+          />
         </TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
           <Run Text="&#xB7; " />
-          <Run FontWeight="SemiBold" Text="API tokens or Global API Key" />
-          <Run Text=" - user tokens (cfut_), account-owned tokens (cfat_) or the classic key; the kind is detected automatically." />
+          <Run FontWeight="SemiBold" x:Uid="About_F6Title" Text="API tokens or Global API Key" />
+          <Run
+            x:Uid="About_F6Body"
+            Text=" - user tokens (cfut_), account-owned tokens (cfat_) or the classic key; the kind is detected automatically."
+          />
         </TextBlock>
         <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
           <Run Text="&#xB7; " />
-          <Run FontWeight="SemiBold" Text="Multi-account" />
-          <Run Text=" - switch between Cloudflare accounts without re-entering credentials." />
+          <Run FontWeight="SemiBold" x:Uid="About_F7Title" Text="Multi-account" />
+          <Run
+            x:Uid="About_F7Body"
+            Text=" - switch between Cloudflare accounts without re-entering credentials."
+          />
         </TextBlock>
       </StackPanel>
 
@@ -73,14 +99,20 @@
       <StackPanel Spacing="6">
         <StackPanel Orientation="Horizontal" Spacing="8">
           <controls:Logo301 Width="20" Height="20" VerticalAlignment="Center" />
-          <TextBlock Text="Built by 301.st" Style="{StaticResource SubtitleTextBlockStyle}" />
+          <TextBlock
+            x:Uid="About_BuiltTitle"
+            Text="Built by 301.st"
+            Style="{StaticResource SubtitleTextBlockStyle}"
+          />
         </StackPanel>
         <TextBlock
+          x:Uid="About_Built1"
           Text="301.st is an edge redirect management platform built on Cloudflare Workers. It delivers intelligent URL redirects with GEO/UA filtering, real-time analytics, and sub-20ms response times globally."
           TextWrapping="Wrap"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
         />
         <TextBlock
+          x:Uid="About_Built2"
           Text="Cloudflare Tools started as a browser extension to simplify bulk zone operations and is now available as a native Windows app with a cleaner, safer workflow."
           TextWrapping="Wrap"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -89,33 +121,43 @@
 
       <!-- Links -->
       <StackPanel Spacing="4">
-        <TextBlock Text="Links" Style="{StaticResource SubtitleTextBlockStyle}" />
+        <TextBlock
+          x:Uid="About_LinksTitle"
+          Text="Links"
+          Style="{StaticResource SubtitleTextBlockStyle}"
+        />
         <HyperlinkButton
+          x:Uid="About_Rate"
           Content="Rate this app in Microsoft Store"
           NavigateUri="ms-windows-store://review/?ProductId=9pn4wf799808"
           Padding="0"
         />
         <HyperlinkButton
+          x:Uid="About_Source"
           Content="Source code on GitHub"
           NavigateUri="https://github.com/investblog/cftools-win"
           Padding="0"
         />
         <HyperlinkButton
+          x:Uid="About_301"
           Content="301.st - edge redirect platform"
           NavigateUri="https://301.st"
           Padding="0"
         />
         <HyperlinkButton
+          x:Uid="About_Edge"
           Content="Browser extension for Edge"
           NavigateUri="https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc"
           Padding="0"
         />
         <HyperlinkButton
+          x:Uid="About_Chrome"
           Content="Browser extension for Chrome"
           NavigateUri="https://chromewebstore.google.com/detail/gncbekdjakchefiiahjbjlbhhfijoikp"
           Padding="0"
         />
         <HyperlinkButton
+          x:Uid="About_Firefox"
           Content="Browser extension for Firefox"
           NavigateUri="https://addons.mozilla.org/en-US/firefox/addon/cloudflare-tools/"
           Padding="0"
@@ -125,12 +167,14 @@
       <!-- Footer -->
       <StackPanel Spacing="4">
         <TextBlock
+          x:Uid="About_Footer1"
           Text="Uses the public Cloudflare API v4. Credentials are stored in Windows Credential Manager and sent only to api.cloudflare.com."
           Foreground="{ThemeResource TextFillColorTertiaryBrush}"
           FontSize="12"
           TextWrapping="Wrap"
         />
         <TextBlock
+          x:Uid="About_Footer2"
           Text="Cloudflare is a trademark of Cloudflare, Inc. This app is an independent tool by 301.st and is not affiliated with, endorsed by, or sponsored by Cloudflare, Inc."
           Foreground="{ThemeResource TextFillColorTertiaryBrush}"
           FontSize="12"

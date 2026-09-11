@@ -4,8 +4,6 @@
 
 Cloudflare® es una marca registrada de Cloudflare, Inc. Cloudflare Tools es una aplicación independiente y de código abierto creada por 301.st. No está afiliada a Cloudflare, Inc., ni respaldada ni patrocinada por ella. Funciona con su propia cuenta de Cloudflare a través de la API pública de Cloudflare v4.
 
-La interfaz de la aplicación está en inglés.
-
 Cloudflare Tools lleva la gestión masiva de zonas, rápida y fiable, al escritorio de Windows. Pensada para profesionales de dominios que administran decenas o cientos de zonas en varias cuentas de Cloudflare.
 
 • Agregar dominios en masa — pegue dominios desde cualquier fuente: listas, CSV, HTML, correos, URL o exportaciones. El analizador extrae dominios raíz, admite IDN y Punycode, marca duplicados y le deja revisar la lista antes de crear nada.
@@ -16,6 +14,7 @@ Cloudflare Tools lleva la gestión masiva de zonas, rápida y fiable, al escrito
 • Token de API o Global API Key — inicie sesión con un token de usuario (cfut_), un token de cuenta (cfat_) o la clave clásica; el tipo se detecta a partir del secreto pegado.
 • Varias cuentas — inicie sesión una vez y cambie de cuenta sin volver a introducir credenciales.
 • Temas oscuro y claro — según Windows o manual.
+• Habla 12 idiomas (español, inglés, ruso, alemán, francés, italiano, portugués, japonés, coreano, chino, polaco, turco) y sigue el idioma de Windows.
 
 Las credenciales permanecen en el Administrador de credenciales de Windows y solo se envían a la API de Cloudflare. Sin telemetría, sin analítica, sin compras. Código fuente en GitHub.
 
@@ -39,6 +38,7 @@ Versión 1.2.0:
 6. Inicio de sesión con token de API (cfut_ / cfat_) o Global API Key, tipo detectado automáticamente; los secretos quedan en el Administrador de credenciales de Windows
 7. Varias cuentas: un solo inicio de sesión, cambio de cuenta de Cloudflare sin volver a escribir credenciales
 8. Cola de solicitudes que respeta los límites, con reintentos y backoff; temas oscuro y claro; código abierto, sin telemetría
+9. Habla 12 idiomas y sigue el idioma de Windows; el idioma también se puede elegir en la configuración
 
 ## Search terms (Store — max 7 terms, 30 chars each)
 

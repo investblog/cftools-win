@@ -1,3 +1,4 @@
+using CFTools.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
@@ -46,14 +47,14 @@ public class PreflightStatusTextConverter : IValueConverter
         value is Models.PreflightStatus status
             ? status switch
             {
-                Models.PreflightStatus.WillCreate => "Ready",
-                Models.PreflightStatus.Exists => "Exists",
-                Models.PreflightStatus.Invalid => "Invalid",
-                Models.PreflightStatus.Duplicate => "Duplicate",
-                Models.PreflightStatus.Creating => "Creating\u2026",
-                Models.PreflightStatus.Created => "Created",
-                Models.PreflightStatus.Failed => "Failed",
-                Models.PreflightStatus.Cancelled => "Cancelled",
+                Models.PreflightStatus.WillCreate => Loc.Get("Preflight_Ready"),
+                Models.PreflightStatus.Exists => Loc.Get("Preflight_Exists"),
+                Models.PreflightStatus.Invalid => Loc.Get("Preflight_Invalid"),
+                Models.PreflightStatus.Duplicate => Loc.Get("Preflight_Duplicate"),
+                Models.PreflightStatus.Creating => Loc.Get("Preflight_Creating"),
+                Models.PreflightStatus.Created => Loc.Get("Preflight_Created"),
+                Models.PreflightStatus.Failed => Loc.Get("Preflight_Failed"),
+                Models.PreflightStatus.Cancelled => Loc.Get("Preflight_Cancelled"),
                 _ => status.ToString(),
             }
             : "";
@@ -102,9 +103,7 @@ public class PurgeTooltipConverter : IValueConverter
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         var status = value as string ?? "";
-        return status == "active"
-            ? (object)null!
-            : $"Zone is {status} — only active zones can be purged";
+        return status == "active" ? (object)null! : Loc.Format("Purge_Tooltip", status);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language) =>

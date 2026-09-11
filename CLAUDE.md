@@ -44,12 +44,15 @@ cftools-win/
 │   │   ├── FileExporter.cs           # FileSavePicker + write (UI thread)
 │   │   ├── RequestPool.cs            # Rate-limited queue with backoff
 │   │   └── DomainParser.cs           # Domain extraction from text
+│   ├── Strings/<culture>/Resources.resw  # GENERATED from i18n/*.txt (scripts/build-resw.py)
 │   └── Models/
 │       ├── CloudflareModels.cs       # API DTOs + state models
 │       ├── CredentialModels.cs       # CredentialKind / CfCredential / detector (Core, tested)
 │       └── ErrorModels.cs            # Error normalization
 ├── src/CFTools.Core/                 # Pure .NET 8 library (no WinUI)
 │   └── CFTools.Core.csproj           # Links Models/ + Services/ for testing
+├── i18n/<lang>.txt                   # UI strings, 12 languages (source of truth for resw)
+├── scripts/                          # build-resw.py, check-strings.py (i18n gate), check-store-listings.py
 ├── tests/CFTools.Tests/              # xUnit (targets net8.0 via Core)
 │   ├── DomainParserTests.cs
 │   ├── ErrorNormalizerTests.cs
@@ -79,6 +82,12 @@ dotnet csharpier format src/ tests/
 
 # Проверка форматирования (CI)
 dotnet csharpier check src/ tests/
+
+# i18n: после правки i18n/*.txt — сгенерировать resw и прогнать страж длины (130% + 8 символов, плейсхолдеры, переносы)
+python scripts/build-resw.py && python scripts/check-strings.py
+
+# Запуск на другом языке без смены Windows
+src/CFTools/bin/x64/Debug/net8.0-windows10.0.19041.0/CFTools.exe --lang=ja
 ```
 
 **Важно:** `dotnet build` для WinUI не работает — нужен VS2022 MSBuild из-за XAML tooling.
@@ -209,6 +218,7 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 15. **API Token auth** (v1.2.0) — cfut_/cfat_ с автоопределением, для cfat_ опциональный Account ID; `App.CurrentEmail` для токенов хранит label «API token xxxxxxxx»
 16. **Batch result export** (v1.2.0) — кнопка «Export results» после батча в Add/Purge/Delete → CSV `domain,status,error`
 17. **Rate this app** + ссылки на расширения + trademark-дисклеймер на About
+19. **i18n, 12 языков** (v1.2.0, по принципу Buho) — XAML через `x:Uid`, код через `Loc.Get/Format`; исходник `i18n/<lang>.txt` → `Strings/<culture>/Resources.resw` (генерируется, коммитится). Страж `scripts/check-strings.py`: паритет ключей, ≤130% длины английской + 8, плейсхолдеры `{n}`, переносы. Язык: Windows → Settings override (`AppSettings.Language`) → `--lang=xx`; применяется через `Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride` (работает и без package identity) + `SetProcessPreferredUILanguages`. Манифест объявляет 12 `<Resource Language>`. Сообщения `ErrorNormalizer` (Core) остаются английскими.
 18. **301.st tips** (v1.2.0) — контекстное промо своего сервиса: InfoBar после успешного Bulk Add (закрытие запоминается в `AppSettings.AfterCreateTipDismissed`), строка на Zones при наличии не-active зон, строка на Auth. Ссылки через `PromoLinks` с utm_campaign per placement. Выключается в Settings → «Show 301.st tips». Глиф — `Views/Controls/Logo301` (Path из 301-ui `brand/301.svg`).
 
 ## Store
@@ -216,7 +226,7 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 - **Partner Center**: MSIX app, identity `301.CloudflareTools`, publisher `CN=BEE1F94B-ABDE-4CF8-9F30-1DF4DAFDAE83`
 - **Статус**: опубликовано как «CFTools» (1.1.1), https://apps.microsoft.com/detail/9pn4wf799808
 - **v1.2.0 (2026-09-11)**: собрано под именем «Cloudflare Tools» (зарезервировано в Partner Center). План: подать с trademark-дисклеймером первой строкой описания + notes for certification (см. docs/store-listing-en.md). Если отклонят по 10.1.1.1 — фолбэк «CFTools for Cloudflare» (паттерн «X for Y»: зарезервировать имя, поменять DisplayName в манифесте/About/README, пересобрать).
-- **Store listings**: 12 языков по принципу Buho (en, ru, de, fr, es, it, pt-br, ja, ko, zh-cn, pl, tr) в `docs/store-listing-<lang>.md`: Description (дисклеймер первой строкой + «интерфейс на английском»), What's new, Product features ≤200 симв., Search terms ≤7×30. Проверка лимитов: `python scripts/check-store-listings.py`. Манифест объявляет только `en-us` (UI не локализован, политика 10.7), языки листинга добавляются в Partner Center отдельно. На 2026-09-11 в Partner Center загружен только EN.
+- **Store listings**: 12 языков по принципу Buho (en, ru, de, fr, es, it, pt-br, ja, ko, zh-cn, pl, tr) в `docs/store-listing-<lang>.md`: Description (дисклеймер первой строкой + «интерфейс на английском»), What's new, Product features ≤200 симв., Search terms ≤7×30. Проверка лимитов: `python scripts/check-store-listings.py`. UI локализован на те же 12 языков, манифест объявляет их в `<Resources>`; языки листинга добавляются в Partner Center. На 2026-09-11 в Partner Center загружен только EN.
 
 ## Сборка MSIX для Store
 
@@ -237,7 +247,7 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 
 ## Очередь разработки
 
-P1: несколько профилей учётных данных (как в расширении v0.2.0), RU-локализация UI (resw), загрузить переводы листинга в Partner Center
+P1: несколько профилей учётных данных (как в расширении v0.2.0), загрузить 11 переводов листинга в Partner Center
 P2: DNS Import/Export, file logging
 P3: Bulk SSL Mode, Security Level, Always HTTPS
 

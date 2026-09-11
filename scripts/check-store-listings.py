@@ -5,7 +5,6 @@ Checks, per language file:
   - Description <= 10000 chars, What's new <= 1500 chars
   - Product features: 1..20 items, each <= 200 chars
   - Search terms: <= 7 terms, each <= 30 chars
-  - non-English files state that the interface is English (policy 10.7)
 
 Usage: python scripts/check-store-listings.py
 """
@@ -20,7 +19,6 @@ LANGS = ["en", "ru", "de", "fr", "es", "it", "pt-br", "ja", "ko", "zh-cn", "pl",
 DOCS = Path(__file__).resolve().parent.parent / "docs"
 
 LIMITS = {"description": 10000, "whats_new": 1500, "feature": 200, "features": 20, "term": 30, "terms": 7}
-ENGLISH_UI_MARKERS = ["English", "английск", "Englisch", "anglais", "inglés", "inglese", "inglês", "英語", "영어", "英文", "angielsk", "İngilizce"]
 
 
 def section(text: str, title: str) -> str:
@@ -40,8 +38,6 @@ def check(lang: str) -> list[str]:
         errors.append("Description: empty")
     elif len(description) > LIMITS["description"]:
         errors.append(f"Description: {len(description)} chars > {LIMITS['description']}")
-    if lang != "en" and not any(m in description for m in ENGLISH_UI_MARKERS):
-        errors.append("Description: must state that the interface is in English (policy 10.7)")
 
     whats_new = section(text, "What's new")
     if len(whats_new) > LIMITS["whats_new"]:

@@ -14,6 +14,7 @@ Cloudflare Tools brings fast, reliable bulk zone management to your Windows desk
 • API token or Global API Key — sign in with a user token (cfut_), an account-owned token (cfat_) or the classic key; the kind is detected from the pasted secret.
 • Multi-account — sign in once, switch accounts without re-entering credentials.
 • Dark and light themes, follows Windows or set manually.
+• Speaks 12 languages (English, Russian, German, French, Spanish, Italian, Portuguese, Japanese, Korean, Chinese, Polish, Turkish) and follows your Windows display language.
 
 Credentials stay in Windows Credential Manager and are sent only to the Cloudflare API. No telemetry, no analytics, no purchases. Source code on GitHub.
 
@@ -26,6 +27,7 @@ Version 1.2.0:
 • Sign in with API tokens (cfut_ / cfat_) alongside the Global API Key
 • Export batch results (add / purge / delete) to CSV
 • Rate this app, extension links and a trademark notice on the About page
+• Interface in 12 languages, follows the Windows display language
 
 ## Product features (keyword-first, ≤200 chars each)
 
@@ -37,6 +39,7 @@ Version 1.2.0:
 6. API token (cfut_ / cfat_) or Global API Key sign-in, kind detected automatically; secrets stay in Windows Credential Manager
 7. Multi-account: sign in once, switch Cloudflare accounts without re-entering credentials
 8. Rate-limit aware request queue with retries and backoff; dark and light themes; open source, no telemetry
+9. Speaks 12 languages and follows the Windows display language; the language can also be set in Settings
 
 ## Search terms (Store — max 7 terms, 30 chars each)
 
@@ -51,7 +54,7 @@ Product name and trademark (policy 10.1.1):
 - Publisher name and support links point to 301.st; the source code is public at https://github.com/investblog/cftools-win.
 
 Localization (policy 10.7):
-- The app interface is English. Store listings in other languages state this in their first lines. The package declares en-us only.
+- The app interface is localized into the 12 languages declared in the package manifest (en, ru, de, fr, es, it, pt-br, ja, ko, zh-Hans, pl, tr); Store listings are provided in the same 12 languages. The language follows the Windows display language and can be overridden in Settings.
 
 Testing (policy 10.3):
 - The app requires the tester's own Cloudflare credentials (an API token or Global API Key). A demo Cloudflare account cannot be shared because all operations (create / delete zones, purge cache) modify the account. Without credentials the reviewer can open every page: Zones, Add Domains, Purge Cache, Delete Domains, Settings and About all render and show a "Connect and select an account" hint.

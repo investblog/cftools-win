@@ -4,8 +4,6 @@
 
 Cloudflare®는 Cloudflare, Inc.의 등록 상표입니다. Cloudflare Tools는 301.st가 만든 독립적인 오픈소스 앱으로, Cloudflare, Inc.와 제휴·승인·후원 관계가 없습니다. 공개 Cloudflare API v4를 통해 사용자 본인의 Cloudflare 계정을 다룹니다.
 
-앱 인터페이스는 영어입니다.
-
 Cloudflare Tools는 빠르고 안정적인 영역(zone) 대량 관리를 Windows 데스크톱에서 제공합니다. 여러 Cloudflare 계정에서 수십에서 수백 개의 영역을 관리하는 도메인 전문가를 위한 도구입니다.
 
 • 도메인 대량 추가 — 목록, CSV, HTML, 이메일, URL, 내보내기 등 어떤 형태의 텍스트든 붙여 넣기만 하면 됩니다. 파서가 루트 도메인을 추출하고 IDN과 Punycode를 처리하며 중복을 표시하고, 생성 전에 목록을 확인할 수 있습니다.
@@ -16,6 +14,7 @@ Cloudflare Tools는 빠르고 안정적인 영역(zone) 대량 관리를 Windows
 • API 토큰 또는 Global API Key — 사용자 토큰(cfut_), 계정 토큰(cfat_) 또는 기존 키로 로그인. 붙여 넣은 비밀 값에서 종류를 자동 인식.
 • 다중 계정 — 한 번 로그인하면 자격 증명을 다시 입력하지 않고 계정 전환.
 • 다크/라이트 테마 — Windows 설정을 따르거나 직접 선택.
+• 12개 언어 지원(한국어, 영어, 러시아어, 독일어, 프랑스어, 스페인어, 이탈리아어, 포르투갈어, 일본어, 중국어, 폴란드어, 터키어). Windows 표시 언어를 자동으로 따릅니다.
 
 자격 증명은 Windows 자격 증명 관리자에 보관되며 Cloudflare API로만 전송됩니다. 원격 측정, 분석, 구매가 없습니다. 소스 코드는 GitHub에 공개되어 있습니다.
 
@@ -39,6 +38,7 @@ Cloudflare Tools는 빠르고 안정적인 영역(zone) 대량 관리를 Windows
 6. API 토큰(cfut_ / cfat_) 또는 Global API Key 로그인, 종류 자동 인식. 비밀 값은 Windows 자격 증명 관리자에 보관
 7. 다중 계정: 한 번 로그인하고 재입력 없이 Cloudflare 계정 전환
 8. 속도 제한을 고려한 요청 대기열(재시도와 백오프 포함). 다크/라이트 테마. 오픈소스, 원격 측정 없음
+9. 12개 언어 지원, Windows 표시 언어를 따름. 설정에서 언어 선택도 가능
 
 ## Search terms (Store — max 7 terms, 30 chars each)
 

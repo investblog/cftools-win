@@ -20,9 +20,14 @@
 
     <ScrollViewer Grid.Row="1">
       <StackPanel Padding="16" Spacing="16" MaxWidth="480" HorizontalAlignment="Left">
-        <TextBlock Text="Cloudflare Authentication" Style="{StaticResource TitleTextBlockStyle}" />
+        <TextBlock
+          x:Uid="Auth_Title"
+          Text="Cloudflare Authentication"
+          Style="{StaticResource TitleTextBlockStyle}"
+        />
 
         <TextBlock
+          x:Uid="Auth_Intro"
           Text="Connect with an API token (cfut_ / cfat_) or your Global API Key. The kind is detected from the pasted secret."
           TextWrapping="Wrap"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -30,6 +35,7 @@
 
         <PasswordBox
           x:Name="ApiKeyBox"
+          x:Uid="Auth_Secret"
           Header="API token or Global API Key"
           PlaceholderText="cfut_… / cfat_… / Global API Key"
           IsEnabled="{x:Bind ViewModel.CanEditCredentials, Mode=OneWay}"
@@ -45,6 +51,7 @@
         />
 
         <TextBox
+          x:Uid="Auth_Email"
           Header="Email (Global API Key only)"
           PlaceholderText="you@example.com"
           Text="{x:Bind ViewModel.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -53,6 +60,7 @@
         />
 
         <TextBox
+          x:Uid="Auth_AccountId"
           Header="Account ID (optional, for account-owned tokens)"
           PlaceholderText="32-character account ID from the Cloudflare dashboard"
           Text="{x:Bind ViewModel.AccountIdInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -69,6 +77,7 @@
         />
 
         <ComboBox
+          x:Uid="Auth_AccountPicker"
           Header="Account"
           ItemsSource="{x:Bind ViewModel.Accounts, Mode=OneWay}"
           SelectedItem="{x:Bind ViewModel.SelectedAccount, Mode=TwoWay}"
@@ -81,6 +90,7 @@
         />
 
         <TextBlock
+          x:Uid="Auth_PickerHint"
           Text="Select an account to finish sign-in, or disconnect to return to the sign-in form."
           TextWrapping="Wrap"
           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -89,22 +99,26 @@
 
         <StackPanel Orientation="Horizontal" Spacing="8">
           <Button
+            x:Uid="Auth_Connect"
             Content="Connect"
             Style="{StaticResource AccentButtonStyle}"
             Command="{x:Bind ViewModel.ConnectCommand}"
             Visibility="{x:Bind ViewModel.ShowConnectAction, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
           />
           <Button
+            x:Uid="Auth_Switch"
             Content="Switch account"
             Command="{x:Bind ViewModel.SwitchAccountCommand}"
             Visibility="{x:Bind ViewModel.ShowSwitchAccountAction, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
           />
           <Button
+            x:Uid="Auth_Disconnect"
             Content="Disconnect"
             Command="{x:Bind ViewModel.DisconnectCommand}"
             Visibility="{x:Bind ViewModel.ShowDisconnectAction, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
           />
           <Button
+            x:Uid="Auth_Forget"
             Content="Forget credentials"
             Command="{x:Bind ViewModel.ForgetCommand}"
             Visibility="{x:Bind ViewModel.ShowForgetAction, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
@@ -129,28 +143,43 @@
           Opacity="0.7"
           Visibility="{x:Bind ViewModel.CanEditCredentials, Mode=OneWay, Converter={StaticResource BoolToVisConverter}}"
         >
-          <TextBlock Text="Where to get credentials" FontWeight="SemiBold" />
+          <TextBlock
+            x:Uid="Auth_WhereTitle"
+            Text="Where to get credentials"
+            FontWeight="SemiBold"
+          />
           <TextBlock TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-            <Run Text="Log in to" />
+            <Run x:Uid="Auth_WhereRun1" Text="Log in to" />
             <Hyperlink NavigateUri="https://dash.cloudflare.com/profile/api-tokens"
               >dash.cloudflare.com</Hyperlink
             >
-            <Run Text=" and open My Profile > API Tokens. Create a token, or view the Global API Key. Account-owned tokens live under Manage Account > API Tokens." />
+            <Run
+              x:Uid="Auth_WhereRun2"
+              Text=" and open My Profile > API Tokens. Create a token, or view the Global API Key. Account-owned tokens live under Manage Account > API Tokens."
+            />
           </TextBlock>
 
-          <TextBlock Text="API token permissions" FontWeight="SemiBold" Margin="0,8,0,0" />
           <TextBlock
+            x:Uid="Auth_PermsTitle"
+            Text="API token permissions"
+            FontWeight="SemiBold"
+            Margin="0,8,0,0"
+          />
+          <TextBlock
+            x:Uid="Auth_PermsBody"
             Text="Zone > Zone > Edit (create, list, delete zones), Zone > Cache Purge > Purge, and Account > Account Settings > Read (to list your accounts)."
             TextWrapping="Wrap"
             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
           />
 
           <TextBlock
+            x:Uid="Auth_WhenTitle"
             Text="When to prefer the Global API Key"
             FontWeight="SemiBold"
             Margin="0,8,0,0"
           />
           <TextBlock
+            x:Uid="Auth_WhenBody"
             Text="Some new accounts cap zone creation for API tokens at the number of zones that already exist, which blocks bulk add from zero. The Global API Key does not hit that limit. Either secret stays in Windows Credential Manager and is sent only to the Cloudflare API."
             TextWrapping="Wrap"
             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
@@ -169,7 +198,7 @@
             TextWrapping="Wrap"
             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
           >
-            <Run Text="For redirects, TDS and domain management:" />
+            <Run x:Uid="Auth_PromoRun" Text="For redirects, TDS and domain management:" />
             <Hyperlink NavigateUri="{x:Bind ViewModel.PromoUrl}">301.st</Hyperlink>
           </TextBlock>
         </StackPanel>

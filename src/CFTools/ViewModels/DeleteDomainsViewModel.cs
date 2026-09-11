@@ -66,7 +66,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
         var fileName = $"cftools-delete-results-{DateTime.Now:yyyy-MM-dd-HHmm}.csv";
         if (await FileExporter.SaveCsvAsync(fileName, CsvBuilder.BatchResultsCsv(rows)))
-            StatusText = $"Exported {rows.Count} result(s) to {fileName}";
+            StatusText = Loc.Format("Status_ExportedResults", rows.Count, fileName);
     }
 
     private void RecordResult(string domain, string status, string? error = null)
@@ -107,7 +107,9 @@ public partial class DeleteDomainsViewModel : ObservableObject
     }
 
     public string AccountContextText =>
-        App.CurrentAccountName is { Length: > 0 } name ? $"Current account: {name}" : string.Empty;
+        App.CurrentAccountName is { Length: > 0 } name
+            ? Loc.Format("Status_CurrentAccount", name)
+            : string.Empty;
 
     public bool IsAccountMissing => App.CurrentAccountId is null;
 
@@ -132,10 +134,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
             {
                 if (!IsBusy && !IsRunning && _loadedAccountId is not null)
                 {
-                    ResetLoadedZones(
-                        "Zone list changed. Press Load Zones to refresh.",
-                        clearResults: false
-                    );
+                    ResetLoadedZones(Loc.Get("Status_ZoneListChangedLoad"), clearResults: false);
                 }
             });
     }
@@ -145,12 +144,12 @@ public partial class DeleteDomainsViewModel : ObservableObject
     {
         if (!App.Api.IsConfigured || App.CurrentAccountId is null)
         {
-            StatusText = "Connect and select a Cloudflare account first";
+            StatusText = Loc.Get("Status_ConnectFirst");
             return;
         }
 
         var accountId = App.CurrentAccountId;
-        var accountName = App.CurrentAccountName ?? "the selected account";
+        var accountName = App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback");
 
         IsBusy = true;
         ProgressText = string.Empty;
@@ -158,7 +157,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
         ProgressValue = 0;
         ProgressMaximum = 1;
         ClearLoadedZones();
-        StatusText = $"Loading zones for {accountName}...";
+        StatusText = Loc.Format("Status_LoadingZones", accountName);
         UpdateCommandStates();
 
         try
@@ -168,7 +167,10 @@ public partial class DeleteDomainsViewModel : ObservableObject
             if (App.CurrentAccountId != accountId)
             {
                 ResetLoadedZones(
-                    $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                    Loc.Format(
+                        "Status_AccountChangedLoad",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
                 );
                 return;
             }
@@ -180,15 +182,15 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
             _loadedAccountId = accountId;
             RefreshVisibleZones();
-            StatusText = $"{zones.Count} zones loaded";
+            StatusText = Loc.Format("Status_ZonesLoaded", zones.Count);
         }
         catch (CfApiException ex)
         {
-            StatusText = $"Error: {ex.Normalized.Message}";
+            StatusText = Loc.Format("Status_Error", ex.Normalized.Message);
         }
         catch (Exception ex)
         {
-            StatusText = $"Error: {ex.Message}";
+            StatusText = Loc.Format("Status_Error", ex.Message);
         }
         finally
         {
@@ -243,8 +245,11 @@ public partial class DeleteDomainsViewModel : ObservableObject
         {
             ResetLoadedZones(
                 App.CurrentAccountId is null
-                    ? "Connect and select a Cloudflare account first"
-                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                    ? Loc.Get("Status_ConnectFirst")
+                    : Loc.Format(
+                        "Status_AccountChangedLoad",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
             );
             return;
         }
@@ -257,12 +262,15 @@ public partial class DeleteDomainsViewModel : ObservableObject
         ShowProgress = true;
         ProgressValue = 0;
         ProgressMaximum = selected.Count;
-        StatusText =
-            $"Deleting {selected.Count} zone(s) from {App.CurrentAccountName ?? "the selected account"}...";
+        StatusText = Loc.Format(
+            "Delete_Starting",
+            selected.Count,
+            App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+        );
         ProgressText = string.Empty;
         foreach (var zone in selected)
         {
-            zone.StatusText = "Queued";
+            zone.StatusText = Loc.Get("Item_Queued");
         }
         UpdateCommandStates();
 
@@ -277,7 +285,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
                 App.Pool.Add(
                     async ct =>
                     {
-                        await RunOnUiThreadAsync(() => zone.StatusText = "Deleting...");
+                        await RunOnUiThreadAsync(() => zone.StatusText = Loc.Get("Delete_Item"));
 
                         try
                         {
@@ -290,7 +298,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
                             await RunOnUiThreadAsync(() =>
                             {
                                 zone.IsDeleted = true;
-                                zone.StatusText = "Deleted";
+                                zone.StatusText = Loc.Get("Delete_ItemDone");
                                 UpdateDeleteProgress(processedCount, successCount, failed, total);
                             });
                         }
@@ -303,7 +311,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
                             await RunOnUiThreadAsync(() =>
                             {
-                                zone.StatusText = "Cancelled";
+                                zone.StatusText = Loc.Get("Item_Cancelled");
                                 UpdateDeleteProgress(
                                     processedCount,
                                     succeeded,
@@ -320,7 +328,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
                             await RunOnUiThreadAsync(() =>
                             {
-                                zone.StatusText = $"Failed: {ex.Normalized.Message}";
+                                zone.StatusText = Loc.Format("Item_Failed", ex.Normalized.Message);
                                 UpdateDeleteProgress(
                                     processedCount,
                                     succeeded,
@@ -337,7 +345,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
 
                             await RunOnUiThreadAsync(() =>
                             {
-                                zone.StatusText = $"Failed: {ex.Message}";
+                                zone.StatusText = Loc.Format("Item_Failed", ex.Message);
                                 UpdateDeleteProgress(
                                     processedCount,
                                     succeeded,
@@ -368,7 +376,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
             IsRunning = false;
             var neverStarted = MarkUnrecordedAsCancelled(selected.Select(z => z.Zone.Name));
             foreach (var zone in selected.Where(z => neverStarted.Contains(z.Zone.Name)))
-                zone.StatusText = "Cancelled";
+                zone.StatusText = Loc.Get("Item_Cancelled");
             if (neverStarted.Count > 0)
             {
                 failed += neverStarted.Count;
@@ -384,8 +392,8 @@ public partial class DeleteDomainsViewModel : ObservableObject
             {
                 StatusText =
                     wasCancelled == 1
-                        ? $"Cancelled: {succeeded} deleted, {failed} not completed out of {total}"
-                        : $"Done: {succeeded} deleted, {failed} failed out of {total}";
+                        ? Loc.Format("Delete_DoneCancelled", succeeded, failed, total)
+                        : Loc.Format("Delete_Done", succeeded, failed, total);
 
                 // Notify first: the handler is queued on the dispatcher and runs while
                 // LoadZonesAsync is busy, so this page keeps its freshly reloaded list.
@@ -403,7 +411,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
             return;
         }
 
-        StatusText = "Cancelling batch...";
+        StatusText = Loc.Get("Status_Cancelling");
         CanCancel = false;
         _batchCts?.Cancel();
         App.Pool.Cancel();
@@ -426,7 +434,10 @@ public partial class DeleteDomainsViewModel : ObservableObject
         if (!IsBusy && !IsRunning && _loadedAccountId is not null)
         {
             var total = VisibleZones.Count;
-            StatusText = selected > 0 ? $"{selected} of {total} selected" : $"{total} zones loaded";
+            StatusText =
+                selected > 0
+                    ? Loc.Format("Status_Selected", selected, total)
+                    : Loc.Format("Status_ZonesLoaded", total);
         }
     }
 
@@ -502,8 +513,11 @@ public partial class DeleteDomainsViewModel : ObservableObject
         {
             ResetLoadedZones(
                 currentAccountId is null
-                    ? "Connect and select a Cloudflare account first"
-                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                    ? Loc.Get("Status_ConnectFirst")
+                    : Loc.Format(
+                        "Status_AccountChangedLoad",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
             );
         }
     }
@@ -518,8 +532,11 @@ public partial class DeleteDomainsViewModel : ObservableObject
         _pendingAccountInvalidation = false;
         ResetLoadedZones(
             App.CurrentAccountId is null
-                ? "Connect and select a Cloudflare account first"
-                : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Load zones again to continue."
+                ? Loc.Get("Status_ConnectFirst")
+                : Loc.Format(
+                    "Status_AccountChangedLoad",
+                    App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                )
         );
         return true;
     }
@@ -557,7 +574,7 @@ public partial class DeleteDomainsViewModel : ObservableObject
     {
         ProgressMaximum = total;
         ProgressValue = processed;
-        ProgressText = $"{processed}/{total} processed - {success} deleted, {failed} failed";
+        ProgressText = Loc.Format("Delete_Progress", processed, total, success, failed);
     }
 
     private Task RunOnUiThreadAsync(Action action)

@@ -1,3 +1,4 @@
+using CFTools.Services;
 using CFTools.Views;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -54,8 +55,8 @@ public sealed partial class MainWindow : Window
             if (App.CurrentEmail is null)
             {
                 AuthIcon.ClearValue(IconElement.ForegroundProperty);
-                AuthNavItem.Content = "Not connected";
-                ToolTipService.SetToolTip(AuthNavItem, "Not connected");
+                AuthNavItem.Content = Loc.Get("Nav_NotConnected");
+                ToolTipService.SetToolTip(AuthNavItem, Loc.Get("Nav_NotConnected"));
                 return;
             }
 
@@ -72,10 +73,10 @@ public sealed partial class MainWindow : Window
             else
             {
                 AuthIcon.ClearValue(IconElement.ForegroundProperty);
-                AuthNavItem.Content = "Select account";
+                AuthNavItem.Content = Loc.Get("Nav_SelectAccount");
                 ToolTipService.SetToolTip(
                     AuthNavItem,
-                    $"Authenticated as {App.CurrentEmail}. Select an account to continue."
+                    Loc.Format("Nav_SelectAccountTip", App.CurrentEmail)
                 );
             }
         });

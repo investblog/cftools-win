@@ -20,6 +20,7 @@ Cloudflare Tools for Windows is a desktop app for fast, high-confidence Cloudfla
 - **Batch result export** - after any add, purge or delete run, save a CSV with per-domain status and error text.
 - **API tokens or Global API Key** - sign in with a user token (`cfut_`), an account-owned token (`cfat_`) or the classic Global API Key; the kind is detected from the pasted secret.
 - **Multi-account workflow** - sign in once, choose an active account, and switch accounts without re-entering credentials.
+- **12 languages** - English, Russian, German, French, Spanish, Italian, Portuguese (Brazil), Japanese, Korean, Chinese (Simplified), Polish, Turkish; follows the Windows display language, overridable in Settings.
 - **Responsive Windows UI** - optimized for compact and full-width layouts, with light, dark, and system theme support.
 - **Resilient request pipeline** - concurrent API calls with retry handling, rate-limit awareness, and cancellation that keeps UI state consistent.
 
@@ -52,6 +53,17 @@ dotnet build CFTools.sln
 ```powershell
 dotnet test CFTools.sln
 ```
+
+### Localization
+
+UI strings live in `i18n/<lang>.txt` (one `Key=Value` per line). After editing, regenerate the resw files and run the length guard:
+
+```powershell
+python scripts/build-resw.py
+python scripts/check-strings.py
+```
+
+A translation may not exceed 130% of the English length + 8 characters, so menus and buttons stay aligned across languages. Test a language without changing Windows: `CFTools.exe --lang=ja`.
 
 ### Optional formatting
 

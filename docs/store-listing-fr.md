@@ -4,8 +4,6 @@
 
 Cloudflare® est une marque déposée de Cloudflare, Inc. Cloudflare Tools est une application indépendante et open source de 301.st. Elle n'est ni affiliée à Cloudflare, Inc., ni approuvée ou sponsorisée par elle. Elle fonctionne avec votre propre compte Cloudflare via l'API publique Cloudflare v4.
 
-L'interface de l'application est en anglais.
-
 Cloudflare Tools apporte une gestion de zones en masse, rapide et fiable, sur le bureau Windows. Conçu pour les professionnels des domaines qui gèrent des dizaines ou des centaines de zones sur plusieurs comptes Cloudflare.
 
 • Ajout de domaines en masse — collez des domaines depuis n'importe quelle source : listes, CSV, HTML, e-mails, URL ou exports. L'analyseur extrait les domaines racine, gère IDN et Punycode, signale les doublons et vous laisse vérifier la liste avant toute création.
@@ -16,6 +14,7 @@ Cloudflare Tools apporte une gestion de zones en masse, rapide et fiable, sur le
 • Jeton d'API ou Global API Key — connexion avec un jeton utilisateur (cfut_), un jeton de compte (cfat_) ou la clé classique ; le type est détecté à partir du secret collé.
 • Multi-comptes — connectez-vous une fois, changez de compte sans ressaisir vos identifiants.
 • Thèmes sombre et clair — selon Windows ou au choix.
+• Parle 12 langues (français, anglais, russe, allemand, espagnol, italien, portugais, japonais, coréen, chinois, polonais, turc) et suit la langue d'affichage de Windows.
 
 Les identifiants restent dans le Gestionnaire d'informations d'identification Windows et ne sont envoyés qu'à l'API Cloudflare. Pas de télémétrie, pas d'analyse, pas d'achats. Code source sur GitHub.
 
@@ -39,6 +38,7 @@ Version 1.2.0 :
 6. Connexion par jeton d'API (cfut_ / cfat_) ou Global API Key, type détecté automatiquement ; secrets conservés dans le Gestionnaire d'identifiants Windows
 7. Multi-comptes : une seule connexion, changement de compte Cloudflare sans ressaisie
 8. File de requêtes respectant les limites, avec reprises et backoff ; thèmes sombre et clair ; open source, sans télémétrie
+9. Parle 12 langues et suit la langue d'affichage de Windows ; la langue se choisit aussi dans les paramètres
 
 ## Search terms (Store — max 7 terms, 30 chars each)
 

@@ -61,7 +61,9 @@ public partial class ZonesViewModel : ObservableObject
     public ObservableCollection<ZoneRow> VisibleZones { get; } = new();
 
     public string AccountContextText =>
-        App.CurrentAccountName is { Length: > 0 } name ? $"Current account: {name}" : string.Empty;
+        App.CurrentAccountName is { Length: > 0 } name
+            ? Loc.Format("Status_CurrentAccount", name)
+            : string.Empty;
 
     public bool IsAccountMissing => App.CurrentAccountId is null;
 
@@ -87,7 +89,7 @@ public partial class ZonesViewModel : ObservableObject
             {
                 if (!IsBusy && _loadedAccountId is not null)
                 {
-                    ResetLoadedZones("Zone list changed. Press Refresh to reload.");
+                    ResetLoadedZones(Loc.Get("Status_ZoneListChangedRefresh"));
                 }
             });
     }
@@ -97,17 +99,17 @@ public partial class ZonesViewModel : ObservableObject
     {
         if (!App.Api.IsConfigured || App.CurrentAccountId is null)
         {
-            StatusText = "Connect and select a Cloudflare account first";
+            StatusText = Loc.Get("Status_ConnectFirst");
             return;
         }
 
         var accountId = App.CurrentAccountId;
-        var accountName = App.CurrentAccountName ?? "the selected account";
+        var accountName = App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback");
 
         IsBusy = true;
         UpdateCommandStates();
         ClearLoadedZones();
-        StatusText = $"Loading zones for {accountName}...";
+        StatusText = Loc.Format("Status_LoadingZones", accountName);
 
         try
         {
@@ -116,7 +118,10 @@ public partial class ZonesViewModel : ObservableObject
             if (App.CurrentAccountId != accountId)
             {
                 ResetLoadedZones(
-                    $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Refresh to continue."
+                    Loc.Format(
+                        "Status_AccountChangedRefresh",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
                 );
                 return;
             }
@@ -129,11 +134,11 @@ public partial class ZonesViewModel : ObservableObject
         }
         catch (CfApiException ex)
         {
-            StatusText = $"Error: {ex.Normalized.Message}";
+            StatusText = Loc.Format("Status_Error", ex.Normalized.Message);
         }
         catch (Exception ex)
         {
-            StatusText = $"Error: {ex.Message}";
+            StatusText = Loc.Format("Status_Error", ex.Message);
         }
         finally
         {
@@ -157,7 +162,7 @@ public partial class ZonesViewModel : ObservableObject
             $"zones-{FileExporter.Slug(App.CurrentAccountName)}-{DateTime.Now:yyyy-MM-dd}.csv";
 
         if (await FileExporter.SaveCsvAsync(fileName, CsvBuilder.ZonesCsv(rows)))
-            StatusText = $"Exported {rows.Count} zone(s) to {fileName}";
+            StatusText = Loc.Format("Zones_Exported", rows.Count, fileName);
     }
 
     /// <summary>
@@ -169,7 +174,7 @@ public partial class ZonesViewModel : ObservableObject
         var accounts = App.AvailableAccounts;
         if (!App.Api.IsConfigured || accounts.Count == 0)
         {
-            StatusText = "Connect first to export all accounts";
+            StatusText = Loc.Get("Zones_ConnectToExportAll");
             return;
         }
 
@@ -185,13 +190,18 @@ public partial class ZonesViewModel : ObservableObject
             foreach (var account in accounts)
             {
                 index++;
-                StatusText = $"Exporting {account.Name} ({index}/{accounts.Count})...";
+                StatusText = Loc.Format(
+                    "Zones_ExportingAccount",
+                    account.Name,
+                    index,
+                    accounts.Count
+                );
 
                 var zones = await App.Api.ListAllZones(account.Id);
 
                 if (!ReferenceEquals(App.Api.Credential, credential))
                 {
-                    StatusText = "Credentials changed during export. Export aborted.";
+                    StatusText = Loc.Get("Zones_CredentialsChanged");
                     return;
                 }
 
@@ -199,19 +209,18 @@ public partial class ZonesViewModel : ObservableObject
             }
 
             var fileName = $"cloudflare-zones-all-{DateTime.Now:yyyy-MM-dd}.csv";
-            StatusText = $"{rows.Count} zone(s) across {accounts.Count} account(s) ready";
+            StatusText = Loc.Format("Zones_ExportReady", rows.Count, accounts.Count);
 
             if (await FileExporter.SaveCsvAsync(fileName, CsvBuilder.ZonesCsv(rows)))
-                StatusText =
-                    $"Exported {rows.Count} zone(s) from {accounts.Count} account(s) to {fileName}";
+                StatusText = Loc.Format("Zones_ExportedAll", rows.Count, accounts.Count, fileName);
         }
         catch (CfApiException ex)
         {
-            StatusText = $"Export failed: {ex.Normalized.Message}";
+            StatusText = Loc.Format("Zones_ExportFailed", ex.Normalized.Message);
         }
         catch (Exception ex)
         {
-            StatusText = $"Export failed: {ex.Message}";
+            StatusText = Loc.Format("Zones_ExportFailed", ex.Message);
         }
         finally
         {
@@ -257,15 +266,15 @@ public partial class ZonesViewModel : ObservableObject
 
         var pending = _loadedAccountId is null ? 0 : Zones.Count(z => z.Zone.Status != "active");
         ShowPendingHint = pending > 0 && App.Settings.Show301Tips;
-        PendingZonesHint = $"{pending} zone(s) not yet pointed to Cloudflare nameservers.";
+        PendingZonesHint = Loc.Format("Zones_PendingHint", pending);
 
         if (!keepStatus && !IsBusy && _loadedAccountId is not null)
         {
             var total = Zones.Count;
             var active = Zones.Count(z => z.Zone.Status == "active");
             StatusText = string.IsNullOrWhiteSpace(FilterText)
-                ? $"{total} zones loaded, {active} active"
-                : $"{VisibleZones.Count} of {total} zones match the filter";
+                ? Loc.Format("Zones_Loaded", total, active)
+                : Loc.Format("Zones_FilterMatch", VisibleZones.Count, total);
         }
     }
 
@@ -294,8 +303,11 @@ public partial class ZonesViewModel : ObservableObject
         {
             ResetLoadedZones(
                 currentAccountId is null
-                    ? "Connect and select a Cloudflare account first"
-                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Refresh to continue."
+                    ? Loc.Get("Status_ConnectFirst")
+                    : Loc.Format(
+                        "Status_AccountChangedRefresh",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
             );
         }
     }
@@ -310,8 +322,11 @@ public partial class ZonesViewModel : ObservableObject
         _pendingAccountInvalidation = false;
         ResetLoadedZones(
             App.CurrentAccountId is null
-                ? "Connect and select a Cloudflare account first"
-                : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Refresh to continue."
+                ? Loc.Get("Status_ConnectFirst")
+                : Loc.Format(
+                    "Status_AccountChangedRefresh",
+                    App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                )
         );
         return true;
     }

@@ -72,7 +72,7 @@ public partial class AddDomainsViewModel : ObservableObject
 
         var fileName = $"cftools-create-results-{DateTime.Now:yyyy-MM-dd-HHmm}.csv";
         if (await FileExporter.SaveCsvAsync(fileName, CsvBuilder.BatchResultsCsv(rows)))
-            StatusText = $"Exported {rows.Count} result(s) to {fileName}";
+            StatusText = Loc.Format("Status_ExportedResults", rows.Count, fileName);
     }
 
     private void RecordResult(string domain, string status, string? error = null)
@@ -113,7 +113,9 @@ public partial class AddDomainsViewModel : ObservableObject
     }
 
     public string AccountContextText =>
-        App.CurrentAccountName is { Length: > 0 } name ? $"Current account: {name}" : string.Empty;
+        App.CurrentAccountName is { Length: > 0 } name
+            ? Loc.Format("Status_CurrentAccount", name)
+            : string.Empty;
 
     public bool IsAccountMissing => App.CurrentAccountId is null;
 
@@ -150,12 +152,12 @@ public partial class AddDomainsViewModel : ObservableObject
 
         if (!App.Api.IsConfigured || App.CurrentAccountId is null)
         {
-            StatusText = "Connect and select a Cloudflare account first";
+            StatusText = Loc.Get("Status_ConnectFirst");
             return;
         }
 
         var accountId = App.CurrentAccountId;
-        var accountName = App.CurrentAccountName ?? "the selected account";
+        var accountName = App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback");
 
         IsBusy = true;
         IsRunning = false;
@@ -172,7 +174,7 @@ public partial class AddDomainsViewModel : ObservableObject
         _preflightAccountId = null;
         ClearBatchResults();
         ShowAfterCreateTip = false;
-        StatusText = "Parsing domains...";
+        StatusText = Loc.Get("Add_Parsing");
 
         try
         {
@@ -180,11 +182,11 @@ public partial class AddDomainsViewModel : ObservableObject
 
             if (parsed.Domains.Count == 0)
             {
-                StatusText = "No valid domains found";
+                StatusText = Loc.Get("Add_NoValidDomains");
                 return;
             }
 
-            StatusText = $"Checking {parsed.Domains.Count} domains in {accountName}...";
+            StatusText = Loc.Format("Add_Checking", parsed.Domains.Count, accountName);
 
             var willCreate = 0;
             var exists = 0;
@@ -200,7 +202,7 @@ public partial class AddDomainsViewModel : ObservableObject
                             domain,
                             PreflightStatus.Exists,
                             zoneId,
-                            "Already exists in Cloudflare"
+                            Loc.Get("Add_Exists")
                         )
                     );
                     exists++;
@@ -211,7 +213,7 @@ public partial class AddDomainsViewModel : ObservableObject
                         new PreflightEntry(
                             domain,
                             PreflightStatus.WillCreate,
-                            Message: "Ready to create"
+                            Message: Loc.Get("Add_Ready")
                         )
                     );
                     _domainsToCreate.Add(domain);
@@ -224,7 +226,7 @@ public partial class AddDomainsViewModel : ObservableObject
                     new PreflightEntry(
                         dup,
                         PreflightStatus.Duplicate,
-                        Message: "Duplicate in input"
+                        Message: Loc.Get("Add_Duplicate")
                     )
                 );
 
@@ -233,31 +235,39 @@ public partial class AddDomainsViewModel : ObservableObject
                     new PreflightEntry(
                         inv,
                         PreflightStatus.Invalid,
-                        Message: "Input is not a valid root domain"
+                        Message: Loc.Get("Add_InvalidRoot")
                     )
                 );
 
             if (App.CurrentAccountId != accountId)
             {
                 ResetPreflightState(
-                    $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Re-check domains before creating."
+                    Loc.Format(
+                        "Status_AccountChangedRecheck",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
                 );
                 return;
             }
 
-            StatusText =
-                $"{willCreate} ready, {exists} already exist, {parsed.Duplicates.Count} duplicates, {parsed.Invalid.Count} invalid";
+            StatusText = Loc.Format(
+                "Add_Summary",
+                willCreate,
+                exists,
+                parsed.Duplicates.Count,
+                parsed.Invalid.Count
+            );
             CanCreate = willCreate > 0;
             IsNextStepCreate = willCreate > 0;
             _preflightAccountId = accountId;
         }
         catch (CfApiException ex)
         {
-            StatusText = $"Error: {ex.Normalized.Message}";
+            StatusText = Loc.Format("Status_Error", ex.Normalized.Message);
         }
         catch (Exception ex)
         {
-            StatusText = $"Error: {ex.Message}";
+            StatusText = Loc.Format("Status_Error", ex.Message);
         }
         finally
         {
@@ -276,7 +286,10 @@ public partial class AddDomainsViewModel : ObservableObject
         if (_preflightAccountId != App.CurrentAccountId)
         {
             ResetPreflightState(
-                $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Re-check domains before creating."
+                Loc.Format(
+                    "Status_AccountChangedRecheck",
+                    App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                )
             );
             return;
         }
@@ -290,7 +303,10 @@ public partial class AddDomainsViewModel : ObservableObject
         ShowProgress = true;
         ProgressValue = 0;
         ProgressMaximum = _domainsToCreate.Count;
-        StatusText = $"Creating zones in {App.CurrentAccountName ?? "the selected account"}...";
+        StatusText = Loc.Format(
+            "Add_CreatingIn",
+            App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+        );
         UpdateCommandStates();
 
         var accountId = App.CurrentAccountId;
@@ -309,7 +325,7 @@ public partial class AddDomainsViewModel : ObservableObject
                             UpdatePreflightStatus(
                                 domain,
                                 PreflightStatus.Creating,
-                                "Creating zone..."
+                                Loc.Get("Add_CreatingZone")
                             )
                         );
 
@@ -326,7 +342,7 @@ public partial class AddDomainsViewModel : ObservableObject
                                 UpdatePreflightStatus(
                                     domain,
                                     PreflightStatus.Created,
-                                    "Zone created"
+                                    Loc.Get("Add_ZoneCreated")
                                 );
                                 UpdateProgress(processedCount, successCount, failed, total);
                             });
@@ -343,7 +359,7 @@ public partial class AddDomainsViewModel : ObservableObject
                                 UpdatePreflightStatus(
                                     domain,
                                     PreflightStatus.Cancelled,
-                                    "Cancelled"
+                                    Loc.Get("Item_Cancelled")
                                 );
                                 UpdateProgress(processedCount, succeeded, failureCount, total);
                             });
@@ -400,7 +416,7 @@ public partial class AddDomainsViewModel : ObservableObject
             IsNextStepCreate = false;
             var neverStarted = MarkUnrecordedAsCancelled(_domainsToCreate);
             foreach (var domain in neverStarted)
-                UpdatePreflightStatus(domain, PreflightStatus.Cancelled, "Cancelled");
+                UpdatePreflightStatus(domain, PreflightStatus.Cancelled, Loc.Get("Item_Cancelled"));
             if (neverStarted.Count > 0)
             {
                 failed += neverStarted.Count;
@@ -416,10 +432,13 @@ public partial class AddDomainsViewModel : ObservableObject
             {
                 ProgressText =
                     wasCancelled == 1
-                        ? $"Cancelled: {succeeded} created, {failed} not completed out of {total}"
-                        : $"Done: {succeeded} created, {failed} failed out of {total}";
+                        ? Loc.Format("Add_DoneCancelled", succeeded, failed, total)
+                        : Loc.Format("Add_Done", succeeded, failed, total);
 
-                StatusText = wasCancelled == 1 ? "Batch cancelled" : "Batch finished";
+                StatusText =
+                    wasCancelled == 1
+                        ? Loc.Get("Status_BatchCancelled")
+                        : Loc.Get("Status_BatchFinished");
 
                 if (succeeded > 0)
                 {
@@ -436,7 +455,7 @@ public partial class AddDomainsViewModel : ObservableObject
         if (!IsRunning)
             return;
 
-        StatusText = "Cancelling batch...";
+        StatusText = Loc.Get("Status_Cancelling");
         CanCancel = false;
         _batchCts?.Cancel();
         App.Pool.Cancel();
@@ -468,7 +487,7 @@ public partial class AddDomainsViewModel : ObservableObject
         var exists = PreflightResults.Count(e => e.Status == Models.PreflightStatus.Exists);
         var dups = PreflightResults.Count(e => e.Status == Models.PreflightStatus.Duplicate);
         var inv = PreflightResults.Count(e => e.Status == Models.PreflightStatus.Invalid);
-        StatusText = $"{ready} ready, {exists} already exist, {dups} duplicates, {inv} invalid";
+        StatusText = Loc.Format("Add_Summary", ready, exists, dups, inv);
 
         IsNextStepCreate = ready > 0;
         UpdateCommandStates();
@@ -480,10 +499,7 @@ public partial class AddDomainsViewModel : ObservableObject
         if (!settings.Show301Tips || settings.AfterCreateTipDismissed)
             return;
 
-        AfterCreateTipText =
-            $"{created} zone(s) created and now waiting for a nameserver change at the registrar. "
-            + "301.st shows the assigned Cloudflare nameservers per domain, verifies NS and tracks expiry. "
-            + "Free for up to 10 domains.";
+        AfterCreateTipText = Loc.Format("Add_Tip", created);
         ShowAfterCreateTip = true;
     }
 
@@ -499,7 +515,7 @@ public partial class AddDomainsViewModel : ObservableObject
     {
         ProgressMaximum = total;
         ProgressValue = processed;
-        ProgressText = $"{processed}/{total} processed - {success} created, {failed} failed";
+        ProgressText = Loc.Format("Add_Progress", processed, total, success, failed);
     }
 
     private void UpdatePreflightStatus(string domain, PreflightStatus newStatus, string? message)
@@ -554,8 +570,11 @@ public partial class AddDomainsViewModel : ObservableObject
         {
             ResetPreflightState(
                 currentAccountId is null
-                    ? "Connect and select a Cloudflare account first"
-                    : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Re-check domains before creating."
+                    ? Loc.Get("Status_ConnectFirst")
+                    : Loc.Format(
+                        "Status_AccountChangedRecheck",
+                        App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                    )
             );
         }
     }
@@ -570,8 +589,11 @@ public partial class AddDomainsViewModel : ObservableObject
         _pendingAccountInvalidation = false;
         ResetPreflightState(
             App.CurrentAccountId is null
-                ? "Connect and select a Cloudflare account first"
-                : $"Account changed to {App.CurrentAccountName ?? "the selected account"}. Re-check domains before creating."
+                ? Loc.Get("Status_ConnectFirst")
+                : Loc.Format(
+                    "Status_AccountChangedRecheck",
+                    App.CurrentAccountName ?? Loc.Get("Status_SelectedAccountFallback")
+                )
         );
         return true;
     }

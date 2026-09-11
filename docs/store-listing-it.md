@@ -4,8 +4,6 @@
 
 Cloudflare® è un marchio registrato di Cloudflare, Inc. Cloudflare Tools è un'app indipendente e open source di 301.st. Non è affiliata a Cloudflare, Inc., né approvata o sponsorizzata da essa. Funziona con il tuo account Cloudflare tramite l'API pubblica Cloudflare v4.
 
-L'interfaccia dell'app è in inglese.
-
 Cloudflare Tools porta la gestione massiva delle zone, rapida e affidabile, sul desktop Windows. Pensata per i professionisti dei domini che gestiscono decine o centinaia di zone su più account Cloudflare.
 
 • Aggiunta domini in blocco — incolla domini da qualsiasi fonte: elenchi, CSV, HTML, e-mail, URL o esportazioni. Il parser estrae i domini radice, gestisce IDN e Punycode, segnala i duplicati e ti lascia controllare l'elenco prima di creare qualcosa.
@@ -16,6 +14,7 @@ Cloudflare Tools porta la gestione massiva delle zone, rapida e affidabile, sul 
 • Token API o Global API Key — accedi con un token utente (cfut_), un token dell'account (cfat_) o la chiave classica; il tipo viene riconosciuto dal segreto incollato.
 • Più account — accedi una volta e cambia account senza reinserire le credenziali.
 • Tema scuro e chiaro — secondo Windows o a scelta.
+• Parla 12 lingue (italiano, inglese, russo, tedesco, francese, spagnolo, portoghese, giapponese, coreano, cinese, polacco, turco) e segue la lingua di Windows.
 
 Le credenziali restano in Gestione credenziali di Windows e vengono inviate solo all'API Cloudflare. Nessuna telemetria, nessuna analisi, nessun acquisto. Codice sorgente su GitHub.
 
@@ -39,6 +38,7 @@ Versione 1.2.0:
 6. Accesso con token API (cfut_ / cfat_) o Global API Key, tipo riconosciuto automaticamente; i segreti restano in Gestione credenziali di Windows
 7. Più account: un solo accesso, cambio di account Cloudflare senza reinserire le credenziali
 8. Coda di richieste che rispetta i limiti, con tentativi e backoff; tema scuro e chiaro; open source, senza telemetria
+9. Parla 12 lingue e segue la lingua di Windows; la lingua si può scegliere anche nelle impostazioni
 
 ## Search terms (Store — max 7 terms, 30 chars each)
 

@@ -4,8 +4,6 @@
 
 Cloudflare®, Cloudflare, Inc.'in tescilli ticari markasıdır. Cloudflare Tools, 301.st tarafından geliştirilen bağımsız ve açık kaynaklı bir uygulamadır. Cloudflare, Inc. ile bağlantılı değildir; onun tarafından onaylanmamış veya desteklenmemiştir. Herkese açık Cloudflare API v4 üzerinden kendi Cloudflare hesabınızla çalışır.
 
-Uygulama arayüzü İngilizcedir.
-
 Cloudflare Tools, hızlı ve güvenilir toplu bölge (zone) yönetimini Windows masaüstüne taşır. Birden fazla Cloudflare hesabında onlarca veya yüzlerce bölgeyi yöneten alan adı uzmanları için tasarlandı.
 
 • Toplu alan adı ekleme — alan adlarını herhangi bir kaynaktan yapıştırın: listeler, CSV, HTML, e-postalar, URL'ler veya dışa aktarmalar. Ayrıştırıcı kök alan adlarını çıkarır, IDN ve Punycode'u destekler, yinelenenleri işaretler ve oluşturmadan önce listeyi kontrol etmenizi sağlar.
@@ -16,6 +14,7 @@ Cloudflare Tools, hızlı ve güvenilir toplu bölge (zone) yönetimini Windows 
 • API belirteci veya Global API Key — kullanıcı belirteci (cfut_), hesap belirteci (cfat_) veya klasik anahtarla oturum açın; tür yapıştırılan gizli anahtardan otomatik algılanır.
 • Birden fazla hesap — bir kez oturum açın, kimlik bilgilerini yeniden girmeden hesap değiştirin.
 • Koyu ve açık tema — Windows ayarına göre veya elle.
+• 12 dil konuşur (Türkçe, İngilizce, Rusça, Almanca, Fransızca, İspanyolca, İtalyanca, Portekizce, Japonca, Korece, Çince, Lehçe) ve Windows görüntüleme dilini izler.
 
 Kimlik bilgileri Windows Kimlik Bilgisi Yöneticisi'nde kalır ve yalnızca Cloudflare API'ye gönderilir. Telemetri yok, analiz yok, satın alma yok. Kaynak kodu GitHub'da.
 
@@ -39,6 +38,7 @@ Sürüm 1.2.0:
 6. API belirteci (cfut_ / cfat_) veya Global API Key ile oturum açma, tür otomatik algılanır; gizli anahtarlar Windows Kimlik Bilgisi Yöneticisi'nde kalır
 7. Birden fazla hesap: tek oturum açma, kimlik bilgilerini yeniden girmeden Cloudflare hesabı değiştirme
 8. Hız sınırına duyarlı istek kuyruğu, yeniden deneme ve geri çekilme ile; koyu ve açık tema; açık kaynak, telemetri yok
+9. 12 dil konuşur ve Windows görüntüleme dilini izler; dil ayarlardan da seçilebilir
 
 ## Search terms (Store — max 7 terms, 30 chars each)
 

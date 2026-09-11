@@ -4,8 +4,6 @@
 
 Cloudflare® ist eine eingetragene Marke von Cloudflare, Inc. Cloudflare Tools ist eine unabhängige Open-Source-App von 301.st. Sie steht in keiner Verbindung zu Cloudflare, Inc. und wird von ihr weder unterstützt noch gesponsert. Die App arbeitet über die öffentliche Cloudflare API v4 mit Ihrem eigenen Cloudflare-Konto.
 
-Die Benutzeroberfläche der App ist auf Englisch.
-
 Cloudflare Tools bringt schnelle, zuverlässige Massenverwaltung von Zonen auf den Windows-Desktop. Für Domain-Profis, die Dutzende oder Hunderte von Zonen in mehreren Cloudflare-Konten betreuen.
 
 • Domains massenweise hinzufügen — Domains aus beliebigen Quellen einfügen: Listen, CSV, HTML, E-Mails, URLs oder Exporte. Der Parser extrahiert Root-Domains, unterstützt IDN und Punycode, markiert Duplikate und lässt Sie die Liste vor dem Anlegen prüfen.
@@ -16,6 +14,7 @@ Cloudflare Tools bringt schnelle, zuverlässige Massenverwaltung von Zonen auf d
 • API-Token oder Global API Key — Anmeldung mit Benutzer-Token (cfut_), kontoeigenem Token (cfat_) oder dem klassischen Schlüssel; die Art wird am eingefügten Geheimnis erkannt.
 • Mehrere Konten — einmal anmelden, Konten ohne erneute Eingabe wechseln.
 • Dunkles und helles Design — nach Windows-Einstellung oder manuell.
+• Spricht 12 Sprachen (Deutsch, Englisch, Russisch, Französisch, Spanisch, Italienisch, Portugiesisch, Japanisch, Koreanisch, Chinesisch, Polnisch, Türkisch) und folgt der Windows-Anzeigesprache.
 
 Zugangsdaten bleiben im Windows-Anmeldeinformationsverwaltung und gehen nur an die Cloudflare API. Keine Telemetrie, keine Analyse, keine Käufe. Quellcode auf GitHub.
 
@@ -39,6 +38,7 @@ Version 1.2.0:
 6. Anmeldung mit API-Token (cfut_ / cfat_) oder Global API Key, Art wird automatisch erkannt; Geheimnisse bleiben in der Windows-Anmeldeinformationsverwaltung
 7. Mehrere Konten: einmal anmelden, Cloudflare-Konten ohne erneute Eingabe wechseln
 8. Ratenlimit-bewusste Warteschlange mit Wiederholungen und Backoff; dunkles und helles Design; Open Source, keine Telemetrie
+9. Spricht 12 Sprachen und folgt der Windows-Anzeigesprache; die Sprache lässt sich auch in den Einstellungen wählen
 
 ## Search terms (Store — max 7 terms, 30 chars each)
 

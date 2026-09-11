@@ -1,0 +1,212 @@
+# Cloudflare Tools — UI strings, English (master).
+# One `Key=Value` per line; `Key.Property` entries bind to XAML x:Uid, plain keys are used from code
+# via Loc.Get / Loc.Format ({0}, {1} placeholders). `\n` is a line break. Generate resw with
+# scripts/build-resw.py, validate translations with scripts/check-strings.py.
+
+# ---- Navigation (MainWindow) ----
+Nav_Zones.Content=Zones
+Nav_AddDomains.Content=Add Domains
+Nav_PurgeCache.Content=Purge Cache
+Nav_DeleteDomains.Content=Delete Domains
+Nav_About.Content=About
+Nav_NotConnected=Not connected
+Nav_SelectAccount=Select account
+Nav_SelectAccountTip=Authenticated as {0}. Select an account to continue.
+
+# ---- Shared ----
+Common_ConnectLink.Content=Connect and select an account to get started
+Common_Filter.PlaceholderText=Filter zones...
+Common_Load.Content=Load Zones
+Common_SelectAll.Content=Select All
+Common_SelectNone.Content=Select None
+Common_Cancel.Content=Cancel
+Common_ExportResults.Content=Export results
+Common_ExportResults.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip=Save the outcome of the last batch as CSV (domain, status, error)
+Status_ConnectFirst=Connect and select a Cloudflare account first
+Status_SelectedAccountFallback=the selected account
+Status_CurrentAccount=Current account: {0}
+Status_Error=Error: {0}
+Status_ZoneListChangedLoad=Zone list changed. Press Load Zones to refresh.
+Status_ZoneListChangedRefresh=Zone list changed. Press Refresh to reload.
+Status_LoadingZones=Loading zones for {0}...
+Status_ZonesLoaded={0} zones loaded
+Status_AccountChangedLoad=Account changed to {0}. Load zones again to continue.
+Status_AccountChangedRefresh=Account changed to {0}. Refresh to continue.
+Status_AccountChangedRecheck=Account changed to {0}. Re-check domains before creating.
+Status_Selected={0} of {1} selected
+Status_BatchCancelled=Batch cancelled
+Status_BatchFinished=Batch finished
+Status_Cancelling=Cancelling batch...
+Status_ExportedResults=Exported {0} result(s) to {1}
+Item_Queued=Queued
+Item_Cancelled=Cancelled
+Item_Failed=Failed: {0}
+Dialog_Cancel=Cancel
+
+# ---- Auth ----
+Auth_Title.Text=Cloudflare Authentication
+Auth_Intro.Text=Connect with an API token (cfut_ / cfat_) or your Global API Key. The kind is detected from the pasted secret.
+Auth_Secret.Header=API token or Global API Key
+Auth_Secret.PlaceholderText=cfut_… / cfat_… / Global API Key
+Auth_Email.Header=Email (Global API Key only)
+Auth_Email.PlaceholderText=you@example.com
+Auth_AccountId.Header=Account ID (optional, for account-owned tokens)
+Auth_AccountId.PlaceholderText=32-character account ID from the Cloudflare dashboard
+Auth_AccountPicker.Header=Account
+Auth_AccountPicker.PlaceholderText=Select an account...
+Auth_PickerHint.Text=Select an account to finish sign-in, or disconnect to return to the sign-in form.
+Auth_Connect.Content=Connect
+Auth_Switch.Content=Switch account
+Auth_Disconnect.Content=Disconnect
+Auth_Forget.Content=Forget credentials
+Auth_WhereTitle.Text=Where to get credentials
+Auth_WhereRun1.Text=Log in to
+Auth_WhereRun2.Text= and open My Profile > API Tokens. Create a token, or view the Global API Key. Account-owned tokens live under Manage Account > API Tokens.
+Auth_PermsTitle.Text=API token permissions
+Auth_PermsBody.Text=Zone > Zone > Edit (create, list, delete zones), Zone > Cache Purge > Purge, and Account > Account Settings > Read (to list your accounts).
+Auth_WhenTitle.Text=When to prefer the Global API Key
+Auth_WhenBody.Text=Some new accounts cap zone creation for API tokens at the number of zones that already exist, which blocks bulk add from zero. The Global API Key does not hit that limit. Either secret stays in Windows Credential Manager and is sent only to the Cloudflare API.
+Auth_PromoRun.Text=For redirects, TDS and domain management:
+Auth_HintGlobalKey=Detected: Global API Key. Enter the account e-mail as well.
+Auth_HintUserToken=Detected: user API token (cfut_). No e-mail needed.
+Auth_HintAccountToken=Detected: account-owned token (cfat_), scoped to one account. Enter the Account ID if the token cannot list its own account.
+Auth_HintUnknown=Format not recognized: with an e-mail it is treated as a Global API Key, without one as an API token.
+Auth_EnterSecret=Enter your API token or Global API Key
+Auth_KeyNeedsEmail=Global API Key requires the account e-mail
+Auth_AccountFallback=Account {0}
+Auth_NoAccountsToken=No accounts visible to this token. Grant it "Account Settings: Read" or enter the Account ID.
+Auth_NoAccountsUser=No accounts found for this user
+Auth_SelectAccount=Authenticated as {0}. Select an account.
+Auth_Failed=Auth failed: {0} - {1}
+Auth_ConnectionError=Connection error: {0}
+Auth_Connected=Connected as {0} ({1})
+
+# ---- Zones ----
+Zones_Title.Text=Zones
+Zones_Refresh.Content=Refresh
+Zones_Export.Content=Export CSV
+Zones_ExportAllShort.Content=All accounts
+Zones_ExportAllShort.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip=Export zones from every account into one CSV
+Zones_ExportAll.Content=Export all accounts
+Zones_ExportAll.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip=Export zones from every account into one CSV
+Zones_PendingLink.Text=Check nameservers in bulk in 301.st
+Zones_ConnectToExportAll=Connect first to export all accounts
+Zones_ExportingAccount=Exporting {0} ({1}/{2})...
+Zones_CredentialsChanged=Credentials changed during export. Export aborted.
+Zones_ExportReady={0} zone(s) across {1} account(s) ready
+Zones_ExportedAll=Exported {0} zone(s) from {1} account(s) to {2}
+Zones_Exported=Exported {0} zone(s) to {1}
+Zones_ExportFailed=Export failed: {0}
+Zones_PendingHint={0} zone(s) not yet pointed to Cloudflare nameservers.
+Zones_Loaded={0} zones loaded, {1} active
+Zones_FilterMatch={0} of {1} zones match the filter
+
+# ---- Add Domains ----
+Add_Title.Text=Add Domains
+Add_Input.Header=Paste domains from any source
+Add_Input.PlaceholderText=Paste raw lists, CSV, HTML,\nemail text, URLs, or exports.\nDomains will be extracted automatically.\n\nIDN and Punycode supported.\nSubdomains filtered to root domains.\nDuplicates detected before create.
+Add_Results.Header=Preflight Results
+Add_Remove.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip=Remove from list
+Add_TipOpen.Content=Open 301.st
+Add_Check.Content=Check
+Add_Create.Content=Create All
+Add_Parsing=Parsing domains...
+Add_NoValidDomains=No valid domains found
+Add_Checking=Checking {0} domains in {1}...
+Add_Exists=Already exists in Cloudflare
+Add_Ready=Ready to create
+Add_Duplicate=Duplicate in input
+Add_InvalidRoot=Input is not a valid root domain
+Add_Summary={0} ready, {1} already exist, {2} duplicates, {3} invalid
+Add_CreatingIn=Creating zones in {0}...
+Add_CreatingZone=Creating zone...
+Add_ZoneCreated=Zone created
+Add_DoneCancelled=Cancelled: {0} created, {1} not completed out of {2}
+Add_Done=Done: {0} created, {1} failed out of {2}
+Add_Progress={0}/{1} processed - {2} created, {3} failed
+Add_Tip={0} zone(s) created and now waiting for a nameserver change at the registrar. 301.st shows the assigned Cloudflare nameservers per domain, verifies NS and tracks expiry. Free for up to 10 domains.
+Preflight_Ready=Ready
+Preflight_Exists=Exists
+Preflight_Invalid=Invalid
+Preflight_Duplicate=Duplicate
+Preflight_Creating=Creating…
+Preflight_Created=Created
+Preflight_Failed=Failed
+Preflight_Cancelled=Cancelled
+
+# ---- Purge Cache ----
+Purge_Title.Text=Purge Cache
+Purge_Run.Content=Purge Selected
+Purge_Starting=Purging cache for {0} zone(s) in {1}...
+Purge_Item=Purging...
+Purge_ItemDone=Purged
+Purge_DoneCancelled=Cancelled: {0} purged, {1} not completed out of {2}
+Purge_Done=Done: {0} purged, {1} failed out of {2}
+Purge_Progress={0}/{1} processed - {2} purged, {3} failed
+Purge_Tooltip=Zone is {0} - only active zones can be purged
+Purge_DialogTitle=Purge cache
+Purge_DialogBody=Purge all cached files for {0} zone(s) in {1}? Cache will rebuild automatically.{2}
+Purge_DialogWarning=\n\nWarning: this is a large purge request and may affect many sites at once.
+Purge_DialogPrimary=Purge
+
+# ---- Delete Domains ----
+Delete_Title.Text=Delete Domains
+Delete_Run.Content=Delete Selected
+Delete_Starting=Deleting {0} zone(s) from {1}...
+Delete_Item=Deleting...
+Delete_ItemDone=Deleted
+Delete_DoneCancelled=Cancelled: {0} deleted, {1} not completed out of {2}
+Delete_Done=Done: {0} deleted, {1} failed out of {2}
+Delete_Progress={0}/{1} processed - {2} deleted, {3} failed
+Delete_DialogTitle=Delete zones
+Delete_DialogBody=Permanently delete {0} zone(s) from {1}?\nThis cannot be undone.{2}
+Delete_DialogWarning=\n\nWarning: this is a large delete request and may remove many zones at once.
+Delete_DialogPrimary=Delete
+
+# ---- Settings ----
+Settings_Title.Text=Settings
+Settings_Pool.Text=Request Pool
+Settings_Concurrency.Header=Max Concurrency
+Settings_Retries.Header=Max Retries
+Settings_Appearance.Text=Appearance
+Settings_Theme.Header=Theme
+Settings_ThemeSystem.Content=System
+Settings_ThemeLight.Content=Light
+Settings_ThemeDark.Content=Dark
+Settings_Language.Header=Language
+Settings_LanguageSystem=System (Windows language)
+Settings_RestartNote.Text=Restart the app to apply the new language.
+Settings_Tips.Header=Show 301.st tips
+Settings_Tips.OnContent=On
+Settings_Tips.OffContent=Off
+Settings_TipsHint.Text=Short, contextual hints about 301.st, the publisher's domain management service: after zones are created and while zones are still pending. Nothing is sent anywhere.
+
+# ---- About ----
+About_Tagline.Text=Independent bulk zone management for Cloudflare accounts, on Windows
+About_WhatTitle.Text=What it does
+About_F1Title.Text=Bulk Add
+About_F1Body.Text= - paste domains from any source. Smart parser handles CSV, HTML, emails, URLs, IDN/Punycode.
+About_F2Title.Text=Bulk Purge
+About_F2Body.Text= - clear cache for multiple zones at once with filtering and progress tracking.
+About_F3Title.Text=Bulk Delete
+About_F3Body.Text= - remove zones safely with confirmation, auto-reload, and per-zone status.
+About_F4Title.Text=Zone List
+About_F4Body.Text= - browse every zone with status, plan and name servers; export to CSV for one account or all accounts at once.
+About_F5Title.Text=Batch export
+About_F5Body.Text= - save the outcome of any add, purge or delete run as CSV with per-domain status and error.
+About_F6Title.Text=API tokens or Global API Key
+About_F6Body.Text= - user tokens (cfut_), account-owned tokens (cfat_) or the classic key; the kind is detected automatically.
+About_F7Title.Text=Multi-account
+About_F7Body.Text= - switch between Cloudflare accounts without re-entering credentials.
+About_BuiltTitle.Text=Built by 301.st
+About_Built1.Text=301.st is an edge redirect management platform built on Cloudflare Workers. It delivers intelligent URL redirects with GEO/UA filtering, real-time analytics, and sub-20ms response times globally.
+About_Built2.Text=Cloudflare Tools started as a browser extension to simplify bulk zone operations and is now available as a native Windows app with a cleaner, safer workflow.
+About_LinksTitle.Text=Links
+About_Rate.Content=Rate this app in Microsoft Store
+About_Source.Content=Source code on GitHub
+About_301.Content=301.st - edge redirect platform
+About_Edge.Content=Browser extension for Edge
+About_Chrome.Content=Browser extension for Chrome
+About_Firefox.Content=Browser extension for Firefox
+About_Footer1.Text=Uses the public Cloudflare API v4. Credentials are stored in Windows Credential Manager and sent only to api.cloudflare.com.
+About_Footer2.Text=Cloudflare is a trademark of Cloudflare, Inc. This app is an independent tool by 301.st and is not affiliated with, endorsed by, or sponsored by Cloudflare, Inc.

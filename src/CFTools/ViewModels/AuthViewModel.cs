@@ -121,14 +121,11 @@ public partial class AuthViewModel : ObservableObject
         ShowAccountIdField = kind == CredentialKind.AccountToken;
         CredentialHint = kind switch
         {
-            CredentialKind.GlobalKey =>
-                "Detected: Global API Key. Enter the account e-mail as well.",
-            CredentialKind.UserToken => "Detected: user API token (cfut_). No e-mail needed.",
-            CredentialKind.AccountToken =>
-                "Detected: account-owned token (cfat_), scoped to one account. Enter the Account ID if the token cannot list its own account.",
+            CredentialKind.GlobalKey => Loc.Get("Auth_HintGlobalKey"),
+            CredentialKind.UserToken => Loc.Get("Auth_HintUserToken"),
+            CredentialKind.AccountToken => Loc.Get("Auth_HintAccountToken"),
             _ when string.IsNullOrWhiteSpace(ApiKey) => string.Empty,
-            _ =>
-                "Format not recognized: with an e-mail it is treated as a Global API Key, without one as an API token.",
+            _ => Loc.Get("Auth_HintUnknown"),
         };
     }
 
@@ -140,14 +137,14 @@ public partial class AuthViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(secret))
         {
-            ShowStatus("Enter your API token or Global API Key", InfoBarSeverity.Warning);
+            ShowStatus(Loc.Get("Auth_EnterSecret"), InfoBarSeverity.Warning);
             return;
         }
 
         var kind = CredentialDetector.Resolve(secret, email);
         if (kind == CredentialKind.GlobalKey && string.IsNullOrWhiteSpace(email))
         {
-            ShowStatus("Global API Key requires the account e-mail", InfoBarSeverity.Warning);
+            ShowStatus(Loc.Get("Auth_KeyNeedsEmail"), InfoBarSeverity.Warning);
             return;
         }
 
@@ -190,15 +187,17 @@ public partial class AuthViewModel : ObservableObject
             if (accounts.Count == 0 && credential.AccountId is not null)
             {
                 var id8 = credential.AccountId[..Math.Min(8, credential.AccountId.Length)];
-                accounts.Add(new CfAccount(credential.AccountId, $"Account {id8}"));
+                accounts.Add(
+                    new CfAccount(credential.AccountId, Loc.Format("Auth_AccountFallback", id8))
+                );
             }
 
             if (accounts.Count == 0)
             {
                 ShowStatus(
                     credential.IsToken
-                        ? "No accounts visible to this token. Grant it \"Account Settings: Read\" or enter the Account ID."
-                        : "No accounts found for this user",
+                        ? Loc.Get("Auth_NoAccountsToken")
+                        : Loc.Get("Auth_NoAccountsUser"),
                     InfoBarSeverity.Error
                 );
                 App.ClearAuthSession();
@@ -224,7 +223,7 @@ public partial class AuthViewModel : ObservableObject
                 ShowAccountPicker = true;
                 App.NotifyAuthChanged();
                 ShowStatus(
-                    $"Authenticated as {identity.Label}. Select an account.",
+                    Loc.Format("Auth_SelectAccount", identity.Label),
                     InfoBarSeverity.Informational
                 );
             }
@@ -233,14 +232,14 @@ public partial class AuthViewModel : ObservableObject
         {
             App.ClearAuthSession();
             ShowStatus(
-                $"Auth failed: {ex.Normalized.Message} - {ex.Normalized.Recommendation}",
+                Loc.Format("Auth_Failed", ex.Normalized.Message, ex.Normalized.Recommendation),
                 InfoBarSeverity.Error
             );
         }
         catch (Exception ex)
         {
             App.ClearAuthSession();
-            ShowStatus($"Connection error: {ex.Message}", InfoBarSeverity.Error);
+            ShowStatus(Loc.Format("Auth_ConnectionError", ex.Message), InfoBarSeverity.Error);
         }
         finally
         {
@@ -267,7 +266,10 @@ public partial class AuthViewModel : ObservableObject
         }
         IsConnected = true;
         ShowAccountPicker = false;
-        ShowStatus($"Connected as {App.CurrentEmail} ({account.Name})", InfoBarSeverity.Success);
+        ShowStatus(
+            Loc.Format("Auth_Connected", App.CurrentEmail, account.Name),
+            InfoBarSeverity.Success
+        );
         App.NotifyAuthChanged();
     }
 
@@ -314,7 +316,7 @@ public partial class AuthViewModel : ObservableObject
         App.CurrentAccountId = null;
         App.CurrentAccountName = null;
         ShowStatus(
-            $"Authenticated as {App.CurrentEmail}. Select an account.",
+            Loc.Format("Auth_SelectAccount", App.CurrentEmail),
             InfoBarSeverity.Informational
         );
         App.NotifyAuthChanged();
