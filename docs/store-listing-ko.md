@@ -59,3 +59,10 @@ Windows용 Cloudflare 영역 대량 관리: 어떤 목록에서든 도메인 추
 ```
 Cloudflare®는 Cloudflare, Inc.의 등록 상표입니다. Cloudflare Tools는 301.st의 독립 앱으로 Cloudflare, Inc.와 제휴·승인·후원 관계가 없습니다. © 2026 301.st, MIT 라이선스.
 ```
+
+## Screenshot captions (temp/screenshots, 200 each)
+
+- `adddomains.png` — 도메인 추가: 어떤 목록이든 붙여 넣으면 파서가 루트 도메인을 추출하고 생성 전에 확인
+- `purgecache.png` — 캐시 삭제: 영역을 선택해 일괄 삭제하고 영역별 진행 상황 확인
+- `deletedomains.png` — 도메인 삭제: 필터, 선택, 안전 확인 대화 상자, 영역별 상태 표시
+- `settings.png` — 설정: 요청 대기열 제한, 테마, 언어

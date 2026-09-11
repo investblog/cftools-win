@@ -59,3 +59,10 @@ Windows'ta toplu Cloudflare bölge yönetimi: herhangi bir listeden alan adı ek
 ```
 Cloudflare®, Cloudflare, Inc.'in tescilli ticari markasıdır. Cloudflare Tools, 301.st'nin bağımsız uygulamasıdır; Cloudflare, Inc. ile bağlantılı değildir. © 2026 301.st, MIT lisansı.
 ```
+
+## Screenshot captions (temp/screenshots, 200 each)
+
+- `adddomains.png` — Alan adı ekle: herhangi bir listeyi yapıştırın, ayrıştırıcı kök alan adlarını çıkarır ve oluşturmadan önce kontrol eder
+- `purgecache.png` — Önbelleği temizle: bölgeleri seçin, toplu temizlemeyi başlatın, bölge başına ilerlemeyi izleyin
+- `deletedomains.png` — Alan adı sil: filtreleyin, seçin, güvenlik iletişim kutusunda onaylayın, bölge başına durumu izleyin
+- `settings.png` — Ayarlar: istek kuyruğu sınırları, tema ve dil

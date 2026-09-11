@@ -59,3 +59,10 @@ Masowe zarządzanie strefami Cloudflare w Windows: dodawaj domeny z dowolnej lis
 ```
 Cloudflare® jest zastrzeżonym znakiem towarowym Cloudflare, Inc. Cloudflare Tools to niezależna aplikacja 301.st, niepowiązana z Cloudflare, Inc. © 2026 301.st, licencja MIT.
 ```
+
+## Screenshot captions (temp/screenshots, 200 each)
+
+- `adddomains.png` — Dodaj domeny: wklej dowolną listę, parser wyodrębni domeny główne i sprawdzi je przed utworzeniem
+- `purgecache.png` — Wyczyść cache: wybierz strefy, uruchom czyszczenie wsadowe i śledź postęp dla każdej strefy
+- `deletedomains.png` — Usuń domeny: filtruj, wybierz, potwierdź w oknie bezpieczeństwa, śledź status każdej strefy
+- `settings.png` — Ustawienia: limity kolejki żądań, motyw i język

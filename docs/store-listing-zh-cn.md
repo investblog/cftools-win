@@ -59,3 +59,10 @@ Windows 上的 Cloudflare 区域批量管理：从任意列表添加域名，浏
 ```
 Cloudflare® 是 Cloudflare, Inc. 的注册商标。Cloudflare Tools 是 301.st 的独立应用，与 Cloudflare, Inc. 无关联，未获其认可或赞助。© 2026 301.st，MIT 许可证。
 ```
+
+## Screenshot captions (temp/screenshots, 200 each)
+
+- `adddomains.png` — 添加域名：粘贴任意列表，解析器提取根域名并在创建前检查
+- `purgecache.png` — 清除缓存：选择区域，批量清除，查看每个区域的进度
+- `deletedomains.png` — 删除域名：筛选、选择、在安全对话框中确认，查看每个区域的状态
+- `settings.png` — 设置：请求队列限制、主题和语言

@@ -61,6 +61,13 @@ Bulk zone management for Cloudflare accounts on Windows: add domains from any li
 Cloudflare® is a registered trademark of Cloudflare, Inc. Cloudflare Tools is an independent app by 301.st, not affiliated with, endorsed by or sponsored by Cloudflare, Inc. © 2026 301.st, MIT.
 ```
 
+## Screenshot captions (temp/screenshots, 200 each)
+
+- `adddomains.png` — Add Domains: paste any list, the parser extracts root domains and checks them before creation
+- `purgecache.png` — Purge Cache: select zones, run a batch purge and watch per-zone progress
+- `deletedomains.png` — Delete Domains: filter, select, confirm in a safety dialog, follow per-zone status
+- `settings.png` — Settings: request pool limits, theme and language
+
 ## Notes for certification (Partner Center → Submission → Notes for certification)
 
 Product name and trademark (policy 10.1.1):

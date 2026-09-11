@@ -65,6 +65,13 @@ def check(lang: str) -> list[str]:
         elif len(value.encode("utf-16-le")) // 2 > LIMITS[key]:
             errors.append(f"{title}: {len(value)} chars > {LIMITS[key]}")
 
+    captions = re.findall(r"^- `[^`]+` — (.+)$", section(text, "Screenshot captions"), re.M)
+    if len(captions) != 4:
+        errors.append(f"Screenshot captions: {len(captions)} found, expected 4")
+    for caption in captions:
+        if len(caption.encode("utf-16-le")) // 2 > 200:
+            errors.append(f"Screenshot caption too long: {caption[:40]}...")
+
     terms_text = section(text, "Search terms")
     terms = [t.strip() for t in terms_text.replace("\n", " ").split(",") if t.strip()]
     if not terms:

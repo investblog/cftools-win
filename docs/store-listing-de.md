@@ -59,3 +59,10 @@ Massenverwaltung von Cloudflare-Zonen unter Windows: Domains aus jeder Liste hin
 ```
 Cloudflare® ist eine eingetragene Marke von Cloudflare, Inc. Cloudflare Tools ist eine unabhängige App von 301.st ohne Verbindung zu Cloudflare, Inc. © 2026 301.st, MIT-Lizenz.
 ```
+
+## Screenshot captions (temp/screenshots, 200 each)
+
+- `adddomains.png` — Domains hinzufügen: beliebige Liste einfügen, der Parser extrahiert Root-Domains und prüft sie vor dem Anlegen
+- `purgecache.png` — Cache leeren: Zonen auswählen, Stapelbereinigung starten, Fortschritt pro Zone verfolgen
+- `deletedomains.png` — Domains löschen: filtern, auswählen, im Sicherheitsdialog bestätigen, Status pro Zone
+- `settings.png` — Einstellungen: Limits der Warteschlange, Design und Sprache

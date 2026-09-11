@@ -59,3 +59,10 @@ Windows 向けの Cloudflare ゾーン一括管理: 任意のリストからド�
 ```
 Cloudflare® は Cloudflare, Inc. の登録商標です。Cloudflare Tools は 301.st の独立したアプリで、Cloudflare, Inc. とは提携・承認・後援の関係にありません。© 2026 301.st, MIT ライセンス。
 ```
+
+## Screenshot captions (temp/screenshots, 200 each)
+
+- `adddomains.png` — ドメインを追加: どんなリストでも貼り付け、パーサーがルートドメインを抽出し作成前にチェック
+- `purgecache.png` — キャッシュ削除: ゾーンを選んで一括パージ、ゾーンごとの進捗を確認
+- `deletedomains.png` — ドメインを削除: 絞り込み、選択、確認ダイアログ、ゾーンごとのステータス表示
+- `settings.png` — 設定: リクエストキューの上限、テーマ、言語
