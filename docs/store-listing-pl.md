@@ -60,6 +60,12 @@ Masowe zarządzanie strefami Cloudflare w Windows: dodawaj domeny z dowolnej lis
 Cloudflare® jest zastrzeżonym znakiem towarowym Cloudflare, Inc. Cloudflare Tools to niezależna aplikacja 301.st, niepowiązana z Cloudflare, Inc. © 2026 301.st, licencja MIT.
 ```
 
+## Developed by (255)
+
+```
+301.st — platforma przekierowań brzegowych i zarządzania domenami dla Cloudflare: masowe przekierowania, routing TDS, inwentarz stref z kontrolą serwerów nazw i terminów wygaśnięcia. Bezpłatnie do 10 domen. https://301.st
+```
+
 ## Screenshot captions (temp/screenshots, 200 each)
 
 - `adddomains.png` — Dodaj domeny: wklej dowolną listę, parser wyodrębni domeny główne i sprawdzi je przed utworzeniem

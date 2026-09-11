@@ -60,6 +60,12 @@ Windows 上的 Cloudflare 区域批量管理：从任意列表添加域名，浏
 Cloudflare® 是 Cloudflare, Inc. 的注册商标。Cloudflare Tools 是 301.st 的独立应用，与 Cloudflare, Inc. 无关联，未获其认可或赞助。© 2026 301.st，MIT 许可证。
 ```
 
+## Developed by (255)
+
+```
+301.st — 面向 Cloudflare 的边缘重定向与域名管理平台：批量重定向、TDS 路由、带名称服务器检查和到期跟踪的区域清单。10 个域名以内免费。https://301.st
+```
+
 ## Screenshot captions (temp/screenshots, 200 each)
 
 - `adddomains.png` — 添加域名：粘贴任意列表，解析器提取根域名并在创建前检查

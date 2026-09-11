@@ -60,6 +60,12 @@ Gestion de zones Cloudflare en masse sur Windows : ajoutez des domaines depuis n
 Cloudflare® est une marque déposée de Cloudflare, Inc. Cloudflare Tools est une application indépendante de 301.st, sans lien avec Cloudflare, Inc. © 2026 301.st, licence MIT.
 ```
 
+## Developed by (255)
+
+```
+301.st — plateforme de redirections en périphérie et de gestion de domaines pour Cloudflare : redirections en masse, routage TDS, inventaire des zones avec contrôle des serveurs de noms et des expirations. Gratuit jusqu'à 10 domaines. https://301.st
+```
+
 ## Screenshot captions (temp/screenshots, 200 each)
 
 - `adddomains.png` — Ajouter des domaines : collez n'importe quelle liste, l'analyseur extrait les domaines racine et les vérifie avant création

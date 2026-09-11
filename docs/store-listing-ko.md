@@ -60,6 +60,12 @@ Windows용 Cloudflare 영역 대량 관리: 어떤 목록에서든 도메인 추
 Cloudflare®는 Cloudflare, Inc.의 등록 상표입니다. Cloudflare Tools는 301.st의 독립 앱으로 Cloudflare, Inc.와 제휴·승인·후원 관계가 없습니다. © 2026 301.st, MIT 라이선스.
 ```
 
+## Developed by (255)
+
+```
+301.st — Cloudflare용 엣지 리디렉션 및 도메인 관리 플랫폼: 대량 리디렉션, TDS 라우팅, 네임서버 검증과 만료 추적이 있는 영역 목록. 10개 도메인까지 무료. https://301.st
+```
+
 ## Screenshot captions (temp/screenshots, 200 each)
 
 - `adddomains.png` — 도메인 추가: 어떤 목록이든 붙여 넣으면 파서가 루트 도메인을 추출하고 생성 전에 확인

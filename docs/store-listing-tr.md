@@ -60,6 +60,12 @@ Windows'ta toplu Cloudflare bölge yönetimi: herhangi bir listeden alan adı ek
 Cloudflare®, Cloudflare, Inc.'in tescilli ticari markasıdır. Cloudflare Tools, 301.st'nin bağımsız uygulamasıdır; Cloudflare, Inc. ile bağlantılı değildir. © 2026 301.st, MIT lisansı.
 ```
 
+## Developed by (255)
+
+```
+301.st — Cloudflare için uç yönlendirme ve alan adı yönetim platformu: toplu yönlendirmeler, TDS yönlendirme, ad sunucusu kontrolü ve süre takibi olan bölge envanteri. 10 alan adına kadar ücretsiz. https://301.st
+```
+
 ## Screenshot captions (temp/screenshots, 200 each)
 
 - `adddomains.png` — Alan adı ekle: herhangi bir listeyi yapıştırın, ayrıştırıcı kök alan adlarını çıkarır ve oluşturmadan önce kontrol eder

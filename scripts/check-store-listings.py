@@ -18,7 +18,7 @@ from pathlib import Path
 LANGS = ["en", "ru", "de", "fr", "es", "it", "pt-br", "ja", "ko", "zh-cn", "pl", "tr"]
 DOCS = Path(__file__).resolve().parent.parent / "docs"
 
-LIMITS = {"description": 10000, "whats_new": 1500, "feature": 200, "features": 20, "term": 30, "terms": 7, "short_title": 50, "short_description": 1000, "copyright": 200}
+LIMITS = {"description": 10000, "whats_new": 1500, "feature": 200, "features": 20, "term": 30, "terms": 7, "short_title": 50, "short_description": 1000, "copyright": 200, "developed_by": 255}
 
 
 def section(text: str, title: str) -> str:
@@ -56,7 +56,7 @@ def check(lang: str) -> list[str]:
         if len(feature) > LIMITS["feature"]:
             errors.append(f"Feature {i}: {len(feature)} chars > {LIMITS['feature']}")
 
-    for title, key in (("Short title", "short_title"), ("Short description", "short_description"), ("Copyright and trademark info", "copyright")):
+    for title, key in (("Short title", "short_title"), ("Short description", "short_description"), ("Copyright and trademark info", "copyright"), ("Developed by", "developed_by")):
         body = section(text, title)
         m = re.search(r"```\n(.*?)\n```", body, re.S)
         value = m.group(1) if m else ""

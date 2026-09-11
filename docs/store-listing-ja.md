@@ -60,6 +60,12 @@ Windows 向けの Cloudflare ゾーン一括管理: 任意のリストからド�
 Cloudflare® は Cloudflare, Inc. の登録商標です。Cloudflare Tools は 301.st の独立したアプリで、Cloudflare, Inc. とは提携・承認・後援の関係にありません。© 2026 301.st, MIT ライセンス。
 ```
 
+## Developed by (255)
+
+```
+301.st — Cloudflare 向けのエッジリダイレクトとドメイン管理プラットフォーム。一括リダイレクト、TDS ルーティング、ネームサーバー検証と有効期限追跡付きのゾーン一覧。10 ドメインまで無料。https://301.st
+```
+
 ## Screenshot captions (temp/screenshots, 200 each)
 
 - `adddomains.png` — ドメインを追加: どんなリストでも貼り付け、パーサーがルートドメインを抽出し作成前にチェック
