@@ -6,7 +6,7 @@ assumed earlier was wrong). Filled and read back from the server the same day: N
 Summary, Description (945 characters as stored), 10 features, support URL, all 23 categories,
 4 screenshots with captions; v1.2.0 imported into Files with the release notes as README; the
 installer pinned as Default Download for Windows and confirmed through `best_release.json`.
-Still open: the GitHub release webhook (see "Keeping releases flowing").
+The GitHub release webhook is wired (2026-09-12, see "Keeping releases flowing"); nothing is open.
 
 Form-ready values for the GitHub Project Importer and for
 the project admin pages, in the layout the spintax-studio project used
@@ -123,8 +123,20 @@ upload the Zones page too once it is captured. 1500×890 works well on the page.
 
 ## Keeping releases flowing
 
-The importer is one-shot. For later releases either re-run the import form (Downloads only) or
-add a GitHub webhook the narrow way, as spintax-studio did: repository → Settings → Webhooks →
-`https://sourceforge.net/p/cloudflare-tools/files-sf/github_webhook`, content type `form`, event
-`release` only, secret from the SourceForge Files admin page. It sends events to SourceForge and
-grants it nothing.
+The importer is one-shot; releases after it flow through a GitHub webhook, wired the narrow way
+on 2026-09-12 (as spintax-studio did) and read back from both sides:
+
+```
+GitHub      hook 678044684   active   events ['release']   content_type form   secret set
+            url  https://sourceforge.net/p/cloudflare-tools/files-sf/github_webhook
+            deliveries: ping → 200
+SourceForge admin page reads "Integration configured"
+```
+
+It sends `release` events to SourceForge and grants it nothing; the secret came from the
+SourceForge GitHub Integration page and is not copied here. What this proves: the pipe exists
+and answers. What it does not prove yet: that a `published` release gets imported — the first
+real proof is the next GitHub release. If one ever shows up on GitHub and not here, the
+one-time import form (`/p/cloudflare-tools/admin/ext/import/github-downloads/`) is the fallback.
+The automatic setup was not used: it asks GitHub for `write:repo_hook` and `public_repo` and
+rewrites the release body with a download button.
