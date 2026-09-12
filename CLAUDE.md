@@ -263,7 +263,8 @@ python scripts/make-release.py --build     # --build запускает MSBuild 
 
 ## Очередь разработки
 
-P1: несколько профилей учётных данных (как в расширении v0.2.0), загрузить 11 переводов листинга в Partner Center
+P0 (после вердикта Store по 1.2.1): загрузить 11 переводов листинга из docs/store-listing-<lang>.md (в Partner Center обновлён только EN); если отказ по 10.2.4.1 повторится — включить Windows Sandbox (`Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM`) и прогнать инсталлятор на чистой Windows
+P1: несколько профилей учётных данных (как в расширении v0.2.0); свежие скриншоты со страницей Zones (нужен аккаунт с тестовыми зонами, реальные домены на скринах нежелательны); решить, выпускать ли GitHub 1.2.1 (код тот же, поменялось только имя окна) — заодно проверит, доезжает ли релиз на SourceForge по вебхуку
 P2: DNS Import/Export, file logging
 P3: Bulk SSL Mode, Security Level, Always HTTPS
 
