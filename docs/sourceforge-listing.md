@@ -42,7 +42,7 @@ leave it off. The release body is hand-written copy that says which file to down
 Cloudflare Tools
 ```
 
-16 of 40. The imported default is the repository name, `cftools-win`; change it on the first
+16 of 40. (The Microsoft Store title is "Tools for Cloudflare" since 2026-09-12 — Store policy 10.1.1.1 forbids a referential title that starts with the referenced service's name; SourceForge has no such rule, and the project keeps the product family name.) The imported default is the repository name, `cftools-win`; change it on the first
 admin visit.
 
 ## Short Summary (70)

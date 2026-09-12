@@ -2,7 +2,9 @@
 
 ## Description
 
-Cloudflare Tools lleva la gestión masiva de zonas, rápida y fiable, al escritorio de Windows. Pensada para profesionales de dominios que administran decenas o cientos de zonas en varias cuentas de Cloudflare. Funciona con su propia cuenta de Cloudflare a través de la API pública de Cloudflare v4.
+No requiere software adicional: el runtime de .NET 8 y el Windows App SDK vienen incluidos en el paquete (autónomo).
+
+Tools for Cloudflare lleva la gestión masiva de zonas, rápida y fiable, al escritorio de Windows. Pensada para profesionales de dominios que administran decenas o cientos de zonas en varias cuentas de Cloudflare. Funciona con su propia cuenta de Cloudflare a través de la API pública de Cloudflare v4.
 
 • Agregar dominios en masa — pegue dominios desde cualquier fuente: listas, CSV, HTML, correos, URL o exportaciones. El analizador extrae dominios raíz, admite IDN y Punycode, marca duplicados y le deja revisar la lista antes de crear nada.
 • Lista de zonas y exportación CSV — cada zona con estado, plan y servidores de nombres; filtre por nombre y exporte a CSV, de una cuenta o de todas a la vez.
@@ -16,11 +18,11 @@ Cloudflare Tools lleva la gestión masiva de zonas, rápida y fiable, al escrito
 
 Las credenciales permanecen en el Administrador de credenciales de Windows y solo se envían a la API de Cloudflare. Sin telemetría, sin analítica, sin compras. Código fuente en GitHub.
 
-También disponible como extensión para Chrome, Edge y Firefox con el mismo nombre. Creada por 301.st, una plataforma de gestión de redirecciones en el edge.
+También disponible como extensión «Cloudflare Tools» para Chrome, Edge y Firefox. Creada por 301.st, una plataforma de gestión de redirecciones en el edge.
 
 ## What's new
 
-Versión 1.2.0:
+Versión 1.2.1:
 • Página Zonas con exportación CSV (una cuenta o todas)
 • Inicio de sesión con tokens de API (cfut_ / cfat_) además de la Global API Key
 • Exportación de resultados de lote (agregar / purgar / eliminar) a CSV
@@ -45,7 +47,7 @@ cloudflare en masa, agregar dominios, purgar caché, eliminar zonas, exportar zo
 ## Short title (50)
 
 ```
-Cloudflare Tools
+Tools for Cloudflare
 ```
 
 ## Short description (1000)
@@ -57,7 +59,7 @@ Gestión masiva de zonas de Cloudflare en Windows: agregue dominios desde cualqu
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare® es una marca registrada de Cloudflare, Inc. Cloudflare Tools es una aplicación independiente de 301.st, sin afiliación con Cloudflare, Inc. © 2026 301.st, licencia MIT.
+Cloudflare® es una marca registrada de Cloudflare, Inc. Tools for Cloudflare es una aplicación independiente de 301.st, sin afiliación con Cloudflare, Inc. © 2026 301.st, licencia MIT.
 ```
 
 ## Developed by (255)

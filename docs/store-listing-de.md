@@ -2,7 +2,9 @@
 
 ## Description
 
-Cloudflare Tools bringt schnelle, zuverlässige Massenverwaltung von Zonen auf den Windows-Desktop. Für Domain-Profis, die Dutzende oder Hunderte von Zonen in mehreren Cloudflare-Konten betreuen. Die App arbeitet über die öffentliche Cloudflare API v4 mit Ihrem eigenen Cloudflare-Konto.
+Keine zusätzliche Software nötig: die .NET-8-Laufzeit und das Windows App SDK sind im Paket enthalten (self-contained).
+
+Tools for Cloudflare bringt schnelle, zuverlässige Massenverwaltung von Zonen auf den Windows-Desktop. Für Domain-Profis, die Dutzende oder Hunderte von Zonen in mehreren Cloudflare-Konten betreuen. Die App arbeitet über die öffentliche Cloudflare API v4 mit Ihrem eigenen Cloudflare-Konto.
 
 • Domains massenweise hinzufügen — Domains aus beliebigen Quellen einfügen: Listen, CSV, HTML, E-Mails, URLs oder Exporte. Der Parser extrahiert Root-Domains, unterstützt IDN und Punycode, markiert Duplikate und lässt Sie die Liste vor dem Anlegen prüfen.
 • Zonenliste und CSV-Export — alle Zonen mit Status, Tarif und Nameservern; nach Name filtern und als CSV exportieren, für ein Konto oder alle Konten auf einmal.
@@ -16,11 +18,11 @@ Cloudflare Tools bringt schnelle, zuverlässige Massenverwaltung von Zonen auf d
 
 Zugangsdaten bleiben im Windows-Anmeldeinformationsverwaltung und gehen nur an die Cloudflare API. Keine Telemetrie, keine Analyse, keine Käufe. Quellcode auf GitHub.
 
-Auch als Browser-Erweiterung für Chrome, Edge und Firefox unter demselben Namen erhältlich. Entwickelt von 301.st, einer Plattform für Edge-Redirect-Management.
+Auch als Browser-Erweiterung „Cloudflare Tools“ für Chrome, Edge und Firefox erhältlich. Entwickelt von 301.st, einer Plattform für Edge-Redirect-Management.
 
 ## What's new
 
-Version 1.2.0:
+Version 1.2.1:
 • Zonen-Seite mit CSV-Export (ein Konto oder alle Konten)
 • Anmeldung mit API-Token (cfut_ / cfat_) neben dem Global API Key
 • Stapelergebnisse (Hinzufügen / Leeren / Löschen) als CSV exportieren
@@ -45,7 +47,7 @@ cloudflare massenweise, domains hinzufügen, cache leeren, zonen löschen, zonen
 ## Short title (50)
 
 ```
-Cloudflare Tools
+Tools for Cloudflare
 ```
 
 ## Short description (1000)
@@ -57,7 +59,7 @@ Massenverwaltung von Cloudflare-Zonen unter Windows: Domains aus jeder Liste hin
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare® ist eine eingetragene Marke von Cloudflare, Inc. Cloudflare Tools ist eine unabhängige App von 301.st ohne Verbindung zu Cloudflare, Inc. © 2026 301.st, MIT-Lizenz.
+Cloudflare® ist eine eingetragene Marke von Cloudflare, Inc. Tools for Cloudflare ist eine unabhängige App von 301.st ohne Verbindung zu Cloudflare, Inc. © 2026 301.st, MIT-Lizenz.
 ```
 
 ## Developed by (255)

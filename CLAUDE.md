@@ -6,7 +6,7 @@
 
 Windows-порт браузерного расширения [cloudflare-tools](W:\Projects\cloudflare-tools) — десктопное приложение для bulk-операций с Cloudflare зонами.
 
-**Имя продукта:** «Cloudflare Tools» (с v1.2.0; в 1.1.x было «CFTools» после отказа Store по 10.1.1.1). Внутренние идентификаторы (namespace `CFTools`, exe, Credential Manager resource, папка настроек) не переименовываются.
+**Имя продукта:** Windows-приложение — «Tools for Cloudflare» (с 1.2.1, 12.09.2026: Store отклонил «Cloudflare Tools» по 10.1.1.1 — referential-название не должно НАЧИНАТЬСЯ с имени чужого сервиса, паттерн «X for Y»). Расширение и SourceForge/GitHub-репозиторий остаются «Cloudflare Tools» (семейство). Внутренние идентификаторы (namespace `CFTools`, exe, Credential Manager resource, папка настроек) не переименовываются.
 
 **Стек:** C# / .NET 8 / WinUI 3 (Windows App SDK 1.6) / CommunityToolkit.Mvvm
 **Спецификация:** `SPEC.md` — **читай перед любой работой**
@@ -225,7 +225,7 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 
 - **Partner Center**: MSIX app, identity `301.CloudflareTools`, publisher `CN=BEE1F94B-ABDE-4CF8-9F30-1DF4DAFDAE83`
 - **Статус**: опубликовано как «CFTools» (1.1.1), https://apps.microsoft.com/detail/9pn4wf799808
-- **v1.2.0 (2026-09-11)**: отправлено на сертификацию вечером 11.09 под именем «Cloudflare Tools» (12 языков листинга, trademark в поле Copyright, notes for certification). Результат смотреть в Partner Center. Было: подать с trademark-дисклеймером первой строкой описания + notes for certification (см. docs/store-listing-en.md). Если отклонят по 10.1.1.1 — фолбэк «CFTools for Cloudflare» (паттерн «X for Y»: зарезервировать имя, поменять DisplayName в манифесте/About/README, пересобрать).
+- **v1.2.0 (2026-09-11)**: отправлено на сертификацию вечером 11.09 под именем «Cloudflare Tools» (12 языков листинга, trademark в поле Copyright, notes for certification). Результат смотреть в Partner Center. Было: подать с trademark-дисклеймером первой строкой описания + notes for certification (см. docs/store-listing-en.md). Если отклонят по 10.1.1.1 — фолбэк «Tools for Cloudflare» (паттерн «X for Y»: зарезервировать имя, поменять DisplayName в манифесте/About/README, пересобрать).
 - **Store listings**: 12 языков по принципу Buho (en, ru, de, fr, es, it, pt-br, ja, ko, zh-cn, pl, tr) в `docs/store-listing-<lang>.md`: Description (дисклеймер первой строкой + «интерфейс на английском»), What's new, Product features ≤200 симв., Search terms ≤7×30. Проверка лимитов: `python scripts/check-store-listings.py`. UI локализован на те же 12 языков, манифест объявляет их в `<Resources>`; языки листинга добавляются в Partner Center. На 2026-09-11 в Partner Center загружен только EN.
 
 ## Сборка MSIX для Store

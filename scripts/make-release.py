@@ -4,8 +4,8 @@
     python scripts/make-release.py --build    # run the MSBuild step too
 
 Produces in temp/release/<version>/:
-  CloudflareTools-v<version>-x64-setup.exe   InnoSetup installer (installer/setup.iss)
-  CloudflareTools-v<version>-x64.zip         no-installer ZIP, one top-level folder
+  ToolsForCloudflare-v<version>-x64-setup.exe   InnoSetup installer (installer/setup.iss)
+  ToolsForCloudflare-v<version>-x64.zip         no-installer ZIP, one top-level folder
   SHA256SUMS                                 basenames, `sha256sum -c SHA256SUMS` next to the files
 
 WHY SELF-CONTAINED. The default Release build is framework-dependent: no coreclr.dll, no
@@ -72,7 +72,7 @@ def package_files():
 
 
 def make_zip(out: Path, ver: str) -> Path:
-    top = f"CloudflareTools-v{ver}-x64"
+    top = f"ToolsForCloudflare-v{ver}-x64"
     target = out / f"{top}.zip"
     with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
         for path, rel in package_files():
@@ -86,7 +86,7 @@ def make_installer(out: Path, ver: str) -> Path:
     if not ISCC.exists():
         sys.exit(f"FAIL: {ISCC} not found")
     subprocess.run([str(ISCC), "/Q", f"/DBuildDirOverride={BUILD_DIR}", f"/O{out}", str(ROOT / "installer" / "setup.iss")], check=True)
-    target = out / f"CloudflareTools-v{ver}-x64-setup.exe"
+    target = out / f"ToolsForCloudflare-v{ver}-x64-setup.exe"
     if not target.exists():
         sys.exit(f"FAIL: installer not produced at {target}")
     return target

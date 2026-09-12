@@ -13,7 +13,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>preview</LangVersion>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
 

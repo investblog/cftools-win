@@ -1,9 +1,9 @@
-# Cloudflare Tools for Windows
+# Tools for Cloudflare
 
 [![Microsoft Store](https://img.shields.io/badge/Microsoft_Store-download-blue?logo=microsoft)](https://apps.microsoft.com/detail/9pn4wf799808)
 [![Sponsor](https://img.shields.io/badge/sponsor-301.st-orange)](https://301.st)
 
-Cloudflare Tools for Windows is a desktop app for fast, high-confidence Cloudflare zone work at scale. It brings the core workflows of the [Cloudflare Tools browser extension](https://github.com/investblog/cloudflare-tools) to a native Windows UI with a cleaner, safer bulk-operations experience.
+Tools for Cloudflare is a desktop app for fast, high-confidence Cloudflare zone work at scale. It brings the core workflows of the [Cloudflare Tools browser extension](https://github.com/investblog/cloudflare-tools) to a native Windows UI with a cleaner, safer bulk-operations experience. The Windows app is named "Tools for Cloudflare" (Microsoft Store naming policy 10.1.1.1: a referential product must not start with the referenced service's name); the extension keeps the name Cloudflare Tools.
 
 > Cloudflare is a trademark of Cloudflare, Inc. This is an independent, open-source tool by 301.st. It is not affiliated with, endorsed by, or sponsored by Cloudflare, Inc.
 

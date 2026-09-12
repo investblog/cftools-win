@@ -2,7 +2,9 @@
 
 ## Description
 
-Cloudflare Tools brings fast, reliable bulk zone management to your Windows desktop. Built for domain professionals who manage dozens or hundreds of zones across several Cloudflare accounts. It works with your own Cloudflare account through the public Cloudflare API v4.
+No additional software required: the .NET 8 runtime and the Windows App SDK are bundled in the package (self-contained).
+
+Tools for Cloudflare brings fast, reliable bulk zone management to your Windows desktop. Built for domain professionals who manage dozens or hundreds of zones across several Cloudflare accounts. It works with your own Cloudflare account through the public Cloudflare API v4.
 
 • Bulk Add Domains — paste domains from any source: plain lists, CSV, HTML, emails, URLs or raw exports. The parser extracts root domains, handles IDN and Punycode, flags duplicates and lets you review the list before anything is created.
 • Zone List and CSV export — every zone with status, plan and nameservers; filter by name and export to CSV, for one account or for all accounts at once.
@@ -16,11 +18,11 @@ Cloudflare Tools brings fast, reliable bulk zone management to your Windows desk
 
 Credentials stay in Windows Credential Manager and are sent only to the Cloudflare API. No telemetry, no analytics, no purchases. Source code on GitHub.
 
-Also available as a browser extension for Chrome, Edge and Firefox under the same name. Made by 301.st, an edge redirect management platform.
+Also available as the Cloudflare Tools browser extension for Chrome, Edge and Firefox. Made by 301.st, an edge redirect management platform.
 
 ## What's new
 
-Version 1.2.0:
+Version 1.2.1:
 • Zones page with CSV export (one account or all accounts)
 • Sign in with API tokens (cfut_ / cfat_) alongside the Global API Key
 • Export batch results (add / purge / delete) to CSV
@@ -46,7 +48,7 @@ cloudflare bulk, add domains, purge cache, delete zones, zone export csv, cloudf
 ## Short title (50)
 
 ```
-Cloudflare Tools
+Tools for Cloudflare
 ```
 
 ## Short description (1000)
@@ -58,7 +60,7 @@ Bulk zone management for Cloudflare accounts on Windows: add domains from any li
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare® is a registered trademark of Cloudflare, Inc. Cloudflare Tools is an independent app by 301.st, not affiliated with, endorsed by or sponsored by Cloudflare, Inc. © 2026 301.st, MIT.
+Cloudflare® is a registered trademark of Cloudflare, Inc. Tools for Cloudflare is an independent app by 301.st, not affiliated with, endorsed by or sponsored by Cloudflare, Inc. © 2026 301.st, MIT.
 ```
 
 ## Developed by (255)
@@ -76,11 +78,14 @@ Cloudflare® is a registered trademark of Cloudflare, Inc. Cloudflare Tools is a
 
 ## Notes for certification (Partner Center → Submission → Notes for certification)
 
-Product name and trademark (policy 10.1.1):
-- "Cloudflare Tools" is the established name of this product across app stores. The same publisher ships it under this name in the Chrome Web Store (id gncbekdjakchefiiahjbjlbhhfijoikp), Microsoft Edge Add-ons (id kklailenhhfnlhbmfaibeonjpdkcpklc) and Firefox Add-ons (cloudflare-tools). The Windows app is the desktop version of that product.
-- The name uses "Cloudflare" nominatively, to describe the service the tool works with (it is a client for the public Cloudflare API v4). It does not claim to be from Cloudflare, Inc.
-- The "Copyright and trademark info" field carries the trademark and non-affiliation statement, and the same statement is shown inside the app on the About page. The app icon and screenshots use our own design and not Cloudflare's logo.
-- Publisher name and support links point to 301.st; the source code is public at https://github.com/investblog/cftools-win.
+Product name and trademark (policy 10.1.1.1):
+- Title changed after the 2026-09-11 certification report to "Tools for Cloudflare": the referential "X for Y" form the report asked for, so the title no longer starts with the name of the referenced service. The package DisplayName and all 12 listing languages carry the new title.
+- "Cloudflare" is used nominatively, to describe the service the tool works with (a client for the public Cloudflare API v4). The "Copyright and trademark info" field states that Cloudflare is a trademark of Cloudflare, Inc. and that the app is independent; the About page inside the app says the same. The icon and screenshots use our own design, not Cloudflare's logo.
+- The same publisher ships the browser extension "Cloudflare Tools" on Chrome Web Store, Edge Add-ons and Firefox Add-ons; the Windows app is its desktop edition. Publisher name and support links point to 301.st; source code: https://github.com/investblog/cftools-win.
+
+Software dependencies (policy 10.2.4.1):
+- The package is self-contained. CFTools.runtimeconfig.json declares includedFrameworks = Microsoft.NETCore.App 8.0.30; hostfxr.dll, hostpolicy.dll, coreclr.dll, clrjit.dll and the Windows App SDK runtime ship inside the package. No .NET Desktop Runtime or any other install is required, and the first line of every description says so.
+- This submission carries an x64 package and an arm64 package, so ARM devices (Surface Laptop on Snapdragon) run native code rather than the x64 package under emulation.
 
 Localization (policy 10.7):
 - The app interface is localized into the 12 languages declared in the package manifest (en, ru, de, fr, es, it, pt-br, ja, ko, zh-Hans, pl, tr); Store listings are provided in the same 12 languages. The language follows the Windows display language and can be overridden in Settings.

@@ -2,7 +2,9 @@
 
 ## Description
 
-Cloudflare Tools는 빠르고 안정적인 영역(zone) 대량 관리를 Windows 데스크톱에서 제공합니다. 여러 Cloudflare 계정에서 수십에서 수백 개의 영역을 관리하는 도메인 전문가를 위한 도구입니다. 공개 Cloudflare API v4를 통해 사용자 본인의 Cloudflare 계정을 다룹니다.
+추가 소프트웨어가 필요 없습니다: .NET 8 런타임과 Windows App SDK가 패키지에 포함되어 있습니다(자체 포함).
+
+Tools for Cloudflare는 빠르고 안정적인 영역(zone) 대량 관리를 Windows 데스크톱에서 제공합니다. 여러 Cloudflare 계정에서 수십에서 수백 개의 영역을 관리하는 도메인 전문가를 위한 도구입니다. 공개 Cloudflare API v4를 통해 사용자 본인의 Cloudflare 계정을 다룹니다.
 
 • 도메인 대량 추가 — 목록, CSV, HTML, 이메일, URL, 내보내기 등 어떤 형태의 텍스트든 붙여 넣기만 하면 됩니다. 파서가 루트 도메인을 추출하고 IDN과 Punycode를 처리하며 중복을 표시하고, 생성 전에 목록을 확인할 수 있습니다.
 • 영역 목록과 CSV 내보내기 — 모든 영역의 상태, 요금제, 네임서버 표시. 이름으로 필터링하고 한 계정 또는 모든 계정을 한 번에 CSV로 내보내기.
@@ -16,11 +18,11 @@ Cloudflare Tools는 빠르고 안정적인 영역(zone) 대량 관리를 Windows
 
 자격 증명은 Windows 자격 증명 관리자에 보관되며 Cloudflare API로만 전송됩니다. 원격 측정, 분석, 구매가 없습니다. 소스 코드는 GitHub에 공개되어 있습니다.
 
-같은 이름의 브라우저 확장(Chrome, Edge, Firefox)으로도 제공됩니다. 엣지 리디렉션 관리 플랫폼 301.st가 만들었습니다.
+브라우저 확장 「Cloudflare Tools」(Chrome, Edge, Firefox)로도 제공됩니다. 엣지 리디렉션 관리 플랫폼 301.st가 만들었습니다.
 
 ## What's new
 
-버전 1.2.0:
+버전 1.2.1:
 • CSV 내보내기가 있는 영역 페이지(한 계정 또는 모든 계정)
 • Global API Key 외에 API 토큰(cfut_ / cfat_)으로 로그인
 • 일괄 작업 결과(추가/캐시 삭제/영역 삭제)를 CSV로 내보내기
@@ -45,7 +47,7 @@ cloudflare 대량, 도메인 추가, 캐시 삭제, 영역 삭제, 영역 csv �
 ## Short title (50)
 
 ```
-Cloudflare Tools
+Tools for Cloudflare
 ```
 
 ## Short description (1000)
@@ -57,7 +59,7 @@ Windows용 Cloudflare 영역 대량 관리: 어떤 목록에서든 도메인 추
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare®는 Cloudflare, Inc.의 등록 상표입니다. Cloudflare Tools는 301.st의 독립 앱으로 Cloudflare, Inc.와 제휴·승인·후원 관계가 없습니다. © 2026 301.st, MIT 라이선스.
+Cloudflare®는 Cloudflare, Inc.의 등록 상표입니다. Tools for Cloudflare는 301.st의 독립 앱으로 Cloudflare, Inc.와 제휴·승인·후원 관계가 없습니다. © 2026 301.st, MIT 라이선스.
 ```
 
 ## Developed by (255)

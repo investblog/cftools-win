@@ -2,7 +2,9 @@
 
 ## Description
 
-Cloudflare Tools, hızlı ve güvenilir toplu bölge (zone) yönetimini Windows masaüstüne taşır. Birden fazla Cloudflare hesabında onlarca veya yüzlerce bölgeyi yöneten alan adı uzmanları için tasarlandı. Herkese açık Cloudflare API v4 üzerinden kendi Cloudflare hesabınızla çalışır.
+Ek yazılım gerekmez: .NET 8 çalışma zamanı ve Windows App SDK pakete dahildir (bağımsız).
+
+Tools for Cloudflare, hızlı ve güvenilir toplu bölge (zone) yönetimini Windows masaüstüne taşır. Birden fazla Cloudflare hesabında onlarca veya yüzlerce bölgeyi yöneten alan adı uzmanları için tasarlandı. Herkese açık Cloudflare API v4 üzerinden kendi Cloudflare hesabınızla çalışır.
 
 • Toplu alan adı ekleme — alan adlarını herhangi bir kaynaktan yapıştırın: listeler, CSV, HTML, e-postalar, URL'ler veya dışa aktarmalar. Ayrıştırıcı kök alan adlarını çıkarır, IDN ve Punycode'u destekler, yinelenenleri işaretler ve oluşturmadan önce listeyi kontrol etmenizi sağlar.
 • Bölge listesi ve CSV dışa aktarma — her bölge durumu, planı ve ad sunucularıyla; ada göre filtreleyin ve tek bir hesap ya da tüm hesaplar için CSV'ye aktarın.
@@ -16,11 +18,11 @@ Cloudflare Tools, hızlı ve güvenilir toplu bölge (zone) yönetimini Windows 
 
 Kimlik bilgileri Windows Kimlik Bilgisi Yöneticisi'nde kalır ve yalnızca Cloudflare API'ye gönderilir. Telemetri yok, analiz yok, satın alma yok. Kaynak kodu GitHub'da.
 
-Aynı adla Chrome, Edge ve Firefox için tarayıcı uzantısı olarak da mevcuttur. Uç yönlendirme yönetim platformu 301.st tarafından geliştirildi.
+"Cloudflare Tools" tarayıcı uzantısı olarak Chrome, Edge ve Firefox için de mevcuttur. Uç yönlendirme yönetim platformu 301.st tarafından geliştirildi.
 
 ## What's new
 
-Sürüm 1.2.0:
+Sürüm 1.2.1:
 • CSV dışa aktarmalı Bölgeler sayfası (tek hesap veya tüm hesaplar)
 • Global API Key'in yanı sıra API belirteçleriyle (cfut_ / cfat_) oturum açma
 • Toplu işlem sonuçlarını (ekleme / temizleme / silme) CSV'ye aktarma
@@ -45,7 +47,7 @@ cloudflare toplu, alan adı ekle, önbellek temizle, bölge sil, bölge csv dı�
 ## Short title (50)
 
 ```
-Cloudflare Tools
+Tools for Cloudflare
 ```
 
 ## Short description (1000)
@@ -57,7 +59,7 @@ Windows'ta toplu Cloudflare bölge yönetimi: herhangi bir listeden alan adı ek
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare®, Cloudflare, Inc.'in tescilli ticari markasıdır. Cloudflare Tools, 301.st'nin bağımsız uygulamasıdır; Cloudflare, Inc. ile bağlantılı değildir. © 2026 301.st, MIT lisansı.
+Cloudflare®, Cloudflare, Inc.'in tescilli ticari markasıdır. Tools for Cloudflare, 301.st'nin bağımsız uygulamasıdır; Cloudflare, Inc. ile bağlantılı değildir. © 2026 301.st, MIT lisansı.
 ```
 
 ## Developed by (255)

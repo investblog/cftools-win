@@ -12,7 +12,7 @@
         <StackPanel Orientation="Horizontal" Spacing="12">
           <Image Source="/Assets/logo_48.png" Width="48" Height="48" VerticalAlignment="Center" />
           <TextBlock
-            Text="Cloudflare Tools"
+            Text="Tools for Cloudflare"
             Style="{StaticResource TitleTextBlockStyle}"
             VerticalAlignment="Center"
           />
