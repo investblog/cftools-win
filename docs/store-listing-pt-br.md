@@ -4,7 +4,7 @@
 
 Não requer software adicional: o runtime .NET 8 e o Windows App SDK vêm incluídos no pacote (autônomo).
 
-O Tools for Cloudflare traz gestão em massa de zonas, rápida e confiável, para a área de trabalho do Windows. Feito para profissionais de domínios que administram dezenas ou centenas de zonas em várias contas Cloudflare. Funciona com a sua própria conta Cloudflare por meio da API pública Cloudflare v4.
+O Bulk Zone Manager traz gestão em massa de zonas, rápida e confiável, para a área de trabalho do Windows. Feito para profissionais de domínios que administram dezenas ou centenas de zonas em várias contas Cloudflare. Funciona com a sua própria conta Cloudflare por meio da API pública Cloudflare v4.
 
 • Adicionar domínios em massa — cole domínios de qualquer fonte: listas, CSV, HTML, e-mails, URLs ou exportações. O analisador extrai domínios raiz, trata IDN e Punycode, sinaliza duplicados e permite revisar a lista antes de criar qualquer coisa.
 • Lista de zonas e exportação CSV — cada zona com status, plano e servidores de nomes; filtre por nome e exporte em CSV, de uma conta ou de todas de uma vez.
@@ -22,7 +22,7 @@ Também disponível como extensão "Cloudflare Tools" para Chrome, Edge e Firefo
 
 ## What's new
 
-Versão 1.2.1:
+Versão 1.2.2:
 • Página Zonas com exportação CSV (uma conta ou todas)
 • Login com tokens de API (cfut_ / cfat_) além da Global API Key
 • Exportação dos resultados do lote (adicionar / limpar / excluir) em CSV
@@ -47,7 +47,7 @@ cloudflare em massa, adicionar domínios, limpar cache, excluir zonas, exportar 
 ## Short title (50)
 
 ```
-Tools for Cloudflare
+Bulk Zone Manager
 ```
 
 ## Short description (1000)
@@ -59,7 +59,7 @@ Gestão em massa de zonas Cloudflare no Windows: adicione domínios de qualquer 
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare® é marca registrada da Cloudflare, Inc. Tools for Cloudflare é um aplicativo independente da 301.st, sem afiliação com a Cloudflare, Inc. © 2026 301.st, licença MIT.
+Cloudflare® é marca registrada da Cloudflare, Inc. Bulk Zone Manager é um aplicativo independente da 301.st, sem afiliação com a Cloudflare, Inc. © 2026 301.st, licença MIT.
 ```
 
 ## Developed by (255)

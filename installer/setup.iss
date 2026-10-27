@@ -1,8 +1,8 @@
-; Tools for Cloudflare - InnoSetup Script
+; Bulk Zone Manager - InnoSetup Script
 ; Compile with: ISCC.exe setup.iss
 
-#define MyAppName "Tools for Cloudflare"
-#define MyAppVersion "1.2.1"
+#define MyAppName "Bulk Zone Manager"
+#define MyAppVersion "1.2.2"
 #define MyAppPublisher "301.st"
 #define MyAppURL "https://301.st"
 #define MyAppExeName "CFTools.exe"
@@ -22,11 +22,11 @@ AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
-DefaultDirName={autopf}\Tools for Cloudflare
+DefaultDirName={autopf}\Bulk Zone Manager
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=..\temp
-OutputBaseFilename=ToolsForCloudflare-v{#MyAppVersion}-x64-setup
+OutputBaseFilename=BulkZoneManager-v{#MyAppVersion}-x64-setup
 SetupIconFile=..\src\CFTools\Assets\app.ico
 UninstallDisplayIcon={app}\Assets\app.ico
 Compression=lzma2/ultra64

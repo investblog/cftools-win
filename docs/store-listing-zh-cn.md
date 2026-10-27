@@ -4,7 +4,7 @@
 
 无需额外软件：.NET 8 运行时和 Windows App SDK 已随包附带（自包含）。
 
-Tools for Cloudflare 将快速、可靠的区域批量管理带到 Windows 桌面。专为在多个 Cloudflare 账户中管理数十甚至数百个区域的域名专业人士打造。 它通过公开的 Cloudflare API v4 操作您自己的 Cloudflare 账户。
+Bulk Zone Manager 将快速、可靠的区域批量管理带到 Windows 桌面。专为在多个 Cloudflare 账户中管理数十甚至数百个区域的域名专业人士打造。 它通过公开的 Cloudflare API v4 操作您自己的 Cloudflare 账户。
 
 • 批量添加域名 — 从任意来源粘贴域名：列表、CSV、HTML、邮件、URL 或导出文件。解析器自动提取根域名，支持 IDN 和 Punycode，标记重复项，并允许在创建前检查列表。
 • 区域列表与 CSV 导出 — 查看每个区域的状态、套餐和名称服务器；按名称筛选并导出为 CSV，可导出单个账户或一次性导出全部账户。
@@ -22,7 +22,7 @@ Tools for Cloudflare 将快速、可靠的区域批量管理带到 Windows 桌�
 
 ## What's new
 
-版本 1.2.1：
+版本 1.2.2：
 • 带 CSV 导出的区域页面（单个账户或全部账户）
 • 除 Global API Key 外，支持使用 API 令牌（cfut_ / cfat_）登录
 • 将批量操作结果（添加 / 清除 / 删除）导出为 CSV
@@ -47,7 +47,7 @@ cloudflare 批量, 添加域名, 清除缓存, 删除区域, 区域导出 csv, c
 ## Short title (50)
 
 ```
-Tools for Cloudflare
+Bulk Zone Manager
 ```
 
 ## Short description (1000)
@@ -59,7 +59,7 @@ Windows 上的 Cloudflare 区域批量管理：从任意列表添加域名，浏
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare® 是 Cloudflare, Inc. 的注册商标。Tools for Cloudflare 是 301.st 的独立应用，与 Cloudflare, Inc. 无关联，未获其认可或赞助。© 2026 301.st，MIT 许可证。
+Cloudflare® 是 Cloudflare, Inc. 的注册商标。Bulk Zone Manager 是 301.st 的独立应用，与 Cloudflare, Inc. 无关联，未获其认可或赞助。© 2026 301.st，MIT 许可证。
 ```
 
 ## Developed by (255)

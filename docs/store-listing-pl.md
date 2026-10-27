@@ -4,7 +4,7 @@
 
 Nie wymaga dodatkowego oprogramowania: środowisko .NET 8 i Windows App SDK są dołączone do pakietu (self-contained).
 
-Tools for Cloudflare przenosi szybkie i niezawodne masowe zarządzanie strefami na pulpit Windows. Dla specjalistów od domen, którzy prowadzą dziesiątki lub setki stref na kilku kontach Cloudflare. Działa z Twoim własnym kontem Cloudflare przez publiczne Cloudflare API v4.
+Bulk Zone Manager przenosi szybkie i niezawodne masowe zarządzanie strefami na pulpit Windows. Dla specjalistów od domen, którzy prowadzą dziesiątki lub setki stref na kilku kontach Cloudflare. Działa z Twoim własnym kontem Cloudflare przez publiczne Cloudflare API v4.
 
 • Masowe dodawanie domen — wklej domeny z dowolnego źródła: listy, CSV, HTML, e-maile, adresy URL lub eksporty. Parser wyodrębnia domeny główne, obsługuje IDN i Punycode, oznacza duplikaty i pozwala sprawdzić listę przed utworzeniem czegokolwiek.
 • Lista stref i eksport CSV — każda strefa ze statusem, planem i serwerami nazw; filtruj po nazwie i eksportuj do CSV, dla jednego konta lub wszystkich kont naraz.
@@ -22,7 +22,7 @@ Dostępne także jako rozszerzenie przeglądarki „Cloudflare Tools” dla Chro
 
 ## What's new
 
-Wersja 1.2.1:
+Wersja 1.2.2:
 • Strona Strefy z eksportem CSV (jedno konto lub wszystkie)
 • Logowanie tokenami API (cfut_ / cfat_) obok Global API Key
 • Eksport wyników operacji wsadowych (dodawanie / czyszczenie / usuwanie) do CSV
@@ -47,7 +47,7 @@ cloudflare masowo, dodaj domeny, wyczyść cache, usuń strefy, eksport stref cs
 ## Short title (50)
 
 ```
-Tools for Cloudflare
+Bulk Zone Manager
 ```
 
 ## Short description (1000)
@@ -59,7 +59,7 @@ Masowe zarządzanie strefami Cloudflare w Windows: dodawaj domeny z dowolnej lis
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare® jest zastrzeżonym znakiem towarowym Cloudflare, Inc. Tools for Cloudflare to niezależna aplikacja 301.st, niepowiązana z Cloudflare, Inc. © 2026 301.st, licencja MIT.
+Cloudflare® jest zastrzeżonym znakiem towarowym Cloudflare, Inc. Bulk Zone Manager to niezależna aplikacja 301.st, niepowiązana z Cloudflare, Inc. © 2026 301.st, licencja MIT.
 ```
 
 ## Developed by (255)

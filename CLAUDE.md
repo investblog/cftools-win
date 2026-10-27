@@ -6,7 +6,7 @@
 
 Windows-порт браузерного расширения [cloudflare-tools](W:\Projects\cloudflare-tools) — десктопное приложение для bulk-операций с Cloudflare зонами.
 
-**Имя продукта:** Windows-приложение — «Tools for Cloudflare» (с 1.2.1, 12.09.2026: Store отклонил «Cloudflare Tools» по 10.1.1.1 — referential-название не должно НАЧИНАТЬСЯ с имени чужого сервиса, паттерн «X for Y»). Расширение и SourceForge/GitHub-репозиторий остаются «Cloudflare Tools» (семейство). Внутренние идентификаторы (namespace `CFTools`, exe, Credential Manager resource, папка настроек) не переименовываются.
+**Имя продукта:** Windows-приложение — «Bulk Zone Manager» (с 1.2.2, 03.10.2026). Store не пропускает товарный знак «Cloudflare» в названии ни в каком месте: «Cloudflare Tools» отклонён 11.09; «Tools for Cloudflare» (форма «X for Y») прошёл сертификацию 15.09, но 02.10 снят проверкой Store по тому же 10.1.1.1. Гайд по названиям: «Do not use trademarked names … could lead to your app being removed from the Store». «Cloudflare» — только в описании (с каким сервисом работает) + trademark-дисклеймер. Расширение и SourceForge/GitHub-репозиторий остаются «Cloudflare Tools» (семейство). Внутренние идентификаторы (namespace `CFTools`, exe, identity `301.CloudflareTools`, Credential Manager resource, папка настроек) не переименовываются.
 
 **Стек:** C# / .NET 8 / WinUI 3 (Windows App SDK 1.6) / CommunityToolkit.Mvvm
 **Спецификация:** `SPEC.md` — **читай перед любой работой**
@@ -68,7 +68,7 @@ cftools-win/
 
 ```bash
 # Сборка (WinUI 3 requires VS2022 MSBuild)
-"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe" \
+"/d/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe" \
   src/CFTools/CFTools.csproj -p:Platform=x64 -p:Configuration=Debug
 
 # Тесты (работают через dotnet CLI — тестируют CFTools.Core, не WinUI)
@@ -224,7 +224,9 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 ## Store
 
 - **Partner Center**: MSIX app, identity `301.CloudflareTools`, publisher `CN=BEE1F94B-ABDE-4CF8-9F30-1DF4DAFDAE83`
-- **Статус**: опубликовано как «CFTools» (1.1.1), https://apps.microsoft.com/detail/9pn4wf799808
+- **Статус**: с 27.10.2026 1.2.2 «Bulk Zone Manager» на сертификации (Update in certification): после переписки продукт разблокировали для переподачи. Снят из Store был 02.10.2026 (Store health review, отчёт `6cab5fcf-cc6e-433e-bf8e-b63e66b76528`, 10.1.1.1, «Found in: Global»). Product ID `9PN4WF799808`, https://apps.microsoft.com/detail/9pn4wf799808. История обращений — `docs/store-appeal-2026-10.md`; на письмо msftpc@microsoft.com не отвечать.
+- **v1.2.2 (2026-10-03)**: переименовано в «Bulk Zone Manager» (имя зарезервировано за этим приложением): DisplayName в манифесте, окно, About, README, инсталлятор, 12 листингов, notes for certification. Пакеты x64 + arm64 собраны 03.10 (`temp/AppPackages/CFTools_1.2.2.0_{x64,arm64}_Test/`, 65 и 63 МБ, coreclr внутри). Обращение подано 03.10: Engage Center → Manage Cases, Request ID `2610030050000446`, Product «Windows Developer Center», severity C; ответ на support@301.st.
+- **v1.2.1 отказ (2026-09-15)**: снова 10.1.1.1, но только «All languages except English (United States)» — в Partner Center 11 не-EN листингов остались с Product name «Cloudflare Tools» от 1.2.0. В присланном отчёте только 10.1.1.1 (10.2.4.1 не повторился → self-contained дошёл). Пакет не трогали (DisplayName в манифесте — одна нелокализованная строка). В тот же день во всех 11 языках Product name сменён на «Tools for Cloudflare» и переподано с тем же пакетом x64 + arm64; тексты не-EN листингов остались от 1.2.0.
 - **v1.2.1 (2026-09-12)**: после отказа 1.2.0 («Cloudflare Tools»: 10.1.1.1 название начинается с чужого сервиса; 10.2.4.1 «не раскрыт .NET Desktop Runtime» при self-contained пакете) повторно отправлено как «Tools for Cloudflare» 1.2.1.0, x64 + arm64. В Partner Center описание обновлено только для EN; остальные 11 листингов ещё с текстом 1.2.0 — обновить после вердикта из docs/.
 - **v1.2.0 (2026-09-11)**: отправлено на сертификацию вечером 11.09 под именем «Cloudflare Tools» (12 языков листинга, trademark в поле Copyright, notes for certification). Результат смотреть в Partner Center. Было: подать с trademark-дисклеймером первой строкой описания + notes for certification (см. docs/store-listing-en.md). Если отклонят по 10.1.1.1 — фолбэк «Tools for Cloudflare» (паттерн «X for Y»: зарезервировать имя, поменять DisplayName в манифесте/About/README, пересобрать).
 - **Store listings**: 12 языков по принципу Buho (en, ru, de, fr, es, it, pt-br, ja, ko, zh-cn, pl, tr) в `docs/store-listing-<lang>.md`: Description (дисклеймер первой строкой + «интерфейс на английском»), What's new, Product features ≤200 симв., Search terms ≤7×30. Проверка лимитов: `python scripts/check-store-listings.py`. UI локализован на те же 12 языков, манифест объявляет их в `<Resources>`; языки листинга добавляются в Partner Center. На 2026-09-11 в Partner Center загружен только EN.
@@ -235,12 +237,13 @@ CheckBox в DataTemplate: binding обновляется ПОСЛЕ событи
 # MSIX пакет (без подписи — Store подпишет сам). SelfContained=true ОБЯЗАТЕЛЬНО: без него в пакете нет
 # .NET-рантайма (нет coreclr.dll, нет PackageDependency) и на чистой машине приложение просит установить .NET.
 # 1.1.x уходили в Store framework-dependent — это было ошибкой, с 1.2.0 self-contained (~65 МБ msix вместо 31).
-"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe" \
+"/d/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe" \
   src/CFTools/CFTools.csproj \
   -p:Platform=x64 -p:Configuration=Release -p:RuntimeIdentifier=win-x64 -p:SelfContained=true \
   -p:GenerateAppxPackageOnBuild=true -p:AppxBundle=Never \
   -p:UapAppxPackageBuildMode=StoreUpload \
   -p:AppxPackageDir=temp/AppPackages/
+# ARM64: та же команда с -p:Platform=ARM64 -p:RuntimeIdentifier=win-arm64 → CFTools_<ver>_arm64_Test/. В Store подаются оба пакета.
 # Output: src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/CFTools_<ver>_x64.msix — путь относителен csproj, НЕ корня репо!
 # Для подачи копировать в temp/AppPackages/ (корень), где лежат прошлые версии:
 #   cp src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/*.msix temp/AppPackages/CFTools_<ver>_x64_Test/
@@ -255,7 +258,7 @@ python scripts/make-release.py --build     # --build запускает MSBuild 
 
 | Канал | Артефакт | Как |
 |---|---|---|
-| Microsoft Store | `src/CFTools/temp/AppPackages/CFTools_<ver>_x64_Test/CFTools_<ver>_x64.msix` | Partner Center руками; листинги 12 языков из `docs/store-listing-*.md`, notes for certification из EN |
+| Microsoft Store | `src/CFTools/temp/AppPackages/CFTools_<ver>_{x64,arm64}_Test/CFTools_<ver>_{x64,arm64}.msix` (оба) | Partner Center руками; листинги 12 языков из `docs/store-listing-*.md`, notes for certification из EN |
 | GitHub Releases | `temp/release/<ver>/` — setup.exe, zip, SHA256SUMS | тело релиза = `docs/release-notes/v<ver>.md` (первым делом «какой файл качать»); msix НЕ прикладывать (без подписи не ставится, SourceForge сделает его default download) |
 | SourceForge | зеркало GitHub Releases | `docs/sourceforge-listing.md`: значения для GitHub Project Importer, тексты под лимиты формы (страж `scripts/check-sourceforge-listing.py`), категории, default download = setup.exe. Сначала публикуется GitHub-релиз, потом импорт |
 
@@ -263,8 +266,8 @@ python scripts/make-release.py --build     # --build запускает MSBuild 
 
 ## Очередь разработки
 
-P0 (после вердикта Store по 1.2.1): загрузить 11 переводов листинга из docs/store-listing-<lang>.md (в Partner Center обновлён только EN); если отказ по 10.2.4.1 повторится — включить Windows Sandbox (`Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM`) и прогнать инсталлятор на чистой Windows
-P1: несколько профилей учётных данных (как в расширении v0.2.0); свежие скриншоты со страницей Zones (нужен аккаунт с тестовыми зонами, реальные домены на скринах нежелательны); решить, выпускать ли GitHub 1.2.1 (код тот же, поменялось только имя окна) — заодно проверит, доезжает ли релиз на SourceForge по вебхуку
+P0: 1.2.2 «Bulk Zone Manager» (x64 + arm64) отправлен на сертификацию 27.10, после того как переписка (03.10–24.10: обращение 2610030050000446 + reportapp, `docs/store-appeal-2026-10.md`) разблокировала продукт. Ждём вердикт в Partner Center. Перед отправкой проверено: Release win-x64 запускается, окно «Bulk Zone Manager»; в 12 листингах имя стоит в Description/Short title/Copyright, What's new — 1.2.2, `check-store-listings.py` — 0 ошибок. Search terms с «cloudflare» оставлены по решению владельца 27.10 (без них продукт не находят); если отказ придёт по 10.1.3 — убрать «cloudflare» из ключей во всех 12 листингах. Не проверено: на какой адрес шло исходное предупреждение по репорту (в support@301.st его нет) — сверить контактный email в Partner Center → Account settings, чтобы следующее не пропустить. Если отказ по 10.2.4.1 повторится — включить Windows Sandbox (`Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM`) и прогнать инсталлятор на чистой Windows
+P1: несколько профилей учётных данных (как в расширении v0.2.0); свежие скриншоты со страницей Zones (нужен аккаунт с тестовыми зонами, реальные домены на скринах нежелательны); решить, выпускать ли GitHub 1.2.2 (код тот же, поменялось только имя: окно/About/инсталлятор «Bulk Zone Manager», файлы `BulkZoneManager-v<ver>-x64-setup.exe`/`.zip`; GitHub 1.2.1 так и не выпускали) — заодно проверит, доезжает ли релиз на SourceForge по вебхуку. Нужен ISCC: диска W: на этой машине нет, Inno Setup не установлен
 P2: DNS Import/Export, file logging
 P3: Bulk SSL Mode, Security Level, Always HTTPS
 
@@ -275,6 +278,6 @@ P3: Bulk SSL Mode, Security Level, Always HTTPS
 
 ## Окружение разработки
 
-- Win11, Visual Studio 2022
+- Win11, Visual Studio 2022 Community на D: (`D:\Program Files\Microsoft Visual Studio\2022\Community`, поставлен 03.10.2026; на C: VS нет)
 - Git + GitHub (repo: github.com/investblog/cftools-win, private)
 - Hyper-V VM (Win10/Win11) — тестирование совместимости

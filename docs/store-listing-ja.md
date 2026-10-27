@@ -4,7 +4,7 @@
 
 追加ソフトウェアは不要です: .NET 8 ランタイムと Windows App SDK はパッケージに同梱されています(自己完結型)。
 
-Tools for Cloudflare は、高速で信頼できるゾーンの一括管理を Windows デスクトップにもたらします。複数の Cloudflare アカウントで数十〜数百のゾーンを扱うドメイン担当者のためのツールです。 公開されている Cloudflare API v4 を通じて、ご自身の Cloudflare アカウントを操作します。
+Bulk Zone Manager は、高速で信頼できるゾーンの一括管理を Windows デスクトップにもたらします。複数の Cloudflare アカウントで数十〜数百のゾーンを扱うドメイン担当者のためのツールです。 公開されている Cloudflare API v4 を通じて、ご自身の Cloudflare アカウントを操作します。
 
 • ドメインの一括追加 — リスト、CSV、HTML、メール、URL、エクスポートなど、どんな形式のテキストでも貼り付けるだけ。パーサーがルートドメインを抽出し、IDN と Punycode に対応、重複を検出し、作成前にリストを確認できます。
 • ゾーン一覧と CSV エクスポート — 全ゾーンのステータス、プラン、ネームサーバーを表示。名前で絞り込み、1 アカウントまたは全アカウントをまとめて CSV に出力。
@@ -22,7 +22,7 @@ Tools for Cloudflare は、高速で信頼できるゾーンの一括管理を W
 
 ## What's new
 
-バージョン 1.2.1:
+バージョン 1.2.2:
 • CSV エクスポート付きのゾーンページ(1 アカウントまたは全アカウント)
 • Global API Key に加えて API トークン(cfut_ / cfat_)でサインイン
 • バッチ結果(追加/パージ/削除)の CSV エクスポート
@@ -47,7 +47,7 @@ cloudflare 一括, ドメイン追加, キャッシュ削除, ゾーン削除, �
 ## Short title (50)
 
 ```
-Tools for Cloudflare
+Bulk Zone Manager
 ```
 
 ## Short description (1000)
@@ -59,7 +59,7 @@ Windows 向けの Cloudflare ゾーン一括管理: 任意のリストからド�
 ## Copyright and trademark info (200)
 
 ```
-Cloudflare® は Cloudflare, Inc. の登録商標です。Tools for Cloudflare は 301.st の独立したアプリで、Cloudflare, Inc. とは提携・承認・後援の関係にありません。© 2026 301.st, MIT ライセンス。
+Cloudflare® は Cloudflare, Inc. の登録商標です。Bulk Zone Manager は 301.st の独立したアプリで、Cloudflare, Inc. とは提携・承認・後援の関係にありません。© 2026 301.st, MIT ライセンス。
 ```
 
 ## Developed by (255)
