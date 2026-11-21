@@ -565,20 +565,8 @@ IDN과 Punycode 지원.
   <data name="About_Rate.Content" xml:space="preserve">
     <value>Microsoft Store에서 평가하기</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>GitHub 소스 코드</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - 엣지 리디렉션 플랫폼</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Edge용 브라우저 확장</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Chrome용 브라우저 확장</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Firefox용 브라우저 확장</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>공개 Cloudflare API v4를 사용합니다. 자격 증명은 Windows 자격 증명 관리자에 보관되며 api.cloudflare.com으로만 전송됩니다.</value>

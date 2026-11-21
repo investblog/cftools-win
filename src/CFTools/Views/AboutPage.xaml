@@ -133,33 +133,9 @@
           Padding="0"
         />
         <HyperlinkButton
-          x:Uid="About_Source"
-          Content="Source code on GitHub"
-          NavigateUri="https://github.com/investblog/cftools-win"
-          Padding="0"
-        />
-        <HyperlinkButton
           x:Uid="About_301"
           Content="301.st - edge redirect platform"
           NavigateUri="https://301.st"
-          Padding="0"
-        />
-        <HyperlinkButton
-          x:Uid="About_Edge"
-          Content="Browser extension for Edge"
-          NavigateUri="https://microsoftedge.microsoft.com/addons/detail/kklailenhhfnlhbmfaibeonjpdkcpklc"
-          Padding="0"
-        />
-        <HyperlinkButton
-          x:Uid="About_Chrome"
-          Content="Browser extension for Chrome"
-          NavigateUri="https://chromewebstore.google.com/detail/gncbekdjakchefiiahjbjlbhhfijoikp"
-          Padding="0"
-        />
-        <HyperlinkButton
-          x:Uid="About_Firefox"
-          Content="Browser extension for Firefox"
-          NavigateUri="https://addons.mozilla.org/en-US/firefox/addon/cloudflare-tools/"
           Padding="0"
         />
       </StackPanel>

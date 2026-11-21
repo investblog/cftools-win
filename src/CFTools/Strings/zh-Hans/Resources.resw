@@ -565,20 +565,8 @@
   <data name="About_Rate.Content" xml:space="preserve">
     <value>在 Microsoft Store 中评分</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>GitHub 上的源代码</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - 边缘重定向平台</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Edge 浏览器扩展</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Chrome 浏览器扩展</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Firefox 浏览器扩展</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>使用公开的 Cloudflare API v4。凭据保存在 Windows 凭据管理器中，仅发送到 api.cloudflare.com。</value>

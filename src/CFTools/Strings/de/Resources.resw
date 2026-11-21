@@ -565,20 +565,8 @@ Warnung: große Anfrage, sie entfernt viele Zonen auf einmal.</value>
   <data name="About_Rate.Content" xml:space="preserve">
     <value>App im Microsoft Store bewerten</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>Quellcode auf GitHub</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - Edge-Redirect-Plattform</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Browser-Erweiterung für Edge</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Browser-Erweiterung für Chrome</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Browser-Erweiterung für Firefox</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>Nutzt die öffentliche Cloudflare API v4. Zugangsdaten liegen in der Windows-Anmeldeinformationsverwaltung und gehen nur an api.cloudflare.com.</value>

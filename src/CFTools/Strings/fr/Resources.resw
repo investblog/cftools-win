@@ -565,20 +565,8 @@ Attention : requête volumineuse, elle supprime de nombreuses zones à la fois.<
   <data name="About_Rate.Content" xml:space="preserve">
     <value>Noter l'application sur le Microsoft Store</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>Code source sur GitHub</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - plateforme de redirections</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Extension pour Edge</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Extension pour Chrome</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Extension pour Firefox</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>Utilise l'API publique Cloudflare v4. Les identifiants sont stockés dans le Gestionnaire d'identifiants Windows et envoyés uniquement à api.cloudflare.com.</value>

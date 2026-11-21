@@ -565,20 +565,8 @@ Attenzione: richiesta grande, rimuove molte zone contemporaneamente.</value>
   <data name="About_Rate.Content" xml:space="preserve">
     <value>Valuta l'app su Microsoft Store</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>Codice sorgente su GitHub</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - piattaforma di redirect edge</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Estensione per Edge</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Estensione per Chrome</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Estensione per Firefox</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>Usa l'API pubblica Cloudflare v4. Le credenziali restano in Gestione credenziali di Windows e vanno solo a api.cloudflare.com.</value>

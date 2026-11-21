@@ -6,6 +6,9 @@ out/
 # Temp assets
 temp/
 
+# Secrets (secret-handoff take target)
+.secrets/
+
 # Installer output
 installer/Output/
 

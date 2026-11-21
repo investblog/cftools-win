@@ -565,20 +565,8 @@
   <data name="About_Rate.Content" xml:space="preserve">
     <value>Оценить в Microsoft Store</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>Исходный код на GitHub</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - платформа edge-редиректов</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Расширение для Edge</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Расширение для Chrome</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Расширение для Firefox</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>Использует публичный Cloudflare API v4. Учётные данные хранятся в Windows Credential Manager и отправляются только на api.cloudflare.com.</value>

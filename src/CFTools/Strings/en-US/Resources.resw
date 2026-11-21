@@ -565,20 +565,8 @@ Warning: this is a large delete request and may remove many zones at once.</valu
   <data name="About_Rate.Content" xml:space="preserve">
     <value>Rate this app in Microsoft Store</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>Source code on GitHub</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - edge redirect platform</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Browser extension for Edge</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Browser extension for Chrome</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Browser extension for Firefox</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>Uses the public Cloudflare API v4. Credentials are stored in Windows Credential Manager and sent only to api.cloudflare.com.</value>

@@ -565,20 +565,8 @@ Uyarı: bu büyük bir istek, birçok bölgeyi aynı anda siler.</value>
   <data name="About_Rate.Content" xml:space="preserve">
     <value>Microsoft Store'da değerlendirin</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>GitHub'daki kaynak kodu</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - uç yönlendirme platformu</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Edge için tarayıcı uzantısı</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Chrome için tarayıcı uzantısı</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Firefox için tarayıcı uzantısı</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>Herkese açık Cloudflare API v4 kullanır. Kimlik bilgileri Windows Kimlik Bilgisi Yöneticisi'nde tutulur ve yalnızca api.cloudflare.com'a gönderilir.</value>

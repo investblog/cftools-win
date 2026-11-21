@@ -565,20 +565,8 @@ Aviso: esta é uma solicitação grande e removerá muitas zonas de uma vez.</va
   <data name="About_Rate.Content" xml:space="preserve">
     <value>Avaliar na Microsoft Store</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>Código-fonte no GitHub</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - plataforma de redirecionamento</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Extensão para Edge</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Extensão para Chrome</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Extensão para Firefox</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>Usa a API pública Cloudflare v4. As credenciais ficam no Gerenciador de Credenciais do Windows e são enviadas apenas para api.cloudflare.com.</value>

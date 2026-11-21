@@ -565,20 +565,8 @@ Uwaga: to duże żądanie, usunie wiele stref naraz.</value>
   <data name="About_Rate.Content" xml:space="preserve">
     <value>Oceń aplikację w Microsoft Store</value>
   </data>
-  <data name="About_Source.Content" xml:space="preserve">
-    <value>Kod źródłowy na GitHub</value>
-  </data>
   <data name="About_301.Content" xml:space="preserve">
     <value>301.st - platforma przekierowań</value>
-  </data>
-  <data name="About_Edge.Content" xml:space="preserve">
-    <value>Rozszerzenie dla Edge</value>
-  </data>
-  <data name="About_Chrome.Content" xml:space="preserve">
-    <value>Rozszerzenie dla Chrome</value>
-  </data>
-  <data name="About_Firefox.Content" xml:space="preserve">
-    <value>Rozszerzenie dla Firefox</value>
   </data>
   <data name="About_Footer1.Text" xml:space="preserve">
     <value>Używa publicznego Cloudflare API v4. Dane logowania są przechowywane w Menedżerze poświadczeń Windows i wysyłane tylko do api.cloudflare.com.</value>
