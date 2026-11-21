@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.3 - 2026-11-22
+
+### Store certification fixes (reports 6cab5fcf… and cea3f4fc…)
+
+- About page: removed the "Source code on GitHub" link and the Edge/Chrome/Firefox browser-extension links from Links (policy 10.1.5 - no promotion of software distribution outside the Store). The only remaining links are "Rate this app in Microsoft Store" and the publisher's 301.st web service (no software download)
+- GitHub Releases no longer ship installer binaries; the Microsoft Store is the only distribution channel
+- Added a dedicated Cloudflare demo account for certification testing; credentials go into Partner Center → Notes for certification (policy 10.3.1 - test account), see `docs/store-listing-en.md`
+
 ## v1.1.0 - 2026-03-15
 
 ### Multi-account and UX overhaul

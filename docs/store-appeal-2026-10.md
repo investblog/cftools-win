@@ -163,3 +163,50 @@ support@301.st
 Переписка дала результат: продукт 9PN4WF799808 разблокирован для переподачи. 27.10 отправлен 1.2.2.0 «Bulk Zone Manager» (x64 + arm64, 12 листингов из `docs/store-listing-<lang>.md`), статус «Update in certification». Обращение в Partner Center из раздела «Эскалация» подавать не понадобилось.
 
 Сертификацию прошёл: 1.2.2 опубликован, страница Store показывает «Bulk Zone Manager» (проверено в en-us, ru-ru, de-de, ja-jp).
+
+## «Hidden by Microsoft» 2026-10-31
+
+Владелец увидел в Partner Center (Apps & Games, список продуктов): `Bulk Zone Manager  MSIX or PWA app  0 add-ons  240  Hidden by Microsoft`. Причина **неизвестна**: уведомление не найдено, официального описания этого статуса в поиске нет. Письмо ниже владелец отправил (сообщил 2026-11-01; адресаты не уточнены), ждём ответа.
+
+Замерено публичными endpoint'ами 31.10 около 21:00 UTC:
+- страница и каталог отвечают: 1.2.2.0, x64 + arm64, `IsDownloadable=true`, `Accessible=true`, `HideFromCollections=false`; рынки US, DE, RU, JP отдают продукт;
+- поиск Store (`storeedgefd.dsx.mp.microsoft.com/v9.0/pages/searchResults`): продукта нет по «Bulk Zone Manager», «cloudflare bulk», «301.st»; контроль «PowerToys» находится. Базы «до» нет: раньше проверяли только страницу, не поиск. Поэтому «скрыт из поиска» — наблюдение, а связь со статусом — предположение;
+- `LastModifiedDate` в каталоге: 2026-10-31T19:00:32Z, связь со статусом неизвестна;
+- ключи в каталоге (`SearchTitles`): dns, domains, zone management, purge cache, delete zones, add domains, cloudflare. Это **не совпадает** с `docs/store-listing-en.md` («cloudflare bulk», «cloudflare api token» и др.): файл не равен опубликованному.
+
+Кандидаты на причину (не подтверждены): ключ «cloudflare» (10.1.3) и поле «Developed by» — реклама 301.st со словом «for Cloudflare», в каталоге это `DeveloperName`.
+
+Не проверено: страница продукта и уведомления в Partner Center, почта `support@301.st`, контактный адрес в Account settings. В Chrome агента Partner Center открыт под `investblog.io@gmail.com`: только Edge и Insights, продукт не открывается (редирект на Home). Поиск писем от Microsoft за 10 дней в этом Gmail вернул пустой текст, вкладка зависла — отсутствие писем не доказано.
+
+План: (1) найти уведомление — колокольчик, продукт, Availability, почта; (2) если причины там нет — письмо ниже на reportapp@microsoft.com и ответом в цепочку `TrackingID#2610030050000446`, на msftpc@microsoft.com не отвечать; (3) листинги до выяснения причины не менять и новых подач не делать. Если причина — 10.1.3 или ключи: убрать «cloudflare» из ключей во всех 12 листингах и ответить сразу.
+
+```
+Subject: Product 9PN4WF799808 "Hidden by Microsoft" after publication – please advise
+
+Hello,
+
+Product 9PN4WF799808 (Bulk Zone Manager, publisher 301) was resubmitted on October 27 after being renamed, and it passed certification. Its product page is live, but Partner Center now shows the status "Hidden by Microsoft", and the app does not appear in Store search.
+
+We have not found a notice explaining this status. Could you please tell us:
+1. Why the product is hidden, and which policy or report applies?
+2. What should we change to have it shown in the Store again?
+
+We want to fix any issue promptly. Please also confirm which email address your notices are sent to, as we may have missed an earlier one.
+
+Thank you,
+301.st
+support@301.st
+```
+
+## Сертификационный отчёт 2026-11-18 — причина «Hidden by Microsoft»
+
+Отчёт `cea3f4fc-7445-4e34-9b28-f3dfcbb0aecf` (review completed 2026-11-18, статус «Attention needed») — это и был ответ на вопрос «почему скрыт»: повторная проверка опубликованного 1.2.2 провалена по двум политикам, продукт скрыт из поиска до проходного обновления. Дедлайн из отчёта: **обновление до 2026-12-02**, иначе продукт снимут с публикации.
+
+Провалы и что сделано в 1.2.3 (коммит отдельно, пока в рабочей копии):
+
+1. **10.3.1 App Is Testable — Test Account.** Тестировщикам нужны учётные данные Cloudflare; в прошлой подаче прямо было написано «демо-аккаунт дать нельзя». Решение: завести отдельный демо-аккаунт Cloudflare (свободная зона, scoped user-токен cfut_), вписать email + токен в Partner Center → Submission → Notes for certification. Плейсхолдеры и текст заметок — в `docs/store-listing-en.md` (секция «Notes for certification»).
+2. **10.1.5 Software Distribution.** «About > Links» продвигает ПО вне стора: ссылка на GitHub вела в репозиторий, в Releases которого лежали установщики (`CloudflareTools-*-setup.exe`/`.zip`). Сделано: из About-страницы убраны ссылки на GitHub и на три браузерных расширения (во всех 12 языках, `i18n/*.txt` + resw); остались «Rate this app in Microsoft Store» и 301.st. Ассеты установщиков удалены из GitHub Releases v1.1.0 и v1.2.0 (релизы с заметками сохранены, сами .exe лежат локально в `temp/`).
+
+Осталось владельцу: (1) создать демо-аккаунт Cloudflare и впечатать реальные email+токен в заметки; (2) собрать пакеты 1.2.3.0 (`scripts/make-release.py`) и подать обновление **до 2026-12-02**.
+
+Остаточный риск (не тронуто): в описаниях листингов 12 языков (строки ~19 и ~21) остаются упоминания «исходный код на GitHub» и «также доступно как расширение для Chrome/Edge/Firefox» — в этой проверке флаг ставили только на About > Links, но строгий тестер может придраться и к описанию.

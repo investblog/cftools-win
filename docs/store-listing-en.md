@@ -79,9 +79,13 @@ Cloudflare® is a registered trademark of Cloudflare, Inc. Bulk Zone Manager is 
 ## Notes for certification (Partner Center → Submission → Notes for certification)
 
 Product name and trademark (policy 10.1.1.1):
-- The 2026-10-02 Store health review (report 6cab5fcf-cc6e-433e-bf8e-b63e66b76528) removed the app because its name contained the name of another service. Following the naming guidance ("Do not use trademarked names"), the app is renamed to "Bulk Zone Manager", a reserved name that contains no third-party trademark. The package DisplayName (version 1.2.2.0), the window title, the About page and all 12 listing languages carry the new name.
+- The 2026-10-02 Store health review (report 6cab5fcf-cc6e-433e-bf8e-b63e66b76528) removed the app because its name contained the name of another service. Following the naming guidance ("Do not use trademarked names"), the app is renamed to "Bulk Zone Manager", a reserved name that contains no third-party trademark. The package DisplayName (version 1.2.3.0), the window title, the About page and all 12 listing languages carry the new name.
 - "Cloudflare" no longer appears in the product name. In the description it is used only to say which service the tool works with (a client for the public Cloudflare API v4). The "Copyright and trademark info" field states that Cloudflare is a trademark of Cloudflare, Inc. and that the app is independent; the About page inside the app says the same. The icon and screenshots use our own design, not Cloudflare's logo.
-- The same publisher ships a browser extension with the same features on Chrome Web Store, Edge Add-ons and Firefox Add-ons; the Windows app is its desktop edition. Publisher name and support links point to 301.st; source code: https://github.com/investblog/cftools-win.
+- Publisher name and support links point to 301.st, the publisher's own edge-redirect platform (a web dashboard; it offers no software download).
+
+Software distribution (policy 10.1.5, report cea3f4fc-7445-4e34-9b28-f3dfcbb0aecf, 2026-11-18):
+- Fixed in 1.2.3. The About page no longer links to the GitHub repository or to browser-extension stores. Its only links are "Rate this app in Microsoft Store" and the publisher's 301.st web service.
+- The GitHub repository keeps the source code and release notes, but all downloadable installers were removed from GitHub Releases. The Microsoft Store is the only distribution channel for this app.
 
 Software dependencies (policy 10.2.4.1):
 - The package is self-contained. CFTools.runtimeconfig.json declares includedFrameworks = Microsoft.NETCore.App 8.0.30; hostfxr.dll, hostpolicy.dll, coreclr.dll, clrjit.dll and the Windows App SDK runtime ship inside the package. No .NET Desktop Runtime or any other install is required, and the first line of every description says so.
@@ -90,6 +94,12 @@ Software dependencies (policy 10.2.4.1):
 Localization (policy 10.7):
 - The app interface is localized into the 12 languages declared in the package manifest (en, ru, de, fr, es, it, pt-br, ja, ko, zh-Hans, pl, tr); Store listings are provided in the same 12 languages. The language follows the Windows display language and can be overridden in Settings.
 
-Testing (policy 10.3):
-- The app requires the tester's own Cloudflare credentials (an API token or Global API Key). A demo Cloudflare account cannot be shared because all operations (create / delete zones, purge cache) modify the account. Without credentials the reviewer can open every page: Zones, Add Domains, Purge Cache, Delete Domains, Settings and About all render and show a "Connect and select an account" hint.
+Testing (policy 10.3.1, report cea3f4fc-7445-4e34-9b28-f3dfcbb0aecf):
+- Test account (a dedicated demo account that exists only for certification; all operations on it are safe and expected):
+  Email: <paste demo Cloudflare account email>
+  API token: <paste demo user API token (cfut_…)>
+  On the Authentication page paste the token into "API token or Global API Key" and press Connect. No e-mail or Account ID is needed with a user token. If several accounts are listed, pick any.
+- Suggested test flow: (1) Zones — Load Zones shows the demo zone(s); (2) Add Domains — paste e.g. "example.com, sub.example.org", press Check, then Create All; (3) Purge Cache — select an active zone and purge; (4) Delete Domains — select a zone and delete it. All changes affect only the demo account.
+- The demo token is scoped to Zone > Zone > Edit, Zone > Cache Purge > Purge and Account > Account Settings > Read.
+- Without credentials, every page still renders and shows a "Connect and select an account" hint.
 - No purchases, no third-party ads, no analytics, no network access other than https://api.cloudflare.com. The About page and two contextual, user-dismissible tips (switchable off in Settings) link to the publisher's own service, 301.st.
